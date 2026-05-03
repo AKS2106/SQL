@@ -1,0 +1,539 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.tab{padding:7px 16px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.tab.active,.tab:hover{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.section{display:none}.section.active{display:block}
+.sec-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.6}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer}
+.card-head:hover{background:var(--color-background-secondary)}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.b-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.b-green{background:var(--color-background-success);color:var(--color-text-success)}
+.b-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.b-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.chev{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.chev.open{transform:rotate(180deg)}
+.card-body{display:none;padding:4px 16px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.card-body.open{display:block}
+.lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+.para{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.code{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.7;margin-bottom:8px}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin-top:6px}
+.insight{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin-top:6px}
+.arch{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.arch-step{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:6px 12px;font-size:12px;color:var(--color-text-primary);display:flex;align-items:center;gap:6px}
+.arch-step:after{content:"→";color:var(--color-text-tertiary);font-size:11px}
+.arch-step:last-child:after{content:""}
+.star-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin:8px 0}
+.star-row{display:flex;gap:10px;margin-bottom:8px;font-size:13px}
+.star-row:last-child{margin-bottom:0}
+.star-label{font-weight:500;color:var(--color-text-primary);min-width:80px;font-size:12px}
+.star-text{color:var(--color-text-secondary);line-height:1.6}
+.qa-q{font-size:13px;font-weight:500;color:var(--color-text-primary);margin:10px 0 4px}
+.qa-a{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.tradeoff{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.t-left{background:var(--color-background-success);border-radius:var(--border-radius-md);padding:8px 10px}
+.t-right{background:var(--color-background-danger);border-radius:var(--border-radius-md);padding:8px 10px}
+.t-title{font-size:11px;font-weight:500;margin-bottom:4px}
+.t-left .t-title{color:var(--color-text-success)}
+.t-right .t-title{color:var(--color-text-danger)}
+.t-text{font-size:12px;line-height:1.6}
+.t-left .t-text{color:var(--color-text-success)}
+.t-right .t-text{color:var(--color-text-danger)}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Data engineering interview prep — system design, behavioral, and case studies</h2>
+
+<div class="tabs" id="tabs"></div>
+<div id="secs"></div>
+</div>
+
+<script>
+const data = [
+{
+  id:"sysdesign", label:"System Design", title:"Data pipeline system design",
+  sub:"At 5 YOE, you're expected to design end-to-end pipelines. The interviewer wants to see your thought process — not just the answer. Always think: source → ingestion → storage → processing → serving → monitoring.",
+  cards:[
+    {
+      title:"How to approach any system design question", badge:"Framework", bc:"b-blue",
+      body:`
+<div class="lbl">The 5-step framework — say this out loud</div>
+<div class="arch">
+  <div class="arch-step">1. Clarify requirements</div>
+  <div class="arch-step">2. Estimate scale</div>
+  <div class="arch-step">3. Design the architecture</div>
+  <div class="arch-step">4. Discuss tradeoffs</div>
+  <div class="arch-step">5. Talk about failure handling</div>
+</div>
+<div class="para">Before drawing anything, ask: Is this batch or real-time? How much data per day? What's the SLA for freshness? Who consumes this — dashboards, ML models, analysts?</div>
+<div class="insight">Career changer tip: You've seen data from the customer side. Use that — "In my CX role, we needed X data to be fresh within Y hours to take action. That's why latency matters here."</div>`
+    },
+    {
+      title:"Design a batch pipeline — customer churn prediction", badge:"Batch", bc:"b-blue",
+      body:`
+<div class="lbl">Scenario</div>
+<div class="para">Process 10M customer records daily. Identify churn risk. Store results for the CRM team to act on.</div>
+<div class="lbl">Architecture on AWS</div>
+<div class="arch">
+  <div class="arch-step">S3 raw data</div>
+  <div class="arch-step">AWS Glue / EMR + PySpark</div>
+  <div class="arch-step">S3 processed (Parquet)</div>
+  <div class="arch-step">Redshift / Athena</div>
+  <div class="arch-step">QuickSight / CRM</div>
+</div>
+<div class="lbl">Key design decisions to mention</div>
+<div class="para">• Partition S3 data by date (year/month/day) — faster reads, cheaper Athena queries<br>• Use Parquet + Snappy compression — columnar, 3-5x smaller than CSV<br>• Orchestrate with Apache Airflow on MWAA — retry logic, dependency management<br>• Use EMR Spot instances for cost savings (up to 70% cheaper)</div>
+<div class="lbl">PySpark snippet to mention</div>
+<div class="code">df = spark.read.parquet("s3://bucket/raw/date=2024-01-01/")
+df_clean = df.dropDuplicates(["customer_id"]) \
+             .filter(col("status") != "test")
+df_clean.write.mode("overwrite") \
+        .partitionBy("region") \
+        .parquet("s3://bucket/processed/")</div>
+<div class="tip">Always mention: partitioning strategy, file format choice, and what happens if the job fails midway (idempotency).</div>`
+    },
+    {
+      title:"Design a real-time pipeline — IoT sensor data", badge:"Streaming", bc:"b-amber",
+      body:`
+<div class="lbl">Scenario</div>
+<div class="para">Car sensors send 1000 events/second. Detect engine anomalies in near real-time. Alert within 30 seconds.</div>
+<div class="lbl">Architecture on AWS</div>
+<div class="arch">
+  <div class="arch-step">IoT / API Gateway</div>
+  <div class="arch-step">Kinesis Data Streams</div>
+  <div class="arch-step">Spark Structured Streaming</div>
+  <div class="arch-step">DynamoDB / S3</div>
+  <div class="arch-step">SNS Alert</div>
+</div>
+<div class="lbl">Key concepts to mention</div>
+<div class="para">• Kinesis = managed Kafka on AWS. Shards determine throughput (1MB/s per shard)<br>• Windowing: tumbling window (fixed, non-overlapping) vs sliding window (overlapping)<br>• Watermarking: handle late-arriving data — "allow up to 10 min late events"<br>• Checkpointing: if Spark crashes, resume from last checkpoint, not from scratch</div>
+<div class="code">df = spark.readStream.format("kinesis")...
+windowed = df.withWatermark("event_time","10 minutes") \
+  .groupBy(window("event_time","5 minutes"), "car_id") \
+  .agg(avg("temperature").alias("avg_temp")) \
+  .filter(col("avg_temp") > 95)</div>
+<div class="tip">Interviewers love: "What if data arrives late?" Answer: watermarking. "What if the job crashes?" Answer: checkpointing + exactly-once semantics.</div>`
+    },
+    {
+      title:"Batch vs Streaming — when to use which", badge:"Tradeoff", bc:"b-green",
+      body:`
+<div class="tradeoff">
+  <div class="t-left">
+    <div class="t-title">Use batch when</div>
+    <div class="t-text">• Daily/hourly reports<br>• Large historical data<br>• ML model training<br>• Cost is priority<br>• Complexity must be low</div>
+  </div>
+  <div class="t-right">
+    <div class="t-title">Use streaming when</div>
+    <div class="t-text">• Fraud detection<br>• Real-time dashboards<br>• IoT sensor alerts<br>• < 1 min data freshness<br>• Event-driven actions</div>
+  </div>
+</div>
+<div class="insight">Most real pipelines are Lambda architecture — batch for historical accuracy + streaming for real-time, merged at the serving layer. Mention this — it shows maturity.</div>`
+    },
+    {
+      title:"Data quality & pipeline reliability", badge:"Production", bc:"b-red",
+      body:`
+<div class="lbl">Common interview question: "How do you ensure data quality?"</div>
+<div class="para">Talk about these 4 layers:</div>
+<div class="para"><strong>1. Schema validation</strong> — reject records with wrong types/missing required fields<br><strong>2. Business rules</strong> — salary can't be negative, age must be 0-120<br><strong>3. Statistical checks</strong> — alert if row count drops > 20% vs yesterday<br><strong>4. Reconciliation</strong> — source count vs destination count must match</div>
+<div class="code"># PySpark data quality check
+from pyspark.sql.functions import col, count, when
+
+total = df.count()
+nulls = df.filter(col("customer_id").isNull()).count()
+negatives = df.filter(col("salary") < 0).count()
+
+print(f"Null IDs: {nulls}/{total} = {nulls/total:.1%}")
+print(f"Bad salaries: {negatives}")</div>
+<div class="tip">Mention Great Expectations or Deequ (AWS) as data quality frameworks. Shows you know industry tools.</div>`
+    },
+    {
+      title:"Slowly Changing Dimensions (SCD)", badge:"Concepts", bc:"b-blue",
+      body:`
+<div class="lbl">What it is</div>
+<div class="para">When dimension data changes over time (customer address, product price), you need a strategy. Very common in data warehouse interviews.</div>
+<div class="qa-q">SCD Type 1 — Overwrite</div>
+<div class="qa-a">Just update the record. No history kept. Use when history doesn't matter (e.g., fixing a typo).</div>
+<div class="qa-q">SCD Type 2 — Add new row (most common)</div>
+<div class="qa-a">Insert a new row with new value. Mark old row as inactive. Add start_date and end_date. Use when you need full history (e.g., customer moved — which address was active during that order?).</div>
+<div class="code">-- SCD Type 2 pattern
+INSERT INTO customers (id, name, city, start_date, end_date, is_current)
+VALUES (1, 'John', 'Chicago', '2024-01-01', NULL, TRUE);
+-- When John moves to NYC:
+UPDATE customers SET end_date='2024-06-01', is_current=FALSE WHERE id=1;
+INSERT INTO customers VALUES (1,'John','NYC','2024-06-01',NULL,TRUE);</div>
+<div class="tip">Delta Lake (on S3) makes SCD Type 2 easy with MERGE INTO. Mention this if asked about modern approaches.</div>`
+    }
+  ]
+},
+{
+  id:"behavioral", label:"Behavioral", title:"Behavioral interview prep",
+  sub:"For a career changer, behavioral questions are your BIGGEST opportunity. Your CX background gives you unique stories — customer empathy, problem-solving under pressure, working with non-technical stakeholders. Use the STAR method: Situation → Task → Action → Result.",
+  cards:[
+    {
+      title:"Career change story — the most important answer", badge:"Must Prepare", bc:"b-red",
+      body:`
+<div class="lbl">Question: "Why are you moving from CX to data engineering?"</div>
+<div class="star-block">
+  <div class="star-row"><span class="star-label">DON'T say</span><span class="star-text">"I want better pay" or "I was bored" — even if true</span></div>
+  <div class="star-row"><span class="star-label">DO say</span><span class="star-text">Connect your CX experience to data — show it was a natural evolution</span></div>
+</div>
+<div class="lbl">Template answer</div>
+<div class="para">"In my CX role, I kept running into the same problem — I could see customers were having issues, but I didn't have the right data to understand why at scale. I started pulling reports, writing SQL queries to find patterns, and realized the data infrastructure we had was limiting the insights we could get. I wanted to be on the side that builds those systems — not just consumes them. I've spent the last [X months] upskilling in PySpark, AWS, and pipeline design, and I'm ready to bring both the technical skills and the business context."</div>
+<div class="insight">Your CX background is a superpower in DE interviews. Most DE candidates don't understand business impact — you do.</div>`
+    },
+    {
+      title:"Tell me about a time you solved a complex problem", badge:"STAR", bc:"b-blue",
+      body:`
+<div class="lbl">Adapt this CX story to sound like DE thinking</div>
+<div class="star-block">
+  <div class="star-row"><span class="star-label">Situation</span><span class="star-text">We were getting high customer complaints about delayed deliveries but couldn't identify the root cause from the dashboard we had.</span></div>
+  <div class="star-row"><span class="star-label">Task</span><span class="star-text">I needed to find patterns — which regions, carriers, or time periods were causing delays.</span></div>
+  <div class="star-row"><span class="star-label">Action</span><span class="star-text">I pulled raw data from 3 systems, wrote SQL queries to join orders, shipping, and complaint tables. Found that 68% of complaints came from one carrier in the northeast region on Mondays. Automated a weekly report so the ops team could act proactively.</span></div>
+  <div class="star-row"><span class="star-label">Result</span><span class="star-text">Complaints in that region dropped 40% in 2 months. This is actually what drove me deeper into data engineering — I wanted to build pipelines that surface these insights automatically, not manually.</span></div>
+</div>
+<div class="tip">End every STAR story with a data engineering angle. It reinforces your career change narrative.</div>`
+    },
+    {
+      title:"Tell me about a time data was wrong / you caught an error", badge:"STAR", bc:"b-blue",
+      body:`
+<div class="lbl">Template story</div>
+<div class="star-block">
+  <div class="star-row"><span class="star-label">Situation</span><span class="star-text">We noticed our weekly CX metrics report showed a 30% drop in satisfaction scores — seemed impossible.</span></div>
+  <div class="star-row"><span class="star-label">Task</span><span class="star-text">Validate whether the data was accurate before leadership made decisions based on it.</span></div>
+  <div class="star-row"><span class="star-label">Action</span><span class="star-text">Traced back to the source — found a new survey tool had been deployed mid-week and the scale changed from 1-5 to 1-10, but the normalization logic wasn't updated. Cross-checked row counts (source vs report) which didn't match — that was the signal.</span></div>
+  <div class="star-row"><span class="star-label">Result</span><span class="star-text">Fixed the normalization, reprocessed the data, set up an automated row count reconciliation check. Now a standard part of our data quality process.</span></div>
+</div>
+<div class="insight">This story demonstrates: data validation instincts, root cause analysis, and proactive monitoring setup — all core DE skills.</div>`
+    },
+    {
+      title:"How do you handle working with non-technical stakeholders?", badge:"STAR", bc:"b-green",
+      body:`
+<div class="lbl">This is where your CX background shines most</div>
+<div class="star-block">
+  <div class="star-row"><span class="star-label">Situation</span><span class="star-text">The CX team needed a new dashboard but kept changing requirements. The dev team was frustrated.</span></div>
+  <div class="star-row"><span class="star-label">Task</span><span class="star-text">Bridge the gap — translate business needs into technical requirements.</span></div>
+  <div class="star-row"><span class="star-label">Action</span><span class="star-text">Ran a structured requirements session. Asked "what decision will you make with this data?" instead of "what columns do you want?" Converted answers into a data spec document — agreed on definitions (what counts as a 'resolved' ticket?), refresh frequency, and who owns data quality.</span></div>
+  <div class="star-row"><span class="star-label">Result</span><span class="star-text">First version shipped without a single change request. Team adopted a requirements template for all future data projects.</span></div>
+</div>
+<div class="tip">"What decision will you make with this data?" — Use this phrase in interviews. It shows data engineering maturity.</div>`
+    },
+    {
+      title:"Tell me about a time you had to learn something quickly", badge:"STAR", bc:"b-amber",
+      body:`
+<div class="lbl">Use your DE upskilling journey as the story</div>
+<div class="star-block">
+  <div class="star-row"><span class="star-label">Situation</span><span class="star-text">I decided to transition into data engineering and had to build technical skills while working full time.</span></div>
+  <div class="star-row"><span class="star-label">Task</span><span class="star-text">Learn PySpark, AWS pipeline services, and SQL at an industry level in [X months].</span></div>
+  <div class="star-row"><span class="star-label">Action</span><span class="star-text">Built a structured learning plan: SQL patterns first (fundamentals), then PySpark (applied on real datasets from Kaggle), then AWS (built an end-to-end pipeline project — S3 → Glue → Athena → QuickSight). Practiced by solving LeetCode SQL problems daily.</span></div>
+  <div class="star-row"><span class="star-label">Result</span><span class="star-text">Built [X] portfolio projects. Can now design and implement batch pipelines end-to-end. Currently preparing for AWS Data Engineer Associate certification.</span></div>
+</div>
+<div class="insight">Mention a real project you built, even if small. "I built a pipeline that processes public COVID data from S3 through PySpark into a dashboard" — this is gold.</div>`
+    },
+    {
+      title:"Common questions + short answers", badge:"Quick Prep", bc:"b-green",
+      body:`
+<div class="qa-q">Where do you see yourself in 3 years?</div>
+<div class="qa-a">Senior Data Engineer, owning end-to-end pipelines, mentoring others. Possibly moving toward data architecture or ML engineering as the team's data infrastructure matures.</div>
+<div class="qa-q">What's your biggest weakness?</div>
+<div class="qa-a">Honest answer that shows self-awareness: "I sometimes over-engineer solutions — I'm learning to ship a working version first and optimize later. I've been practicing this by setting a 'good enough' benchmark before starting."</div>
+<div class="qa-q">Why this company / role?</div>
+<div class="qa-a">Research their tech stack and data maturity. Say something specific: "I saw you use Spark on EMR and your team has open problems around pipeline reliability — that's exactly what I've been focused on."</div>
+<div class="qa-q">Do you have any questions for us?</div>
+<div class="qa-a">Always ask: "What does the data infrastructure look like today and what's the biggest challenge the team is trying to solve?" — Shows genuine interest and DE maturity.</div>`
+    }
+  ]
+},
+{
+  id:"health", label:"Healthcare Case Study", title:"Healthcare — AWS + PySpark + SQL",
+  sub:"Healthcare data is sensitive (HIPAA), high-volume, and has strict SLAs. Interviewers in this domain test: data governance knowledge, pipeline design for patient data, and real-world SQL on clinical datasets.",
+  cards:[
+    {
+      title:"Case: Patient readmission pipeline (hospital)", badge:"Batch Pipeline", bc:"b-blue",
+      body:`
+<div class="lbl">Business problem</div>
+<div class="para">Hospital wants to predict which patients discharged today are likely to be readmitted within 30 days. CX angle: reducing readmissions improves patient experience and reduces costs.</div>
+<div class="lbl">Pipeline architecture</div>
+<div class="arch">
+  <div class="arch-step">EHR System (HL7/FHIR)</div>
+  <div class="arch-step">S3 raw (encrypted)</div>
+  <div class="arch-step">AWS Glue + PySpark</div>
+  <div class="arch-step">S3 curated (Parquet)</div>
+  <div class="arch-step">Redshift + Athena</div>
+  <div class="arch-step">ML model / Dashboard</div>
+</div>
+<div class="lbl">Key design decisions</div>
+<div class="para">• S3 encryption at rest (SSE-KMS) — HIPAA requirement<br>• PII masking: hash patient_id before storing in analytics layer<br>• Partition by admission_date and hospital_id<br>• Data retention policy: 7 years (regulatory)<br>• VPC + private subnets — no public internet access to data</div>
+<div class="lbl">PySpark — calculate readmission flag</div>
+<div class="code">from pyspark.sql.functions import datediff, lag
+from pyspark.sql.window import Window
+
+w = Window.partitionBy("patient_id").orderBy("admission_date")
+
+df = df.withColumn("prev_discharge", lag("discharge_date").over(w)) \
+       .withColumn("days_since_last",
+           datediff(col("admission_date"), col("prev_discharge"))) \
+       .withColumn("is_readmission",
+           when(col("days_since_last") <= 30, 1).otherwise(0))</div>
+<div class="tip">Always mention HIPAA when designing health pipelines. It shows domain awareness. Key points: encryption, access control, audit logs, data masking.</div>`
+    },
+    {
+      title:"Case: Insurance claims anomaly detection", badge:"Real-time", bc:"b-amber",
+      body:`
+<div class="lbl">Business problem</div>
+<div class="para">Insurance company processes 50k claims/day. Detect fraudulent or anomalous claims in real-time before approval.</div>
+<div class="lbl">Architecture</div>
+<div class="arch">
+  <div class="arch-step">Claims API</div>
+  <div class="arch-step">Kinesis Streams</div>
+  <div class="arch-step">Spark Structured Streaming</div>
+  <div class="arch-step">DynamoDB (flags)</div>
+  <div class="arch-step">SNS → Analyst Alert</div>
+</div>
+<div class="lbl">Anomaly logic in PySpark</div>
+<div class="code">w = Window.partitionBy("provider_id") \
+          .orderBy("claim_date") \
+          .rowsBetween(-6, 0)  # 7-day sliding window
+
+df = df.withColumn("avg_claim_7d", avg("amount").over(w)) \
+       .withColumn("is_anomaly",
+           when(col("amount") > col("avg_claim_7d") * 3, True)
+           .otherwise(False))</div>
+<div class="lbl">SQL for analysts to investigate</div>
+<div class="code">-- Top providers by anomaly rate
+SELECT provider_id, 
+       COUNT(*) AS total_claims,
+       SUM(is_anomaly) AS flagged,
+       ROUND(100.0 * SUM(is_anomaly)/COUNT(*), 1) AS flag_rate_pct
+FROM claims
+WHERE claim_date >= CURRENT_DATE - 30
+GROUP BY provider_id
+HAVING flag_rate_pct > 10
+ORDER BY flag_rate_pct DESC;</div>
+<div class="insight">Tie this to your CX experience: "In customer experience, we saw patterns of fraudulent refund requests — the same anomaly detection logic applies at scale here."</div>`
+    },
+    {
+      title:"SQL — clinical data questions", badge:"SQL", bc:"b-green",
+      body:`
+<div class="lbl">Q1: Find patients with more than 2 hospital visits in the last 90 days</div>
+<div class="code">SELECT patient_id, COUNT(*) AS visits
+FROM admissions
+WHERE admission_date >= CURRENT_DATE - 90
+GROUP BY patient_id
+HAVING COUNT(*) > 2
+ORDER BY visits DESC;</div>
+<div class="lbl">Q2: Average length of stay per diagnosis, only for stays > 2 days</div>
+<div class="code">SELECT diagnosis_code,
+       AVG(DATEDIFF(discharge_date, admission_date)) AS avg_los_days,
+       COUNT(*) AS cases
+FROM admissions
+WHERE DATEDIFF(discharge_date, admission_date) > 2
+GROUP BY diagnosis_code
+ORDER BY avg_los_days DESC;</div>
+<div class="lbl">Q3: Month-over-month change in claims volume</div>
+<div class="code">WITH monthly AS (
+  SELECT DATE_FORMAT(claim_date,'%Y-%m') AS month,
+         COUNT(*) AS claims
+  FROM claims GROUP BY 1
+)
+SELECT month, claims,
+  LAG(claims) OVER (ORDER BY month) AS prev_month,
+  ROUND(100.0*(claims - LAG(claims) OVER (ORDER BY month))
+        / LAG(claims) OVER (ORDER BY month), 1) AS pct_change
+FROM monthly;</div>`
+    }
+  ]
+},
+{
+  id:"auto", label:"Automobile Case Study", title:"Automobile — AWS + PySpark + SQL",
+  sub:"Auto industry data is IoT-heavy, high velocity, and increasingly real-time. Key problems: telematics (vehicle sensors), predictive maintenance, supply chain, and customer journey analytics.",
+  cards:[
+    {
+      title:"Case: Predictive maintenance pipeline (telematics)", badge:"IoT + Streaming", bc:"b-amber",
+      body:`
+<div class="lbl">Business problem</div>
+<div class="para">Fleet of 100k vehicles sending sensor data every 5 seconds. Predict engine failure 2 weeks in advance to schedule proactive maintenance. CX angle: reduce breakdown incidents that frustrate customers.</div>
+<div class="lbl">Architecture</div>
+<div class="arch">
+  <div class="arch-step">Vehicle sensors (OBD-II)</div>
+  <div class="arch-step">AWS IoT Core</div>
+  <div class="arch-step">Kinesis Firehose</div>
+  <div class="arch-step">S3 (raw + processed)</div>
+  <div class="arch-step">EMR + PySpark</div>
+  <div class="arch-step">SageMaker (ML)</div>
+  <div class="arch-step">SNS → Service Center</div>
+</div>
+<div class="lbl">Feature engineering in PySpark</div>
+<div class="code">w = Window.partitionBy("vehicle_id").orderBy("timestamp")
+w_7d = w.rowsBetween(-7*24*12, 0)  # 7 days of 5-sec intervals
+
+df = df.withColumn("rpm_avg_7d", avg("rpm").over(w_7d)) \
+       .withColumn("temp_max_7d", max("engine_temp").over(w_7d)) \
+       .withColumn("rpm_trend",
+           col("rpm") - lag("rpm", 1).over(w)) \
+       .withColumn("anomaly_score",
+           when(
+             (col("engine_temp") > 105) & 
+             (col("rpm_avg_7d") > 4500), "high"
+           ).when(col("engine_temp") > 95, "medium")
+           .otherwise("normal"))</div>
+<div class="tip">Interviewers love when you mention: data volume estimation. "100k vehicles × 1 event/5sec = 20k events/sec = ~1.7B events/day." Shows engineering mindset.</div>`
+    },
+    {
+      title:"Case: Vehicle sales & customer journey analytics", badge:"Batch + DWH", bc:"b-blue",
+      body:`
+<div class="lbl">Business problem</div>
+<div class="para">Track customer journey from website visit → test drive → purchase → service. Find drop-off points. This is directly your CX experience — now at pipeline scale.</div>
+<div class="lbl">Architecture</div>
+<div class="arch">
+  <div class="arch-step">CRM + Web + Dealer System</div>
+  <div class="arch-step">S3 data lake</div>
+  <div class="arch-step">AWS Glue ETL</div>
+  <div class="arch-step">Redshift DWH</div>
+  <div class="arch-step">QuickSight</div>
+</div>
+<div class="lbl">PySpark — funnel analysis</div>
+<div class="code">from pyspark.sql.functions import min as min_, countDistinct
+
+journey = events_df.groupBy("customer_id").agg(
+  countDistinct(when(col("event")=="website_visit",1)).alias("visited"),
+  countDistinct(when(col("event")=="test_drive",1)).alias("test_drove"),
+  countDistinct(when(col("event")=="purchase",1)).alias("purchased"),
+  min_("event_date").alias("first_touch")
+)
+
+# Conversion rate
+journey = journey.withColumn("visit_to_drive",
+    (col("test_drove") / col("visited") * 100).cast("decimal(5,2)"))</div>
+<div class="lbl">SQL — conversion funnel report</div>
+<div class="code">SELECT 
+  model_category,
+  COUNT(DISTINCT CASE WHEN stage='visit' THEN customer_id END) AS visitors,
+  COUNT(DISTINCT CASE WHEN stage='test_drive' THEN customer_id END) AS test_drives,
+  COUNT(DISTINCT CASE WHEN stage='purchase' THEN customer_id END) AS purchases,
+  ROUND(100.0 * COUNT(DISTINCT CASE WHEN stage='purchase' THEN customer_id END)
+    / NULLIF(COUNT(DISTINCT CASE WHEN stage='visit' THEN customer_id END),0),1) AS conversion_pct
+FROM customer_journey
+GROUP BY model_category;</div>
+<div class="insight">This is your CX story told in SQL. "I used to track this manually in spreadsheets — now I can build the pipeline that generates this automatically for any time range."</div>`
+    },
+    {
+      title:"Case: Supply chain delay detection", badge:"Batch", bc:"b-green",
+      body:`
+<div class="lbl">Business problem</div>
+<div class="para">Auto manufacturer has 2000+ suppliers. Identify which suppliers consistently deliver late and impact production schedules.</div>
+<div class="lbl">SQL — supplier performance analysis</div>
+<div class="code">WITH supplier_stats AS (
+  SELECT supplier_id,
+    COUNT(*) AS total_deliveries,
+    SUM(CASE WHEN actual_date > expected_date THEN 1 ELSE 0 END) AS late_count,
+    AVG(DATEDIFF(actual_date, expected_date)) AS avg_delay_days,
+    ROUND(100.0 * SUM(CASE WHEN actual_date > expected_date THEN 1 ELSE 0 END)
+          / COUNT(*), 1) AS late_rate_pct
+  FROM deliveries
+  WHERE delivery_date >= CURRENT_DATE - 90
+  GROUP BY supplier_id
+),
+ranked AS (
+  SELECT *, 
+    DENSE_RANK() OVER (ORDER BY late_rate_pct DESC) AS risk_rank
+  FROM supplier_stats
+)
+SELECT supplier_id, total_deliveries, late_rate_pct, 
+       avg_delay_days, risk_rank,
+  CASE WHEN late_rate_pct > 30 THEN 'High Risk'
+       WHEN late_rate_pct > 15 THEN 'Medium Risk'
+       ELSE 'Low Risk' END AS risk_category
+FROM ranked
+WHERE risk_rank <= 20;</div>
+<div class="tip">This query combines CTEs + window functions + CASE — exactly what interviewers test. Practice explaining it line by line.</div>`
+    },
+    {
+      title:"SQL & PySpark — automobile interview questions", badge:"SQL", bc:"b-green",
+      body:`
+<div class="lbl">Q1: Top 3 best-selling models per region (classic Top N per group)</div>
+<div class="code">WITH ranked AS (
+  SELECT region, model, SUM(units_sold) AS total,
+    DENSE_RANK() OVER (PARTITION BY region ORDER BY SUM(units_sold) DESC) AS rnk
+  FROM sales GROUP BY region, model
+)
+SELECT region, model, total FROM ranked WHERE rnk <= 3;</div>
+<div class="lbl">Q2: Vehicles that haven't had a service in 6 months (inactive customer pattern)</div>
+<div class="code">SELECT v.vehicle_id, v.owner_id, v.model
+FROM vehicles v
+LEFT JOIN service_records s 
+  ON v.vehicle_id = s.vehicle_id
+  AND s.service_date >= CURRENT_DATE - 180
+WHERE s.vehicle_id IS NULL;</div>
+<div class="lbl">Q3: PySpark — calculate average fuel efficiency by brand, exclude outliers</div>
+<div class="code">from pyspark.sql.functions import percentile_approx
+
+# Get 5th and 95th percentile bounds to remove outliers
+bounds = df.agg(
+  percentile_approx("fuel_efficiency", 0.05).alias("low"),
+  percentile_approx("fuel_efficiency", 0.95).alias("high")
+).collect()[0]
+
+df.filter(
+    (col("fuel_efficiency") >= bounds["low"]) & 
+    (col("fuel_efficiency") <= bounds["high"])
+).groupBy("brand").agg(avg("fuel_efficiency").alias("avg_mpg")) \
+ .orderBy(col("avg_mpg").desc())</div>`
+    }
+  ]
+}
+];
+
+function buildTabs(){
+  const t=document.getElementById("tabs");
+  data.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(i===0?" active":"");
+    b.textContent=s.label;
+    b.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+      document.getElementById("s-"+s.id).classList.add("active");
+    };
+    t.appendChild(b);
+  });
+}
+
+function buildSecs(){
+  const c=document.getElementById("secs");
+  data.forEach((s,i)=>{
+    const sec=document.createElement("div");
+    sec.className="section"+(i===0?" active":"");
+    sec.id="s-"+s.id;
+    sec.innerHTML=`<div class="sec-title">${s.title}</div><div class="sec-sub">${s.sub}</div><div class="cards">${s.cards.map(buildCard).join("")}</div>`;
+    c.appendChild(sec);
+  });
+}
+
+function buildCard(p){
+  return `<div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="badge ${p.bc}">${p.badge}</span>
+      <span class="card-title">${p.title}</span>
+      <span class="chev">▼</span>
+    </div>
+    <div class="card-body">${p.body}</div>
+  </div>`;
+}
+
+function toggle(h){
+  const b=h.nextElementSibling,c=h.querySelector(".chev");
+  b.classList.toggle("open");c.classList.toggle("open");
+}
+
+buildTabs();buildSecs();
+</script>

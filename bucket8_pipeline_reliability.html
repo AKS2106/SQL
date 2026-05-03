@@ -1,0 +1,565 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{background:var(--color-background-success);color:var(--color-text-success)}
+</style>
+
+<h3>Bucket 8 — Pipeline Reliability</h3>
+<div class="sub">6 questions. The final bucket. This is where your CX background becomes a real advantage — you understand what happens downstream when a pipeline fails. Every question here tests one thing: do you build pipelines that fail gracefully and recover cleanly?</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">How do you handle a job that fails halfway through</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — idempotency</div>
+  <div class="p">The most important word in this answer is <b>idempotent</b>. A pipeline is idempotent when running it twice gives exactly the same result as running it once. If your job fails halfway and you re-run it — the output is correct, no duplicates, no missing data.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Non-idempotent — dangerous</div>
+      <div class="box-r">Job fails halfway. You re-run it. First half of data is written twice. Output has duplicates. Data is wrong.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Idempotent — safe</div>
+      <div class="box-r">Job fails halfway. You re-run it. Write mode is overwrite. Same output as if it ran once. Always safe to retry.</div>
+    </div>
+  </div>
+
+  <div class="lbl">Three techniques to make a pipeline idempotent</div>
+<pre>
+# Technique 1: partition overwrite — safest for batch jobs
+# Writing same partition twice = same result every time
+df.write \
+  .mode("overwrite") \
+  .partitionBy("event_date") \
+  .parquet("s3://bucket/processed/")
+
+# Technique 2: Delta Lake MERGE — handles duplicates automatically
+# Re-running MERGE with same data = same result (update not insert)
+target.alias("t").merge(
+    updates_df.alias("s"),
+    "t.order_id = s.order_id"
+).whenMatchedUpdateAll() \
+ .whenNotMatchedInsertAll() \
+ .execute()
+
+# Technique 3: write to temp location, then atomic rename
+# Either fully committed or not — no partial writes visible
+TEMP_PATH = "s3://bucket/temp/orders_20240115/"
+FINAL_PATH = "s3://bucket/processed/orders/dt=2024-01-15/"
+
+df.write.mode("overwrite").parquet(TEMP_PATH)  # write to temp
+# If write succeeded, rename to final (atomic in most storage)
+import boto3
+s3 = boto3.client("s3")
+# copy from temp to final, delete temp</pre>
+
+  <div class="lbl">Handle corrupted input records without failing the whole job</div>
+<pre>
+try:
+    df = spark.read \
+        .option("mode", "PERMISSIVE") \
+        .option("columnNameOfCorruptRecord", "_corrupt") \
+        .schema(schema) \
+        .json("s3://bucket/raw/")
+
+    valid_df = df.filter(col("_corrupt").isNull()).drop("_corrupt")
+    bad_df   = df.filter(col("_corrupt").isNotNull())
+
+    # Write valid records — job continues even if some records are bad
+    valid_df.write.mode("overwrite") \
+        .partitionBy("dt") \
+        .parquet("s3://bucket/processed/")
+
+    # Preserve bad records for investigation
+    if bad_df.count() > 0:
+        bad_df.write.mode("append").json("s3://bucket/quarantine/")
+
+except Exception as e:
+    # Notify team — job failed completely
+    boto3.client("sns").publish(
+        TopicArn="arn:aws:sns:us-east-1:123:alerts",
+        Subject="Pipeline failed",
+        Message=str(e)
+    )
+    raise  # re-raise so Glue marks job as FAILED</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"The key is idempotency — designing the pipeline so re-running it gives the same result as running it once. I achieve this with partition overwrite mode so writing the same partition twice does not create duplicates, or with Delta Lake MERGE which naturally handles re-runs. For corrupted input I use PERMISSIVE mode — bad records go to quarantine, valid records continue, the job does not fail because of a few bad rows."</div></div>
+  <div class="tip">Always say idempotent when answering this question. Then explain how you achieve it. That one word shows you think about failures proactively not reactively.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q2</span>
+  <span class="qt">How do you get alerted when a pipeline fails</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Two layers of alerting — always mention both</div>
+  <div class="mrow"><span class="mk">Layer 1 — code alerts</span><span class="mv">Your pipeline code sends SNS when business logic fails — bad record rate too high, row count too low, watermark not advancing.</span></div>
+  <div class="mrow"><span class="mk">Layer 2 — infra alerts</span><span class="mv">CloudWatch monitors the Glue job itself — job failed, job ran too long, too many errors. Fires SNS alarm automatically.</span></div>
+
+<pre>
+import boto3
+from datetime import date
+
+SNS_TOPIC = "arn:aws:sns:us-east-1:123456:pipeline-alerts"
+sns = boto3.client("sns")
+
+# --- Layer 1: business logic alerts from your code ---
+def check_and_alert(df, job_name):
+    total     = df.count()
+    bad_count = df.filter(col("_corrupt").isNotNull()).count()
+
+    # Alert if bad record rate too high
+    if total > 0 and bad_count / total > 0.05:
+        sns.publish(
+            TopicArn=SNS_TOPIC,
+            Subject=f"Data quality alert — {job_name}",
+            Message=(
+                f"Job: {job_name}\n"
+                f"Date: {date.today()}\n"
+                f"Bad records: {bad_count}/{total} "
+                f"({100*bad_count/total:.1f}%)\n"
+                f"Check quarantine: s3://bucket/quarantine/"
+            )
+        )
+
+    # Alert if row count drops more than 20% vs yesterday
+    # (compare to watermark stored in DynamoDB)
+    expected_min = 50_000
+    if total < expected_min:
+        sns.publish(
+            TopicArn=SNS_TOPIC,
+            Subject=f"Low volume alert — {job_name}",
+            Message=f"Only {total} rows. Expected at least {expected_min}."
+        )
+
+# --- Layer 2: infra alert — wrap entire job in try/except ---
+def run_pipeline():
+    try:
+        df = spark.read.parquet("s3://bucket/raw/")
+        check_and_alert(df, "orders_pipeline")
+        # ... rest of pipeline ...
+        df.write.mode("overwrite").parquet("s3://bucket/processed/")
+    except Exception as e:
+        sns.publish(
+            TopicArn=SNS_TOPIC,
+            Subject="FAILURE — orders_pipeline",
+            Message=f"Error: {str(e)}\nDate: {date.today()}"
+        )
+        raise  # re-raise — Glue marks job as FAILED, CloudWatch alarm fires</pre>
+
+  <div class="lbl">CloudWatch alarm — automatic infra-level alerting</div>
+<pre>
+# Terraform — CloudWatch alarm fires SNS when Glue job fails
+resource "aws_cloudwatch_metric_alarm" "pipeline_failure" {
+  alarm_name          = "orders-pipeline-failure"
+  namespace           = "Glue"
+  metric_name         = "glue.driver.aggregate.numFailedTasks"
+  statistic           = "Sum"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 1
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+  ok_actions          = [aws_sns_topic.alerts.arn]
+}</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I have two layers. First, my pipeline code sends SNS alerts for business logic failures — bad record rate over 5%, row count below expected threshold, any exception in the job. Second, CloudWatch monitors the Glue job itself and fires a separate SNS alarm if the job fails or runs too long. Both feed into the same SNS topic so the team gets one stream of notifications. I always re-raise after sending the code alert so CloudWatch also sees the failure — otherwise CloudWatch thinks the job succeeded."</div></div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">Kinesis — what it is and how it fits in a real-time pipeline</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What Kinesis Data Streams is</div>
+  <div class="p">Kinesis is AWS's managed real-time data streaming service — like Kafka but fully managed. Data flows through <b>shards</b>. Each shard handles 1MB/s write and 2MB/s read. You scale by adding shards.</div>
+
+  <div class="mrow"><span class="mk">Shard</span><span class="mv">Unit of capacity. 1MB/s in, 2MB/s out. Add shards to scale throughput. Each shard is independent — parallelism comes from multiple shards.</span></div>
+  <div class="mrow"><span class="mk">Partition key</span><span class="mv">Determines which shard a record goes to. Use user_id for even distribution. Using a single key sends everything to one shard — skew.</span></div>
+  <div class="mrow"><span class="mk">Retention</span><span class="mv">Default 24 hours, max 7 days. Events are replayable within the retention window — if processing fails, replay from the beginning.</span></div>
+  <div class="mrow"><span class="mk">vs Kafka</span><span class="mv">Kinesis is fully managed — no cluster to run. Kafka gives more control and is open source. On AWS, use Kinesis. On-prem or multi-cloud, use Kafka.</span></div>
+
+<pre>
+# Producer — write events to Kinesis (from app, IoT device, or Lambda)
+import boto3, json
+
+kinesis = boto3.client("kinesis", region_name="us-east-1")
+
+def send_event(user_id, event_type, amount):
+    kinesis.put_record(
+        StreamName="user-events",
+        Data=json.dumps({
+            "user_id":    user_id,
+            "event_type": event_type,
+            "amount":     amount,
+            "ts":         "2024-01-15T10:30:00Z"
+        }),
+        PartitionKey=user_id   # routes to shard — use user_id for even spread
+    )
+
+# Consumer — Spark Structured Streaming reads from Kinesis
+from pyspark.sql.functions import from_json, col
+from pyspark.sql.types import *
+
+schema = StructType([
+    StructField("user_id",    StringType()),
+    StructField("event_type", StringType()),
+    StructField("amount",     DoubleType()),
+    StructField("ts",         StringType())
+])
+
+df_stream = spark.readStream \
+    .format("kinesis") \
+    .option("streamName",       "user-events") \
+    .option("region",           "us-east-1") \
+    .option("initialPosition",  "LATEST") \
+    .load()
+
+# Parse JSON payload from Kinesis record
+df_parsed = df_stream \
+    .withColumn("data",
+        from_json(col("data").cast("string"), schema)) \
+    .select("data.*")
+
+# Apply watermark and window — with late data handling
+windowed = df_parsed \
+    .withWatermark("ts", "5 minutes") \
+    .groupBy(
+        window(col("ts").cast("timestamp"), "1 hour"),
+        "event_type"
+    ).agg(
+        count("*").alias("event_count"),
+        sum("amount").alias("total_amount")
+    )
+
+# Write to S3 every 30 seconds
+query = windowed.writeStream \
+    .outputMode("update") \
+    .format("parquet") \
+    .option("path",            "s3://bucket/streaming/hourly_events/") \
+    .option("checkpointLocation","s3://bucket/checkpoints/kinesis/") \
+    .trigger(processingTime="30 seconds") \
+    .start()
+
+query.awaitTermination()</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Kinesis is AWS's managed streaming service — like Kafka but serverless. Data flows through shards, each handling 1MB/s write. Producers write events with a partition key that routes to a shard — I use user_id for even distribution. Consumers are Spark Structured Streaming jobs that read from shards, apply watermarking for late data, and write windowed aggregations to S3. I always set a checkpoint location so if the streaming job crashes it resumes from where it left off, not the beginning."</div></div>
+  <div class="tip">Checkpoint location is the streaming equivalent of idempotency. Without it, a streaming job restart replays all events from the start and creates duplicates. Always mention it when talking about Kinesis or Spark Streaming.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">Deploying Spark jobs with CI/CD</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The three parts of a DE CI/CD pipeline</div>
+  <div class="mrow"><span class="mk">1. Test</span><span class="mv">Unit tests on PySpark transformations using pytest + local Spark. Runs on every pull request.</span></div>
+  <div class="mrow"><span class="mk">2. Package</span><span class="mv">Upload updated script to S3. Update Glue job definition to point to new script.</span></div>
+  <div class="mrow"><span class="mk">3. Infrastructure</span><span class="mv">Glue job definitions, IAM roles, S3 buckets managed in Terraform — version controlled alongside code.</span></div>
+
+<pre>
+# --- Unit test: test PySpark logic without a real cluster ---
+# tests/test_transforms.py
+
+import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+from src.transform import add_readmission_flag, dept_summary
+
+@pytest.fixture(scope="session")
+def spark():
+    return SparkSession.builder \
+        .master("local[1]") \
+        .appName("unit_tests") \
+        .getOrCreate()
+
+def test_readmission_flag(spark):
+    data = [
+        ("P1", "2024-01-01", "2024-01-05"),   # first admission
+        ("P1", "2024-01-20", "2024-01-25"),   # 15 days later = readmit
+        ("P2", "2024-01-01", "2024-01-10"),   # only one admission
+    ]
+    df = spark.createDataFrame(
+        data, ["patient_id","admission_date","discharge_date"]
+    )
+    result = add_readmission_flag(df)
+    # P1 second admission should be flagged as readmission
+    readmits = result.filter(col("is_readmission") == 1).count()
+    assert readmits == 1, f"Expected 1 readmission, got {readmits}"
+
+def test_no_negative_los(spark):
+    # Length of stay should never be negative
+    data = [("P1","2024-01-01","2024-01-05")]
+    df = spark.createDataFrame(
+        data, ["patient_id","admission_date","discharge_date"]
+    )
+    result = add_readmission_flag(df)
+    neg_los = result.filter(col("los_days") < 0).count()
+    assert neg_los == 0, "Negative length of stay detected"</pre>
+
+<pre>
+# --- GitHub Actions workflow: .github/workflows/deploy.yml ---
+
+# name: Deploy pipeline
+# on:
+#   push:
+#     branches: [main]
+#
+# jobs:
+#   test-and-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with: {python-version: '3.10'}
+#       - name: Install dependencies
+#         run: pip install pyspark pytest boto3
+#       - name: Run unit tests
+#         run: pytest tests/ -v
+#       - name: Upload script to S3
+#         run: aws s3 cp src/transform.py s3://bucket/scripts/transform.py
+#       - name: Update Glue job
+#         run: |
+#           aws glue update-job \
+#             --job-name orders_pipeline \
+#             --job-update "Command={ScriptLocation=s3://bucket/scripts/transform.py}"
+
+# Deploy via Python boto3
+import boto3
+
+def deploy_glue_job(script_path, job_name):
+    s3  = boto3.client("s3")
+    glue = boto3.client("glue")
+
+    # Upload new script version
+    s3.upload_file(
+        script_path,
+        "my-pipeline-bucket",
+        f"scripts/{job_name}.py"
+    )
+    print(f"Script uploaded: scripts/{job_name}.py")
+
+    # Update Glue job to use new script
+    glue.update_job(
+        JobName=job_name,
+        JobUpdate={
+            "Command": {
+                "ScriptLocation": f"s3://my-pipeline-bucket/scripts/{job_name}.py"
+            }
+        }
+    )
+    print(f"Glue job updated: {job_name}")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"My CI/CD has three stages. On every pull request, GitHub Actions runs pytest unit tests against PySpark transformations using a local Spark session — no cluster needed. On merge to main, it uploads the script to S3 and updates the Glue job definition via AWS CLI or boto3. Infrastructure like Glue jobs and IAM roles lives in Terraform so it is version controlled alongside code — no manual console changes."</div></div>
+  <div class="win">Mentioning Terraform for infrastructure as code shows you think beyond just the pipeline code. It signals production maturity — no one is clicking around in the AWS console to make changes.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Q5</span>
+  <span class="qt">Design an end-to-end pipeline — how to answer in 2 minutes</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The 5-layer structure — use this for any pipeline question</div>
+  <div class="p">When an interviewer says "design a pipeline for X" — do not start drawing boxes immediately. Say this first: "I think about it in 5 layers — ingestion, storage, processing, serving, and monitoring. Let me walk through each."</div>
+
+  <div class="mrow"><span class="mk">1. Ingestion</span><span class="mv">How does data arrive? Batch (S3 file drop, API pull, database export) or streaming (Kinesis, Kafka)? What format? What volume per day?</span></div>
+  <div class="mrow"><span class="mk">2. Storage</span><span class="mv">Raw zone: S3, original format, never delete. Processed zone: S3, Parquet or Delta, partitioned by date. Serving layer: Redshift, Athena, or DynamoDB.</span></div>
+  <div class="mrow"><span class="mk">3. Processing</span><span class="mv">Glue + PySpark for batch ETL. Spark Structured Streaming for real-time. Airflow or MWAA for orchestration and dependency management.</span></div>
+  <div class="mrow"><span class="mk">4. Serving</span><span class="mv">Athena for ad-hoc SQL queries on S3. Redshift for dashboards with frequent queries. DynamoDB for millisecond lookups from applications.</span></div>
+  <div class="mrow"><span class="mk">5. Monitoring</span><span class="mv">CloudWatch metrics on Glue jobs. SNS alerts for failures and data quality issues. Row count reconciliation between source and destination.</span></div>
+
+<pre>
+# --- Healthcare batch pipeline — concrete example ---
+
+# Layer 1: Ingestion
+# Hospital EHR exports patient records to S3 daily at 2am
+# Format: CSV, ~500k rows/day
+# Lambda triggered by S3 PUT event → starts Glue job
+
+# Layer 2: Storage
+# s3://hospital-datalake/raw/admissions/dt=2024-01-15/     ← raw, never touched
+# s3://hospital-datalake/processed/admissions/dt=2024-01-15/ ← Parquet, partitioned
+# s3://hospital-datalake/delta/patient_summary/            ← Delta for SCD Type 2
+
+# Layer 3: Processing — Glue ETL job
+def run_admissions_pipeline(spark, glueContext, input_path, run_date):
+    # Read
+    dyf = glueContext.create_dynamic_frame.from_catalog(
+        database="hospital_db", table_name="raw_admissions",
+        push_down_predicate=f"dt = '{run_date}'"
+    )
+    df = dyf.toDF()
+
+    # Quality checks
+    bad_df  = df.filter(col("patient_id").isNull())
+    good_df = df.filter(col("patient_id").isNotNull())
+
+    # Transform — add readmission flag
+    from pyspark.sql.window import Window
+    w = Window.partitionBy("patient_id").orderBy("admission_date")
+    good_df = good_df \
+        .withColumn("prev_discharge", lag("discharge_date").over(w)) \
+        .withColumn("is_readmission",
+            when(datediff("admission_date","prev_discharge") <= 30, 1)
+            .otherwise(0))
+
+    # Write
+    good_df.write.mode("overwrite").partitionBy("dt") \
+        .parquet("s3://hospital-datalake/processed/admissions/")
+    bad_df.write.mode("append") \
+        .json("s3://hospital-datalake/quarantine/admissions/")
+
+# Layer 4: Serving
+# Athena queries on processed/ for ad-hoc analysis
+# QuickSight dashboard connected to Athena for clinical ops team
+
+# Layer 5: Monitoring
+# CloudWatch alarm on Glue job failure → SNS → email team
+# Row count check: source CSV rows == processed Parquet rows</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I design pipelines in 5 layers. Ingestion: how and when data arrives — batch file drop or streaming events. Storage: raw zone keeps original data forever, processed zone has clean partitioned Parquet or Delta. Processing: Glue PySpark for batch, Spark Streaming for real-time, Airflow for orchestration. Serving: Athena for ad-hoc, Redshift for dashboards, DynamoDB for low-latency app lookups. Monitoring: CloudWatch alarms plus SNS alerts from code for business logic failures. Every layer has a clear purpose."</div></div>
+  <div class="ok">This structure works for any domain — healthcare, auto, finance, retail. The 5 layers never change. Only the specific technologies and data volumes change per scenario.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q6</span>
+  <span class="qt">How do you handle pipeline failures and recover — the complete playbook</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Failure types — each needs a different response</div>
+  <div class="mrow"><span class="mk">Infrastructure failure</span><span class="mv">Glue job crashes, EMR cluster dies, Lambda times out. Fix: retry with exponential backoff via Step Functions or Glue retry config.</span></div>
+  <div class="mrow"><span class="mk">Bad input data</span><span class="mv">Corrupt file, schema mismatch, unexpected NULL. Fix: quarantine bad records, continue with valid data, alert team.</span></div>
+  <div class="mrow"><span class="mk">Logic error</span><span class="mv">Bug in transform produced wrong output. Fix: restore from Delta time travel or reprocess from raw zone.</span></div>
+  <div class="mrow"><span class="mk">Upstream delay</span><span class="mv">Source data arrived 3 hours late. Fix: pipeline waits with dependency check or handles late data with reprocessing window.</span></div>
+
+<pre>
+# --- Retry config in Glue ---
+# Set in Glue job config:
+# Max retries: 3
+# Retry delay: 2 minutes
+# This handles transient failures (network blip, S3 throttle)
+
+# --- Step Functions with exponential backoff ---
+{
+  "Type": "Task",
+  "Resource": "arn:aws:states:...:glue:startJobRun.sync",
+  "Parameters": {"JobName": "orders_pipeline"},
+  "Retry": [{
+    "ErrorEquals": ["States.ALL"],
+    "IntervalSeconds": 60,       # wait 60s before first retry
+    "MaxAttempts": 3,            # retry up to 3 times
+    "BackoffRate": 2.0           # double wait time each retry
+  }],
+  "Catch": [{
+    "ErrorEquals": ["States.ALL"],
+    "Next": "NotifyFailure"      # after all retries fail → alert
+  }],
+  "Next": "NextStep"
+}
+
+# --- Recovery from logic error using Delta time travel ---
+from delta.tables import DeltaTable
+
+# Check what versions exist
+spark.sql("""
+    DESCRIBE HISTORY delta.`s3://bucket/delta/orders/`
+""").show()
+
+# Restore to version before the bad job ran
+dt = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+dt.restoreToVersion(12)   # version 12 was last known good state
+print("Table restored to version 12")</pre>
+
+  <div class="lbl">The recovery playbook — say this structure in interviews</div>
+  <div class="mrow"><span class="mk">Step 1 — Detect</span><span class="mv">CloudWatch alarm fires. SNS alert goes to team. On-call engineer gets paged within 5 minutes of failure.</span></div>
+  <div class="mrow"><span class="mk">Step 2 — Assess</span><span class="mv">Check Glue job logs in CloudWatch. Is it infra failure (retry) or data issue (quarantine and reprocess)?</span></div>
+  <div class="mrow"><span class="mk">Step 3 — Fix</span><span class="mv">Infra failure: retry job — idempotent writes mean safe to re-run. Data issue: fix quarantine records, reprocess. Logic bug: restoreToVersion in Delta, fix code, redeploy.</span></div>
+  <div class="mrow"><span class="mk">Step 4 — Verify</span><span class="mv">Row count reconciliation — source count matches destination count. Data quality checks pass. Downstream dashboards show correct data.</span></div>
+  <div class="mrow"><span class="mk">Step 5 — Prevent</span><span class="mv">Add the failure scenario to unit tests. Add a data quality check that would have caught it. Document the incident.</span></div>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"My pipeline handles failures at three levels. Transient infra failures are handled automatically with Step Functions retry and exponential backoff — no human needed. Bad input data goes to quarantine with a fail_reason tag, valid data continues, and SNS alerts the team. Logic errors are recovered using Delta Lake restoreToVersion — one line of code to roll back to the last good state. After any failure I add the scenario to unit tests and data quality checks so it cannot silently happen again."</div></div>
+  <div class="win">The phrase "Step 5 — Prevent" is what makes this a senior answer. Juniors fix the immediate problem. Seniors fix it and make sure it never happens silently again.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 8 complete — 6 of 6 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:8px">
+  Q1 — Job fails halfway: idempotency + partition overwrite + Delta MERGE = always safe to retry<br>
+  Q2 — Alerting: two layers — code alerts for business logic, CloudWatch for infra. Always re-raise<br>
+  Q3 — Kinesis: shards, partition key, checkpoint location for streaming recovery<br>
+  Q4 — CI/CD: pytest locally, S3 upload, Glue update via boto3, Terraform for infra<br>
+  Q5 — End-to-end design: 5 layers — ingestion, storage, processing, serving, monitoring<br>
+  Q6 — Recovery playbook: detect → assess → fix → verify → prevent
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success);margin-bottom:10px">The phrase for this bucket: <b>"idempotent, quarantine, restore, prevent."</b> Those four words cover every failure scenario.</div>
+  <div style="font-size:13px;font-weight:500;color:var(--color-text-success)">All 8 buckets complete. You have now covered every question from your interview list.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

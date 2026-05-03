@@ -1,0 +1,765 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.tab{padding:7px 16px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.tab.active,.tab:hover{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.6}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer}
+.card-head:hover{background:var(--color-background-secondary)}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.b-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.b-green{background:var(--color-background-success);color:var(--color-text-success)}
+.b-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.b-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.chev{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.chev.open{transform:rotate(180deg)}
+.card-body{display:none;padding:4px 16px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.card-body.open{display:block}
+.lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+.para{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.code{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.7;margin-bottom:8px}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.insight{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.info{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.think{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;margin:8px 0}
+.think-row{display:flex;gap:10px;margin-bottom:5px;font-size:13px;align-items:flex-start}
+.think-row:last-child{margin-bottom:0}
+.think-q{font-weight:500;color:var(--color-text-primary);min-width:100px;font-size:12px}
+.think-a{color:var(--color-text-secondary);line-height:1.6;font-size:13px}
+.table-wrap{overflow-x:auto;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:7px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);font-family:var(--font-mono)}
+.hl{background:var(--color-background-info)}
+.hl td{color:var(--color-text-info)}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+.diff-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.diff-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.diff-text{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Window functions interview guide — concepts, patterns, and practice questions with SQL and PySpark</h2>
+<div class="tabs" id="tabs"></div>
+<div id="secs"></div>
+</div>
+
+<script>
+const data = [
+{
+  id:"concept", label:"Core Concept",
+  title:"What is a window function — really",
+  sub:"Before memorizing syntax, understand the one idea that unlocks all window functions.",
+  cards:[
+    {
+      title:"GROUP BY vs window function — the key difference", badge:"Foundation", bc:"b-blue",
+      body:`
+<div class="lbl">GROUP BY collapses rows. Window functions don't.</div>
+<div class="para">That's the entire difference. Everything else follows from this.</div>
+<div class="diff-grid">
+  <div class="diff-box">
+    <div class="diff-title">GROUP BY</div>
+    <div class="diff-text">5 rows → 2 rows<br>Original rows gone<br>Can't see individual data</div>
+  </div>
+  <div class="diff-box">
+    <div class="diff-title">Window function</div>
+    <div class="diff-text">5 rows → 5 rows<br>Original rows kept<br>Adds a new column</div>
+  </div>
+  <div class="diff-box">
+    <div class="diff-title">When to use which</div>
+    <div class="diff-text">GROUP BY = summary<br>Window = compare each row to its group</div>
+  </div>
+</div>
+<div class="lbl">Same data, different results</div>
+<div class="table-wrap">
+<table>
+<tr><th>name</th><th>dept</th><th>salary</th><th>GROUP BY avg</th><th>Window avg</th></tr>
+<tr><td>Alice</td><td>IT</td><td>70000</td><td rowspan="2" style="text-align:center;vertical-align:middle">IT: 75000<br>HR: 55000</td><td>75000</td></tr>
+<tr><td>Bob</td><td>IT</td><td>80000</td><td>75000</td></tr>
+<tr><td>Carol</td><td>HR</td><td>50000</td><td rowspan="2" style="text-align:center;vertical-align:middle"></td><td>55000</td></tr>
+<tr><td>Dave</td><td>HR</td><td>60000</td><td>55000</td></tr>
+</table>
+</div>
+<div class="insight">With GROUP BY you lose Alice, Bob, Carol, Dave. With window function every employee row stays — plus you get the dept average added. That's the power.</div>`
+    },
+    {
+      title:"Anatomy of OVER() — the three parts", badge:"Syntax", bc:"b-blue",
+      body:`
+<div class="lbl">Every window function has the same structure</div>
+<div class="code">FUNCTION_NAME() OVER (
+  PARTITION BY column   -- reset for each group  (optional)
+  ORDER BY column       -- defines sequence       (optional)
+  ROWS BETWEEN ...      -- defines frame          (optional)
+)</div>
+<div class="lbl">What each part means</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">PARTITION BY</span><span class="think-a">Like GROUP BY but without collapsing. "Do this calculation separately for each dept." If missing → treats whole table as one group.</span></div>
+  <div class="think-row"><span class="think-q">ORDER BY</span><span class="think-a">Defines order within each partition. Required for ranking, LAG/LEAD, running totals. Meaningless for AVG/SUM without a frame.</span></div>
+  <div class="think-row"><span class="think-q">ROWS BETWEEN</span><span class="think-a">Defines which rows to include in the calculation. Default is "all rows in partition". For running total: UNBOUNDED PRECEDING to CURRENT ROW.</span></div>
+</div>
+<div class="lbl">PySpark equivalent</div>
+<div class="code">from pyspark.sql.window import Window
+
+w = Window.partitionBy("dept") \   # PARTITION BY
+          .orderBy("salary") \     # ORDER BY
+          .rowsBetween(            # ROWS BETWEEN
+              Window.unboundedPreceding,
+              Window.currentRow
+          )</div>
+<div class="tip">In interviews say: "PARTITION BY is like GROUP BY for window functions — it restarts the calculation for each group but keeps all rows."</div>`
+    }
+  ]
+},
+{
+  id:"ranking", label:"Ranking Functions",
+  title:"Ranking functions — ROW_NUMBER, RANK, DENSE_RANK",
+  sub:"The most asked window function topic. Know the difference between all three — interviewers always test this.",
+  cards:[
+    {
+      title:"ROW_NUMBER vs RANK vs DENSE_RANK — the difference", badge:"Must Know", bc:"b-red",
+      body:`
+<div class="lbl">Same data, three different results — memorize this table</div>
+<div class="table-wrap">
+<table>
+<tr><th>name</th><th>salary</th><th>ROW_NUMBER</th><th>RANK</th><th>DENSE_RANK</th></tr>
+<tr><td>Alice</td><td>90000</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Bob</td><td>75000</td><td>2</td><td>2</td><td>2</td></tr>
+<tr class="hl"><td>Carol</td><td>75000</td><td>3</td><td>2</td><td>2</td></tr>
+<tr><td>Dave</td><td>60000</td><td>4</td><td>4</td><td>3</td></tr>
+<tr><td>Eve</td><td>50000</td><td>5</td><td>5</td><td>4</td></tr>
+</table>
+</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">ROW_NUMBER</span><span class="think-a">Always unique. No ties. Even if Bob and Carol have same salary → 2 and 3. Use for deduplication.</span></div>
+  <div class="think-row"><span class="think-q">RANK</span><span class="think-a">Ties get same rank. But next rank skips. Bob=2, Carol=2, Dave=4 (gap). Use rarely.</span></div>
+  <div class="think-row"><span class="think-q">DENSE_RANK</span><span class="think-a">Ties get same rank. No gaps. Bob=2, Carol=2, Dave=3. Use for Nth highest salary.</span></div>
+</div>
+<div class="tip">Rule: Use ROW_NUMBER for deduplication. Use DENSE_RANK for Nth highest / top N per group. Avoid RANK in interviews unless specifically asked.</div>
+<div class="code">SELECT name, salary,
+  ROW_NUMBER()  OVER (ORDER BY salary DESC) AS row_num,
+  RANK()        OVER (ORDER BY salary DESC) AS rnk,
+  DENSE_RANK()  OVER (ORDER BY salary DESC) AS dense_rnk
+FROM employees;</div>`
+    },
+    {
+      title:"Q: Find the 2nd highest salary in each department", badge:"Top Interview Q", bc:"b-red",
+      body:`
+<div class="lbl">Break it down first</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Per dept?</span><span class="think-a">Yes → PARTITION BY dept</span></div>
+  <div class="think-row"><span class="think-q">Ranking?</span><span class="think-a">2nd highest → DENSE_RANK (handles ties correctly)</span></div>
+  <div class="think-row"><span class="think-q">Filter?</span><span class="think-a">Can't filter on window function in WHERE → wrap in CTE first</span></div>
+</div>
+<div class="lbl">SQL</div>
+<div class="code">WITH ranked AS (
+  SELECT name, dept, salary,
+    DENSE_RANK() OVER (
+      PARTITION BY dept
+      ORDER BY salary DESC
+    ) AS rnk
+  FROM employees
+)
+SELECT name, dept, salary
+FROM ranked
+WHERE rnk = 2;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.window import Window
+from pyspark.sql.functions import dense_rank
+
+w = Window.partitionBy("dept").orderBy(col("salary").desc())
+
+df.withColumn("rnk", dense_rank().over(w)) \
+  .filter(col("rnk") == 2) \
+  .select("name","dept","salary")</div>
+<div class="insight">This is the most asked window function question in interviews. The pattern is always: rank in CTE → filter outside. Never try to filter a window function in the same SELECT.</div>`
+    },
+    {
+      title:"Q: Top N per group — top 3 employees per department", badge:"Classic", bc:"b-amber",
+      body:`
+<div class="lbl">Exact same pattern — just change the filter number</div>
+<div class="code">WITH ranked AS (
+  SELECT name, dept, salary,
+    DENSE_RANK() OVER (
+      PARTITION BY dept ORDER BY salary DESC
+    ) AS rnk
+  FROM employees
+)
+SELECT name, dept, salary, rnk
+FROM ranked
+WHERE rnk <= 3;   -- change this number for top N</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("dept").orderBy(col("salary").desc())
+df.withColumn("rnk", dense_rank().over(w)) \
+  .filter(col("rnk") <= 3)</div>
+<div class="lbl">Variations you will see</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Top 1 per group</span><span class="think-a">WHERE rnk = 1 → gives highest salary per dept</span></div>
+  <div class="think-row"><span class="think-q">Bottom N</span><span class="think-a">Change ORDER BY salary ASC → now rank 1 = lowest</span></div>
+  <div class="think-row"><span class="think-q">Latest per user</span><span class="think-a">PARTITION BY user_id ORDER BY date DESC → rnk = 1 is most recent</span></div>
+  <div class="think-row"><span class="think-q">Dedup keep first</span><span class="think-a">ROW_NUMBER + PARTITION BY name ORDER BY id → keep rn = 1</span></div>
+</div>`
+    },
+    {
+      title:"Q: Remove duplicates keeping lowest ID", badge:"Dedup Pattern", bc:"b-purple",
+      body:`
+<div class="lbl">When to use ROW_NUMBER instead of DENSE_RANK</div>
+<div class="para">Deduplication = you want exactly ONE row per group, no ties. ROW_NUMBER guarantees uniqueness even when values are identical.</div>
+<div class="code">WITH dupes AS (
+  SELECT *,
+    ROW_NUMBER() OVER (
+      PARTITION BY name, email   -- columns that define a duplicate
+      ORDER BY id ASC            -- keep lowest id
+    ) AS rn
+  FROM employees
+)
+SELECT * FROM dupes
+WHERE rn = 1;   -- keep only the first occurrence</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("name","email").orderBy("id")
+df.withColumn("rn", row_number().over(w)) \
+  .filter(col("rn") == 1) \
+  .drop("rn")</div>
+<div class="tip">Interview tip: When asked "how do you remove duplicates in PySpark?" — mention both dropDuplicates() for simple cases AND the ROW_NUMBER approach when you need to control which row to keep.</div>`
+    }
+  ]
+},
+{
+  id:"lag_lead", label:"LAG & LEAD",
+  title:"LAG and LEAD — compare with previous or next row",
+  sub:"LAG looks back. LEAD looks forward. Used for day-over-day changes, finding gaps, comparing to previous record.",
+  cards:[
+    {
+      title:"LAG and LEAD — the concept", badge:"Concept", bc:"b-blue",
+      body:`
+<div class="lbl">Think of it as sliding the column up or down</div>
+<div class="table-wrap">
+<table>
+<tr><th>date</th><th>revenue</th><th>LAG(revenue)</th><th>LEAD(revenue)</th></tr>
+<tr><td>Jan 1</td><td>100</td><td>NULL</td><td>150</td></tr>
+<tr class="hl"><td>Jan 2</td><td>150</td><td>100</td><td>120</td></tr>
+<tr><td>Jan 3</td><td>120</td><td>150</td><td>200</td></tr>
+<tr><td>Jan 4</td><td>200</td><td>120</td><td>NULL</td></tr>
+</table>
+</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">LAG(col, N)</span><span class="think-a">Brings value from N rows BEFORE current row. Default N=1. First row gets NULL.</span></div>
+  <div class="think-row"><span class="think-q">LEAD(col, N)</span><span class="think-a">Brings value from N rows AFTER current row. Default N=1. Last row gets NULL.</span></div>
+  <div class="think-row"><span class="think-q">Default value</span><span class="think-a">LAG(col, 1, 0) → use 0 instead of NULL for missing rows. Useful for running calculations.</span></div>
+</div>
+<div class="code">SELECT date, revenue,
+  LAG(revenue)  OVER (ORDER BY date) AS prev_revenue,
+  LEAD(revenue) OVER (ORDER BY date) AS next_revenue,
+  revenue - LAG(revenue) OVER (ORDER BY date) AS daily_change
+FROM sales;</div>`
+    },
+    {
+      title:"Q: Day-over-day and month-over-month change", badge:"Classic", bc:"b-green",
+      body:`
+<div class="lbl">Day-over-day revenue change</div>
+<div class="code">SELECT date, revenue,
+  LAG(revenue) OVER (ORDER BY date) AS prev_day,
+  revenue - LAG(revenue) OVER (ORDER BY date) AS change,
+  ROUND(100.0 * (revenue - LAG(revenue) OVER (ORDER BY date))
+        / LAG(revenue) OVER (ORDER BY date), 1) AS pct_change
+FROM daily_sales
+ORDER BY date;</div>
+<div class="lbl">Month-over-month per product category</div>
+<div class="code">WITH monthly AS (
+  SELECT category,
+    DATE_FORMAT(sale_date,'%Y-%m') AS month,
+    SUM(revenue) AS total
+  FROM sales
+  GROUP BY category, DATE_FORMAT(sale_date,'%Y-%m')
+)
+SELECT category, month, total,
+  LAG(total) OVER (
+    PARTITION BY category   -- reset per category
+    ORDER BY month
+  ) AS prev_month,
+  ROUND(100.0*(total - LAG(total) OVER (
+    PARTITION BY category ORDER BY month)
+  ) / LAG(total) OVER (
+    PARTITION BY category ORDER BY month), 1) AS mom_pct
+FROM monthly;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import lag, round as round_
+w = Window.partitionBy("category").orderBy("month")
+
+df.withColumn("prev", lag("total").over(w)) \
+  .withColumn("mom_pct",
+    round_(100*(col("total")-col("prev"))/col("prev"), 1))</div>`
+    },
+    {
+      title:"Q: Find gaps in a sequence using LEAD", badge:"Gap Detection", bc:"b-amber",
+      body:`
+<div class="lbl">Find missing order IDs or missing dates</div>
+<div class="code">-- Find gaps in order_id sequence
+SELECT order_id,
+  LEAD(order_id) OVER (ORDER BY order_id) AS next_id,
+  LEAD(order_id) OVER (ORDER BY order_id) - order_id - 1 AS gap_size
+FROM orders
+HAVING gap_size > 0;  -- only show rows where gap exists</div>
+<div class="lbl">Find users who stopped ordering (gap between orders > 30 days)</div>
+<div class="code">SELECT user_id, order_date,
+  LEAD(order_date) OVER (
+    PARTITION BY user_id ORDER BY order_date
+  ) AS next_order,
+  DATEDIFF(
+    LEAD(order_date) OVER (PARTITION BY user_id ORDER BY order_date),
+    order_date
+  ) AS days_to_next
+FROM orders
+HAVING days_to_next > 30 OR days_to_next IS NULL;</div>
+<div class="tip">NULL in LEAD = no next order = this was the user's last order. Filter IS NULL to find users who never ordered again.</div>`
+    },
+    {
+      title:"Q: Compare each employee salary to their manager", badge:"Self-Join + LAG", bc:"b-purple",
+      body:`
+<div class="lbl">Two approaches — know both</div>
+<div class="lbl">Approach 1: Self-join (clearer)</div>
+<div class="code">SELECT e.name, e.salary,
+  m.name AS manager_name, m.salary AS manager_salary,
+  e.salary - m.salary AS diff
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.emp_id;</div>
+<div class="lbl">Approach 2: LAG (if data is ordered by hierarchy)</div>
+<div class="code">SELECT emp_id, name, salary, manager_id,
+  LAG(salary) OVER (
+    PARTITION BY manager_id ORDER BY emp_id
+  ) AS prev_peer_salary,
+  salary - LAG(salary) OVER (
+    PARTITION BY manager_id ORDER BY emp_id
+  ) AS diff_from_prev_peer
+FROM employees;</div>
+<div class="insight">In interviews, always go with self-join for manager comparison — it's clearer and more correct. Only mention LAG if they specifically ask for a window function approach.</div>`
+    }
+  ]
+},
+{
+  id:"running", label:"Running Calculations",
+  title:"Running totals, moving averages, cumulative sums",
+  sub:"The ROWS BETWEEN clause is what makes these work. Understand the frame and you can build any running calculation.",
+  cards:[
+    {
+      title:"ROWS BETWEEN — the frame concept", badge:"Key Concept", bc:"b-blue",
+      body:`
+<div class="lbl">Think of it as a sliding window over rows</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">UNBOUNDED PRECEDING</span><span class="think-a">From the very first row of the partition</span></div>
+  <div class="think-row"><span class="think-q">CURRENT ROW</span><span class="think-a">Up to and including the current row</span></div>
+  <div class="think-row"><span class="think-q">N PRECEDING</span><span class="think-a">N rows before current row</span></div>
+  <div class="think-row"><span class="think-q">N FOLLOWING</span><span class="think-a">N rows after current row</span></div>
+</div>
+<div class="lbl">Common frames and what they do</div>
+<div class="code">-- Running total (all rows from start to current)
+ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+
+-- Moving average of last 7 rows
+ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+
+-- Entire partition (same as no frame — for avg over whole group)
+ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING</div>
+<div class="table-wrap">
+<table>
+<tr><th>date</th><th>sales</th><th>running total</th><th>3-day moving avg</th></tr>
+<tr><td>Jan 1</td><td>100</td><td>100</td><td>100</td></tr>
+<tr><td>Jan 2</td><td>150</td><td>250</td><td>125</td></tr>
+<tr class="hl"><td>Jan 3</td><td>120</td><td>370</td><td>123</td></tr>
+<tr><td>Jan 4</td><td>200</td><td>570</td><td>157</td></tr>
+</table>
+</div>`
+    },
+    {
+      title:"Q: Running total of sales ordered by date", badge:"Running Total", bc:"b-green",
+      body:`
+<div class="lbl">SQL</div>
+<div class="code">SELECT date, sales,
+  SUM(sales) OVER (
+    ORDER BY date
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS running_total
+FROM daily_sales;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import sum as sum_
+from pyspark.sql.window import Window
+
+w = Window.orderBy("date") \
+    .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+
+df.withColumn("running_total", sum_("sales").over(w))</div>
+<div class="lbl">Running total per department (reset per group)</div>
+<div class="code">-- Add PARTITION BY to reset total for each dept
+SELECT name, dept, salary,
+  SUM(salary) OVER (
+    PARTITION BY dept
+    ORDER BY emp_id
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS dept_running_total
+FROM employees;</div>
+<div class="tip">Always specify ROWS BETWEEN explicitly in PySpark. Without it, the default frame is RANGE BETWEEN which can give unexpected results with duplicate values.</div>`
+    },
+    {
+      title:"Q: 7-day moving average of revenue", badge:"Moving Average", bc:"b-green",
+      body:`
+<div class="lbl">SQL — 7 rows including current = 6 PRECEDING to CURRENT ROW</div>
+<div class="code">SELECT date, revenue,
+  ROUND(AVG(revenue) OVER (
+    ORDER BY date
+    ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+  ), 2) AS moving_avg_7d
+FROM daily_revenue;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.orderBy("date").rowsBetween(-6, 0)
+df.withColumn("moving_avg_7d",
+    round_(avg("revenue").over(w), 2))</div>
+<div class="lbl">Variation — 30 day moving average per product category</div>
+<div class="code">w = Window.partitionBy("category") \
+          .orderBy("date") \
+          .rowsBetween(-29, 0)  # 30 rows including current
+
+df.withColumn("moving_avg_30d", avg("revenue").over(w))</div>
+<div class="insight">Moving average smooths out spikes in data — tell the interviewer this. "I used a 7-day moving average to smooth daily revenue fluctuations and show the trend more clearly."</div>`
+    },
+    {
+      title:"Q: Cumulative percentage of total sales", badge:"Cumulative %", bc:"b-amber",
+      body:`
+<div class="lbl">Running total divided by overall total</div>
+<div class="code">SELECT date, sales,
+  SUM(sales) OVER (
+    ORDER BY date
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS cumulative,
+  SUM(sales) OVER () AS grand_total,   -- entire table sum
+  ROUND(100.0 *
+    SUM(sales) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    / SUM(sales) OVER (), 1) AS cumulative_pct
+FROM daily_sales;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w_running = Window.orderBy("date") \
+    .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+w_total = Window.rowsBetween(
+    Window.unboundedPreceding, Window.unboundedFollowing)
+
+df.withColumn("cumulative", sum_("sales").over(w_running)) \
+  .withColumn("grand_total", sum_("sales").over(w_total)) \
+  .withColumn("cum_pct",
+    round_(100*col("cumulative")/col("grand_total"), 1))</div>`
+    }
+  ]
+},
+{
+  id:"aggwindow", label:"Aggregate as Window",
+  title:"Aggregate functions as window functions",
+  sub:"AVG, SUM, COUNT, MIN, MAX can all be used as window functions. This lets you compare individual rows to their group without collapsing data.",
+  cards:[
+    {
+      title:"Q: Employees earning more than their dept average", badge:"Most Asked", bc:"b-red",
+      body:`
+<div class="lbl">Why this needs a window function (not GROUP BY)</div>
+<div class="para">You need each employee's salary AND their dept average in the same row. GROUP BY loses the employee detail. Window function keeps both.</div>
+<div class="code">WITH dept_avgs AS (
+  SELECT *,
+    AVG(salary) OVER (PARTITION BY dept) AS dept_avg
+  FROM employees
+)
+SELECT name, dept, salary,
+       ROUND(dept_avg, 0) AS dept_avg,
+       ROUND(salary - dept_avg, 0) AS above_avg_by
+FROM dept_avgs
+WHERE salary > dept_avg
+ORDER BY above_avg_by DESC;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import avg, round as round_
+w = Window.partitionBy("dept")
+
+df.withColumn("dept_avg", avg("salary").over(w)) \
+  .filter(col("salary") > col("dept_avg")) \
+  .withColumn("above_by", round_(col("salary")-col("dept_avg"),0))</div>
+<div class="table-wrap">
+<table>
+<tr><th>name</th><th>dept</th><th>salary</th><th>dept_avg</th><th>above_by</th></tr>
+<tr class="hl"><td>Bob</td><td>IT</td><td>80000</td><td>75000</td><td>+5000</td></tr>
+<tr><td>Alice</td><td>IT</td><td>70000</td><td>75000</td><td>below</td></tr>
+<tr class="hl"><td>Dave</td><td>HR</td><td>60000</td><td>55000</td><td>+5000</td></tr>
+</table>
+</div>`
+    },
+    {
+      title:"Q: Salary as percentage of department total", badge:"Percent of Total", bc:"b-green",
+      body:`
+<div class="lbl">Each employee's salary as % of their dept total</div>
+<div class="code">SELECT name, dept, salary,
+  SUM(salary) OVER (PARTITION BY dept) AS dept_total,
+  ROUND(100.0 * salary /
+    SUM(salary) OVER (PARTITION BY dept), 1) AS pct_of_dept
+FROM employees;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("dept")
+df.withColumn("dept_total", sum_("salary").over(w)) \
+  .withColumn("pct_of_dept",
+    round_(100*col("salary")/col("dept_total"), 1))</div>
+<div class="insight">This is a very common reporting query. "What % of dept budget does each employee's salary represent?" — same pattern, just change the column.</div>`
+    },
+    {
+      title:"Q: Count of employees earning more than each person in their dept", badge:"Self Compare", bc:"b-amber",
+      body:`
+<div class="lbl">For each employee — how many colleagues earn more?</div>
+<div class="code">-- Using SUM as window function with CASE
+SELECT name, dept, salary,
+  SUM(CASE WHEN salary > e.salary THEN 1 ELSE 0 END)
+    OVER (PARTITION BY dept) AS how_many_earn_more
+FROM employees e;</div>
+<div class="lbl">PySpark — self join approach (cleaner)</div>
+<div class="code">df.alias("a").join(
+    df.alias("b"),
+    (col("a.dept") == col("b.dept")) &
+    (col("b.salary") > col("a.salary"))
+  ) \
+  .groupBy("a.name","a.dept","a.salary") \
+  .agg(count("b.emp_id").alias("earn_more"))</div>
+<div class="tip">This is a hard question. If you get stuck in an interview, say: "I'd approach this with a self-join — join the table to itself on same dept, filter where the other person's salary is higher, then count."</div>`
+    }
+  ]
+},
+{
+  id:"percentile", label:"PERCENT_RANK & NTILE",
+  title:"PERCENT_RANK, CUME_DIST and NTILE",
+  sub:"Used for percentile ranking, bucketing employees into groups, and distribution analysis.",
+  cards:[
+    {
+      title:"PERCENT_RANK vs CUME_DIST vs NTILE", badge:"Concept", bc:"b-blue",
+      body:`
+<div class="think">
+  <div class="think-row"><span class="think-q">PERCENT_RANK</span><span class="think-a">Where does this row rank as a % of all rows? 0 to 1. First row = 0, last = 1. Formula: (rank-1)/(total rows-1)</span></div>
+  <div class="think-row"><span class="think-q">CUME_DIST</span><span class="think-a">What % of rows have value ≤ this row? Always > 0. Last row = 1. Formula: rank/total rows</span></div>
+  <div class="think-row"><span class="think-q">NTILE(N)</span><span class="think-a">Divides rows into N equal buckets. NTILE(4) = quartiles (Q1/Q2/Q3/Q4). NTILE(100) = percentiles.</span></div>
+</div>
+<div class="table-wrap">
+<table>
+<tr><th>name</th><th>salary</th><th>PERCENT_RANK</th><th>CUME_DIST</th><th>NTILE(4)</th></tr>
+<tr><td>Eve</td><td>50000</td><td>0.00</td><td>0.20</td><td>1</td></tr>
+<tr><td>Dave</td><td>60000</td><td>0.25</td><td>0.40</td><td>1</td></tr>
+<tr><td>Alice</td><td>70000</td><td>0.50</td><td>0.60</td><td>2</td></tr>
+<tr><td>Bob</td><td>80000</td><td>0.75</td><td>0.80</td><td>3</td></tr>
+<tr><td>Carol</td><td>90000</td><td>1.00</td><td>1.00</td><td>4</td></tr>
+</table>
+</div>`
+    },
+    {
+      title:"Q: Assign employees to salary quartiles using NTILE", badge:"Quartiles", bc:"b-green",
+      body:`
+<div class="lbl">NTILE(4) = split into 4 equal groups</div>
+<div class="code">SELECT name, salary,
+  NTILE(4) OVER (ORDER BY salary) AS quartile,
+  CASE NTILE(4) OVER (ORDER BY salary)
+    WHEN 1 THEN 'Bottom 25%'
+    WHEN 2 THEN 'Lower-mid 25%'
+    WHEN 3 THEN 'Upper-mid 25%'
+    WHEN 4 THEN 'Top 25%'
+  END AS salary_band
+FROM employees;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import ntile, when
+w = Window.orderBy("salary")
+df.withColumn("quartile", ntile(4).over(w)) \
+  .withColumn("band",
+    when(col("quartile")==1,"Bottom 25%")
+    .when(col("quartile")==2,"Lower-mid 25%")
+    .when(col("quartile")==3,"Upper-mid 25%")
+    .otherwise("Top 25%"))</div>
+<div class="tip">NTILE(10) = deciles. NTILE(100) = percentiles. Interviewers sometimes ask "put customers into 10 equal groups by spend" — that's NTILE(10).</div>`
+    },
+    {
+      title:"Q: Find employees in the top 10% salary bracket", badge:"Top 10%", bc:"b-amber",
+      body:`
+<div class="lbl">Use PERCENT_RANK >= 0.9 to find top 10%</div>
+<div class="code">WITH pct AS (
+  SELECT name, salary,
+    PERCENT_RANK() OVER (ORDER BY salary) AS pct_rank
+  FROM employees
+)
+SELECT name, salary,
+  ROUND(pct_rank * 100, 1) AS percentile
+FROM pct
+WHERE pct_rank >= 0.9;   -- top 10%</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import percent_rank
+w = Window.orderBy("salary")
+df.withColumn("pct_rank", percent_rank().over(w)) \
+  .filter(col("pct_rank") >= 0.9) \
+  .withColumn("percentile", round_(col("pct_rank")*100, 1))</div>
+<div class="insight">Real use case: "Find customers in the top 10% by spend to target for VIP program." Same query, just change salary to spend and employees to customers.</div>`
+    }
+  ]
+},
+{
+  id:"practice", label:"Practice Questions",
+  title:"Practice questions — try before expanding",
+  sub:"These are real interview questions. Try to write the query yourself first. Label the function you need, then check the answer.",
+  cards:[
+    {
+      title:"P1: For each order, show the previous order amount for the same customer", badge:"LAG", bc:"b-blue",
+      body:`
+<div class="lbl">Think first → function needed: LAG, PARTITION BY customer</div>
+<div class="code">SELECT customer_id, order_date, amount,
+  LAG(amount) OVER (
+    PARTITION BY customer_id
+    ORDER BY order_date
+  ) AS prev_order_amount
+FROM orders;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("customer_id").orderBy("order_date")
+df.withColumn("prev_amount", lag("amount").over(w))</div>`
+    },
+    {
+      title:"P2: Show each product's sales and the best-selling product's sales in that category", badge:"MAX as Window", bc:"b-green",
+      body:`
+<div class="lbl">Think first → MAX as window function, PARTITION BY category</div>
+<div class="code">SELECT product, category, sales,
+  MAX(sales) OVER (PARTITION BY category) AS category_best,
+  MAX(sales) OVER (PARTITION BY category) - sales AS gap_to_best
+FROM products;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("category")
+df.withColumn("category_best", max("sales").over(w)) \
+  .withColumn("gap_to_best", col("category_best")-col("sales"))</div>`
+    },
+    {
+      title:"P3: Find users whose current order is larger than their own average order", badge:"AVG as Window", bc:"b-amber",
+      body:`
+<div class="lbl">Think first → AVG window per user, then filter where current > avg</div>
+<div class="code">WITH user_avgs AS (
+  SELECT *,
+    AVG(amount) OVER (PARTITION BY user_id) AS user_avg
+  FROM orders
+)
+SELECT user_id, order_id, amount, ROUND(user_avg,2) AS user_avg
+FROM user_avgs
+WHERE amount > user_avg;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("user_id")
+df.withColumn("user_avg", avg("amount").over(w)) \
+  .filter(col("amount") > col("user_avg"))</div>`
+    },
+    {
+      title:"P4: For each employee, show the salary difference from the highest earner in their dept", badge:"MAX + diff", bc:"b-purple",
+      body:`
+<div class="lbl">Think first → MAX window per dept, subtract</div>
+<div class="code">SELECT name, dept, salary,
+  MAX(salary) OVER (PARTITION BY dept) AS dept_max,
+  MAX(salary) OVER (PARTITION BY dept) - salary AS gap_from_top
+FROM employees
+ORDER BY dept, gap_from_top;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("dept")
+df.withColumn("dept_max", max("salary").over(w)) \
+  .withColumn("gap_from_top", col("dept_max")-col("salary")) \
+  .orderBy("dept","gap_from_top")</div>`
+    },
+    {
+      title:"P5: Assign a medal (Gold/Silver/Bronze) to top 3 per category by sales", badge:"DENSE_RANK + CASE", bc:"b-red",
+      body:`
+<div class="lbl">Think first → DENSE_RANK per category, then CASE on rank</div>
+<div class="code">WITH ranked AS (
+  SELECT product, category, sales,
+    DENSE_RANK() OVER (
+      PARTITION BY category ORDER BY sales DESC
+    ) AS rnk
+  FROM products
+)
+SELECT product, category, sales,
+  CASE rnk
+    WHEN 1 THEN 'Gold'
+    WHEN 2 THEN 'Silver'
+    WHEN 3 THEN 'Bronze'
+  END AS medal
+FROM ranked
+WHERE rnk <= 3;</div>
+<div class="lbl">PySpark</div>
+<div class="code">w = Window.partitionBy("category").orderBy(col("sales").desc())
+df.withColumn("rnk", dense_rank().over(w)) \
+  .filter(col("rnk") <= 3) \
+  .withColumn("medal",
+    when(col("rnk")==1,"Gold")
+    .when(col("rnk")==2,"Silver")
+    .otherwise("Bronze"))</div>
+<div class="insight">This combines three things: DENSE_RANK + PARTITION BY + CASE. It's a favourite final question in interviews — shows you can combine window functions with conditional logic.</div>`
+    },
+    {
+      title:"P6: Show running total that resets every month", badge:"Partitioned Running Total", bc:"b-amber",
+      body:`
+<div class="lbl">Think first → PARTITION BY month + running total frame</div>
+<div class="code">SELECT order_date, amount,
+  DATE_FORMAT(order_date,'%Y-%m') AS month,
+  SUM(amount) OVER (
+    PARTITION BY DATE_FORMAT(order_date,'%Y-%m')
+    ORDER BY order_date
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS monthly_running_total
+FROM orders;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import date_format
+
+df = df.withColumn("month", date_format("order_date","yyyy-MM"))
+
+w = Window.partitionBy("month") \
+          .orderBy("order_date") \
+          .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+
+df.withColumn("monthly_running_total", sum_("amount").over(w))</div>
+<div class="tip">PARTITION BY the time period (month/week/year) makes any running calculation reset at the start of each period. This is a very practical pattern for financial reports.</div>`
+    }
+  ]
+}
+];
+
+function buildTabs(){
+  const t=document.getElementById("tabs");
+  data.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(i===0?" active":"");
+    b.textContent=s.label;
+    b.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      document.querySelectorAll(".sec").forEach(x=>x.classList.remove("active"));
+      document.getElementById("s-"+s.id).classList.add("active");
+    };
+    t.appendChild(b);
+  });
+}
+function buildSecs(){
+  const c=document.getElementById("secs");
+  data.forEach((s,i)=>{
+    const sec=document.createElement("div");
+    sec.className="sec"+(i===0?" active":"");
+    sec.id="s-"+s.id;
+    sec.innerHTML=`<div class="sec-title">${s.title}</div><div class="sec-sub">${s.sub}</div><div class="cards">${s.cards.map(buildCard).join("")}</div>`;
+    c.appendChild(sec);
+  });
+}
+function buildCard(p){
+  return `<div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="badge ${p.bc}">${p.badge}</span>
+      <span class="card-title">${p.title}</span>
+      <span class="chev">▼</span>
+    </div>
+    <div class="card-body">${p.body}</div>
+  </div>`;
+}
+function toggle(h){
+  const b=h.nextElementSibling,c=h.querySelector(".chev");
+  b.classList.toggle("open");c.classList.toggle("open");
+}
+buildTabs();buildSecs();
+</script>

@@ -1,0 +1,553 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.tab{padding:7px 16px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.tab.active,.tab:hover{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.section{display:none}.section.active{display:block}
+.sec-title{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.6}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer}
+.card-head:hover{background:var(--color-background-secondary)}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.b-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.b-green{background:var(--color-background-success);color:var(--color-text-success)}
+.b-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.b-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.chev{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.chev.open{transform:rotate(180deg)}
+.card-body{display:none;padding:4px 16px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.card-body.open{display:block}
+.lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+.para{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.code{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.7;margin-bottom:8px}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.insight{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.info{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.think{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin:8px 0}
+.think-row{display:flex;gap:10px;margin-bottom:6px;font-size:13px;align-items:flex-start}
+.think-row:last-child{margin-bottom:0}
+.think-q{font-weight:500;color:var(--color-text-primary);min-width:90px;font-size:12px}
+.think-a{color:var(--color-text-secondary);line-height:1.6}
+.sample{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin:8px 0;font-family:var(--font-mono);font-size:12px;line-height:1.8;color:var(--color-text-secondary)}
+.sample b{color:var(--color-text-primary)}
+</style>
+
+<div class="wrap">
+<div class="tabs" id="tabs"></div>
+<div id="secs"></div>
+</div>
+
+<script>
+const data = [
+{
+  id:"understand", label:"Understand First",
+  title:"How to read these questions — the 3 patterns",
+  sub:"Before writing any code, identify which pattern the question belongs to. Every date-based question is one of these three.",
+  cards:[
+    {
+      title:"The 3 patterns — identify before you code", badge:"Must Read", bc:"b-blue",
+      body:`
+<div class="lbl">Pattern A — Activity in a time window</div>
+<div class="para">Keywords: "in last X days", "at least once in", "more than N times in"<br>
+Question is asking: did this user do something <b>within a date range?</b><br>
+Tool: <b>WHERE date >= TODAY - X</b> then GROUP BY + HAVING</div>
+
+<div class="lbl">Pattern B — Absence / inactivity</div>
+<div class="para">Keywords: "not logged in", "not contacted", "no order in", "haven't done X"<br>
+Question is asking: is this user <b>missing from recent activity?</b><br>
+Tool: <b>LEFT JOIN + IS NULL</b> or <b>NOT IN subquery</b> or <b>left_anti join</b></div>
+
+<div class="lbl">Pattern C — Consecutive days</div>
+<div class="para">Keywords: "consecutive days", "N days in a row", "streak"<br>
+Question is asking: did this user do something on <b>back-to-back days?</b><br>
+Tool: <b>ROW_NUMBER trick</b> — date minus row number = same value for consecutive rows</div>
+
+<div class="insight">The moment you see the keyword — stop and label the pattern. Then apply the template. That's the whole skill.</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Q1 logged consecutive days</span><span class="think-a">→ Pattern C (consecutive)</span></div>
+  <div class="think-row"><span class="think-q">Q2 orders 3 consecutive days</span><span class="think-a">→ Pattern C (consecutive)</span></div>
+  <div class="think-row"><span class="think-q">Q3 not logged in 3 days</span><span class="think-a">→ Pattern B (absence)</span></div>
+  <div class="think-row"><span class="think-q">Q4 not logged 2 consecutive days</span><span class="think-a">→ Pattern B (absence) — simpler than it looks</span></div>
+  <div class="think-row"><span class="think-q">Q5 visited > 3 times in 7 days</span><span class="think-a">→ Pattern A (activity window)</span></div>
+  <div class="think-row"><span class="think-q">Q6 purchased once in 30 days</span><span class="think-a">→ Pattern A (activity window)</span></div>
+  <div class="think-row"><span class="think-q">Q7 not contacted in 14 days</span><span class="think-a">→ Pattern B (absence)</span></div>
+</div>`
+    }
+  ]
+},
+{
+  id:"patternA", label:"Pattern A — Activity Window",
+  title:"Pattern A — Activity in a time window",
+  sub:"Did this user do something within the last X days? Simple date filter + GROUP BY + HAVING. This is the easiest of the three patterns.",
+  cards:[
+    {
+      title:"How to think about it", badge:"Concept", bc:"b-blue",
+      body:`
+<div class="lbl">The mental model — 3 questions to ask yourself</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">1. What table?</span><span class="think-a">logins / orders / visits — wherever the activity is recorded</span></div>
+  <div class="think-row"><span class="think-q">2. What window?</span><span class="think-a">last 7 days? last 30 days? → that becomes your WHERE clause</span></div>
+  <div class="think-row"><span class="think-q">3. What threshold?</span><span class="think-a">> 3 times? at least once? → that becomes your HAVING clause</span></div>
+</div>
+<div class="lbl">Template — always the same shape</div>
+<div class="code">SELECT user_id
+FROM activity_table
+WHERE activity_date >= CURRENT_DATE - N   -- the window
+GROUP BY user_id
+HAVING COUNT(*) [condition];              -- the threshold</div>
+<div class="tip">HAVING COUNT(*) > 0  = at least once
+HAVING COUNT(*) > 3  = more than 3 times
+HAVING COUNT(*) >= 3 = 3 or more times
+Know the difference — interviews test this.</div>`
+    },
+    {
+      title:"Q5 — Users who visited > 3 times in last 7 days", badge:"Q5", bc:"b-green",
+      body:`
+<div class="lbl">Break it down first</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Table</span><span class="think-a">visits (user_id, visit_date)</span></div>
+  <div class="think-row"><span class="think-q">Window</span><span class="think-a">last 7 days → visit_date >= TODAY - 7</span></div>
+  <div class="think-row"><span class="think-q">Threshold</span><span class="think-a">> 3 times → HAVING COUNT(*) > 3</span></div>
+</div>
+<div class="lbl">Sample data</div>
+<div class="sample">
+user_id | visit_date
+--------|----------
+<b>U1      | 2024-01-01   ← within 7 days</b>
+<b>U1      | 2024-01-02   ← within 7 days</b>
+<b>U1      | 2024-01-03   ← within 7 days</b>
+<b>U1      | 2024-01-04   ← within 7 days  → U1 has 4 visits ✓</b>
+U2      | 2024-01-01   ← within 7 days
+U2      | 2024-01-02   ← within 7 days   → U2 has 2 visits ✗
+</div>
+<div class="lbl">SQL</div>
+<div class="code">SELECT user_id, COUNT(*) AS visit_count
+FROM visits
+WHERE visit_date >= CURRENT_DATE - 7
+GROUP BY user_id
+HAVING COUNT(*) > 3;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import current_date, datediff, count
+
+df.filter(datediff(current_date(), col("visit_date")) <= 7) \
+  .groupBy("user_id") \
+  .agg(count("*").alias("visit_count")) \
+  .filter(col("visit_count") > 3)</div>`
+    },
+    {
+      title:"Q6 — Users who purchased at least once in last 30 days", badge:"Q6", bc:"b-green",
+      body:`
+<div class="lbl">Break it down</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Table</span><span class="think-a">orders (user_id, order_date)</span></div>
+  <div class="think-row"><span class="think-q">Window</span><span class="think-a">last 30 days → order_date >= TODAY - 30</span></div>
+  <div class="think-row"><span class="think-q">Threshold</span><span class="think-a">at least once → HAVING COUNT(*) >= 1 (or just use DISTINCT)</span></div>
+</div>
+<div class="lbl">SQL — two ways, same result</div>
+<div class="code">-- Way 1: GROUP BY + HAVING
+SELECT user_id
+FROM orders
+WHERE order_date >= CURRENT_DATE - 30
+GROUP BY user_id
+HAVING COUNT(*) >= 1;
+
+-- Way 2: cleaner — just DISTINCT (since any match = "at least once")
+SELECT DISTINCT user_id
+FROM orders
+WHERE order_date >= CURRENT_DATE - 30;</div>
+<div class="lbl">PySpark</div>
+<div class="code">df.filter(datediff(current_date(), col("order_date")) <= 30) \
+  .select("user_id") \
+  .distinct()</div>
+<div class="insight">"At least once" = DISTINCT is enough. You don't need GROUP BY + HAVING for this case. Simpler = better in interviews.</div>`
+    }
+  ]
+},
+{
+  id:"patternB", label:"Pattern B — Absence",
+  title:"Pattern B — Absence / inactivity",
+  sub:"Is this user MISSING from recent activity? The trick is: start from the users table, then LEFT JOIN to activity. Users with no match = inactive.",
+  cards:[
+    {
+      title:"How to think about it", badge:"Concept", bc:"b-blue",
+      body:`
+<div class="lbl">The mental model — think of it as two lists</div>
+<div class="para">List 1: ALL users<br>
+List 2: users who were ACTIVE in the window<br><br>
+Answer = List 1 MINUS List 2</div>
+<div class="lbl">Two ways to get "List 1 minus List 2"</div>
+<div class="code">-- Way 1: LEFT JOIN + IS NULL (most common in interviews)
+SELECT u.user_id
+FROM users u
+LEFT JOIN activity a
+  ON u.user_id = a.user_id
+  AND a.activity_date >= CURRENT_DATE - N
+WHERE a.user_id IS NULL;   -- NULL means no match = inactive
+
+-- Way 2: NOT IN subquery
+SELECT user_id FROM users
+WHERE user_id NOT IN (
+  SELECT user_id FROM activity
+  WHERE activity_date >= CURRENT_DATE - N
+);</div>
+<div class="lbl">PySpark — left_anti join</div>
+<div class="code">active = activity_df \
+  .filter(datediff(current_date(), col("activity_date")) <= N) \
+  .select("user_id").distinct()
+
+# left_anti = keep rows from left that have NO match on right
+users_df.join(active, "user_id", "left_anti")</div>
+<div class="tip">LEFT JOIN + IS NULL = left_anti join in PySpark. They are the exact same thing. Know both — interviewers ask for both.</div>`
+    },
+    {
+      title:"Q3 — Users who have not logged in for last 3 days", badge:"Q3", bc:"b-amber",
+      body:`
+<div class="lbl">Break it down</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Pattern</span><span class="think-a">B — absence. "Not logged in" = missing from recent logins</span></div>
+  <div class="think-row"><span class="think-q">Window</span><span class="think-a">last 3 days</span></div>
+  <div class="think-row"><span class="think-q">Logic</span><span class="think-a">ALL users MINUS users who logged in last 3 days</span></div>
+</div>
+<div class="lbl">Sample data</div>
+<div class="sample">
+users:  U1, U2, U3, U4
+logins in last 3 days: U1, U3
+Answer: U2, U4  (not in recent logins)
+</div>
+<div class="lbl">SQL</div>
+<div class="code">SELECT u.user_id
+FROM users u
+LEFT JOIN logins l
+  ON u.user_id = l.user_id
+  AND l.login_date >= CURRENT_DATE - 3
+WHERE l.user_id IS NULL;</div>
+<div class="lbl">PySpark</div>
+<div class="code">recent_logins = logins_df \
+  .filter(datediff(current_date(), col("login_date")) <= 3) \
+  .select("user_id").distinct()
+
+users_df.join(recent_logins, "user_id", "left_anti")</div>`
+    },
+    {
+      title:"Q4 — Users not logged in for 2 consecutive days", badge:"Q4", bc:"b-amber",
+      body:`
+<div class="lbl">This sounds like Pattern C but it's actually Pattern B — here's why</div>
+<div class="para">"Not logged in for 2 consecutive days" really means: there exist 2 days in a row where the user has NO login. The simplest way to read this is: the user hasn't logged in at all in the last 2 days.</div>
+<div class="lbl">SQL</div>
+<div class="code">-- Simplest correct interpretation:
+-- User has no login in the last 2 days
+SELECT u.user_id
+FROM users u
+LEFT JOIN logins l
+  ON u.user_id = l.user_id
+  AND l.login_date >= CURRENT_DATE - 2
+WHERE l.user_id IS NULL;</div>
+<div class="lbl">If they mean "had a streak of 2 days without login" (gap detection)</div>
+<div class="code">-- Find users where gap between consecutive logins > 1 day
+WITH gaps AS (
+  SELECT user_id, login_date,
+    LEAD(login_date) OVER (
+      PARTITION BY user_id ORDER BY login_date
+    ) AS next_login,
+    DATEDIFF(
+      LEAD(login_date) OVER (PARTITION BY user_id ORDER BY login_date),
+      login_date
+    ) AS gap_days
+  FROM logins
+)
+SELECT DISTINCT user_id
+FROM gaps
+WHERE gap_days >= 2;</div>
+<div class="tip">In interviews, always clarify: "Do you mean no login in the last 2 days, or a gap of 2 days somewhere in their history?" The clarification itself shows seniority.</div>`
+    },
+    {
+      title:"Q7 — Users not contacted in last 14 days", badge:"Q7", bc:"b-amber",
+      body:`
+<div class="lbl">Exact same pattern as Q3 — just a different table and window</div>
+<div class="code">-- SQL
+SELECT u.user_id
+FROM users u
+LEFT JOIN contacts c
+  ON u.user_id = c.user_id
+  AND c.contact_date >= CURRENT_DATE - 14
+WHERE c.user_id IS NULL;</div>
+<div class="code">-- PySpark
+recent_contacts = contacts_df \
+  .filter(datediff(current_date(), col("contact_date")) <= 14) \
+  .select("user_id").distinct()
+
+users_df.join(recent_contacts, "user_id", "left_anti")</div>
+<div class="insight">Once you know Pattern B, Q3, Q4, and Q7 are all the same query. Just swap the table name and the number of days. That's why learning patterns beats memorizing questions.</div>`
+    }
+  ]
+},
+{
+  id:"patternC", label:"Pattern C — Consecutive",
+  title:"Pattern C — Consecutive days (the tricky one)",
+  sub:"The hardest pattern. The trick: if you subtract the row number from the date, consecutive dates give the SAME value. Group by that value — if count >= N, user has N consecutive days.",
+  cards:[
+    {
+      title:"The core trick — date minus row number", badge:"Key Concept", bc:"b-purple",
+      body:`
+<div class="lbl">Why does date - row_number work?</div>
+<div class="para">If dates are consecutive (no gaps), they increase by 1 each day. Row numbers also increase by 1. So date - row_number stays the same. The moment there's a gap, the value changes.</div>
+<div class="sample">
+user | login_date  | row_num | date - row_num
+-----|-------------|---------|---------------
+U1   | 2024-01-01  |    1    | 2023-12-31  ← same group
+U1   | 2024-01-02  |    2    | 2023-12-31  ← same group
+U1   | 2024-01-03  |    3    | 2023-12-31  ← same group  → 3 in a row!
+U1   | 2024-01-07  |    4    | 2024-01-03  ← new group   → streak broken
+U1   | 2024-01-08  |    5    | 2024-01-03  ← new group
+</div>
+<div class="lbl">So the steps are always</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Step 1</span><span class="think-a">Deduplicate — one row per user per day (in case of multiple logins)</span></div>
+  <div class="think-row"><span class="think-q">Step 2</span><span class="think-a">Add ROW_NUMBER partitioned by user, ordered by date</span></div>
+  <div class="think-row"><span class="think-q">Step 3</span><span class="think-a">Calculate date - row_number → this is your "streak group"</span></div>
+  <div class="think-row"><span class="think-q">Step 4</span><span class="think-a">GROUP BY user + streak group, COUNT rows</span></div>
+  <div class="think-row"><span class="think-q">Step 5</span><span class="think-a">Filter where COUNT >= N (your required consecutive days)</span></div>
+</div>
+<div class="tip">Step 1 (dedup) is the most commonly forgotten step. If a user logs in twice on the same day, your row numbers break. Always dedup to DATE level first.</div>`
+    },
+    {
+      title:"Q1 — Users who logged on consecutive days (any streak)", badge:"Q1", bc:"b-green",
+      body:`
+<div class="lbl">SQL — full solution with every step commented</div>
+<div class="code">WITH daily_logins AS (
+  -- Step 1: one row per user per day
+  SELECT user_id, CAST(login_date AS DATE) AS login_day
+  FROM logins
+  GROUP BY user_id, CAST(login_date AS DATE)
+),
+with_rownum AS (
+  -- Step 2 & 3: add row number, calculate streak group
+  SELECT user_id, login_day,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id ORDER BY login_day
+    ) AS rn,
+    DATE_SUB(login_day,
+      ROW_NUMBER() OVER (
+        PARTITION BY user_id ORDER BY login_day
+      )
+    ) AS streak_group
+  FROM daily_logins
+),
+streaks AS (
+  -- Step 4: count consecutive days per streak group
+  SELECT user_id, streak_group, COUNT(*) AS consecutive_days
+  FROM with_rownum
+  GROUP BY user_id, streak_group
+)
+-- Step 5: any streak of 2+ days = "logged on consecutive days"
+SELECT DISTINCT user_id
+FROM streaks
+WHERE consecutive_days >= 2;</div>
+<div class="lbl">PySpark</div>
+<div class="code">from pyspark.sql.functions import *
+from pyspark.sql.window import Window
+
+# Step 1: dedup to one row per user per day
+daily = df.withColumn("login_day", to_date("login_date")) \
+          .select("user_id","login_day").distinct()
+
+# Step 2+3: row number and streak group
+w = Window.partitionBy("user_id").orderBy("login_day")
+daily = daily.withColumn("rn", row_number().over(w)) \
+             .withColumn("streak_group",
+                 date_sub("login_day", col("rn").cast("int")))
+
+# Step 4+5: group and filter
+daily.groupBy("user_id","streak_group") \
+     .agg(count("*").alias("consec_days")) \
+     .filter(col("consec_days") >= 2) \
+     .select("user_id").distinct()</div>`
+    },
+    {
+      title:"Q2 — Users who placed orders on 3 consecutive days", badge:"Q2", bc:"b-green",
+      body:`
+<div class="lbl">Exactly the same pattern — just change table and threshold to 3</div>
+<div class="code">WITH daily_orders AS (
+  SELECT user_id, CAST(order_date AS DATE) AS order_day
+  FROM orders
+  GROUP BY user_id, CAST(order_date AS DATE)
+),
+with_rownum AS (
+  SELECT user_id, order_day,
+    DATE_SUB(order_day,
+      ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY order_day)
+    ) AS streak_group
+  FROM daily_orders
+),
+streaks AS (
+  SELECT user_id, streak_group, COUNT(*) AS consecutive_days
+  FROM with_rownum
+  GROUP BY user_id, streak_group
+)
+SELECT DISTINCT user_id, MAX(consecutive_days) AS longest_streak
+FROM streaks
+WHERE consecutive_days >= 3   -- only change from Q1
+GROUP BY user_id;</div>
+<div class="insight">Compare Q1 and Q2 — the only differences are: table name (logins vs orders), date column name, and the threshold (>= 2 vs >= 3). The structure is identical. This is what "learning patterns" means.</div>`
+    },
+    {
+      title:"Practice variations — try these yourself", badge:"Practice", bc:"b-amber",
+      body:`
+<div class="lbl">Same pattern, different wording — solve these using the 5-step template</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Variation 1</span><span class="think-a">Find users with a login streak of exactly 7 days (not more, not less)</span></div>
+  <div class="think-row"><span class="think-q">Variation 2</span><span class="think-a">Find users whose longest streak ever is at least 5 days</span></div>
+  <div class="think-row"><span class="think-q">Variation 3</span><span class="think-a">Find users who bought something on 3 consecutive days in the last 30 days</span></div>
+  <div class="think-row"><span class="think-q">Variation 4</span><span class="think-a">For each user, show their longest consecutive login streak</span></div>
+</div>
+<div class="lbl">Hints</div>
+<div class="para">Variation 1: use HAVING COUNT(*) = 7 instead of >= 7<br>
+Variation 2: use MAX(consecutive_days) in outer query<br>
+Variation 3: combine Pattern A (last 30 days filter) + Pattern C (streak logic) — filter the data first, then run streak detection<br>
+Variation 4: SELECT user_id, MAX(consecutive_days) — no filter needed</div>
+<div class="tip">Variation 3 is a real interview question. It combines two patterns. Break it into: Step 1 — filter last 30 days. Step 2 — run the full consecutive days logic on that filtered data.</div>`
+    }
+  ]
+},
+{
+  id:"combined", label:"Combined Questions",
+  title:"Combined — multiple conditions together",
+  sub:"Real interview questions often combine patterns. Break them into individual conditions first, solve each separately, then combine with JOIN or AND.",
+  cards:[
+    {
+      title:"Framework: break → solve → combine", badge:"Approach", bc:"b-blue",
+      body:`
+<div class="lbl">When you see multiple conditions — do this</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Step 1</span><span class="think-a">List each condition separately</span></div>
+  <div class="think-row"><span class="think-q">Step 2</span><span class="think-a">Label each as Pattern A, B, or C</span></div>
+  <div class="think-row"><span class="think-q">Step 3</span><span class="think-a">Write a CTE for each condition</span></div>
+  <div class="think-row"><span class="think-q">Step 4</span><span class="think-a">JOIN the CTEs together on user_id</span></div>
+</div>
+<div class="insight">Every combined question becomes easy once you split it. The skill is recognizing that it's a combination problem — not one complex problem.</div>`
+    },
+    {
+      title:"Find users: visited > 3 times (7d) + purchased once (30d) + not contacted (14d)", badge:"Combined", bc:"b-purple",
+      body:`
+<div class="lbl">Break it down</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Condition 1</span><span class="think-a">visited > 3 times in 7 days → Pattern A</span></div>
+  <div class="think-row"><span class="think-q">Condition 2</span><span class="think-a">purchased at least once in 30 days → Pattern A</span></div>
+  <div class="think-row"><span class="think-q">Condition 3</span><span class="think-a">NOT contacted in 14 days → Pattern B</span></div>
+  <div class="think-row"><span class="think-q">Combine</span><span class="think-a">user must satisfy ALL three → JOIN conditions 1+2, then exclude condition 3</span></div>
+</div>
+<div class="lbl">SQL — one CTE per condition, then combine</div>
+<div class="code">WITH frequent_visitors AS (
+  -- Condition 1: Pattern A
+  SELECT user_id
+  FROM visits
+  WHERE visit_date >= CURRENT_DATE - 7
+  GROUP BY user_id
+  HAVING COUNT(*) > 3
+),
+recent_buyers AS (
+  -- Condition 2: Pattern A
+  SELECT DISTINCT user_id
+  FROM orders
+  WHERE order_date >= CURRENT_DATE - 30
+),
+recently_contacted AS (
+  -- Condition 3: Pattern B (we'll EXCLUDE these)
+  SELECT DISTINCT user_id
+  FROM contacts
+  WHERE contact_date >= CURRENT_DATE - 14
+)
+-- Combine: must be in 1 AND 2 but NOT in 3
+SELECT fv.user_id
+FROM frequent_visitors fv
+INNER JOIN recent_buyers rb ON fv.user_id = rb.user_id
+LEFT JOIN recently_contacted rc ON fv.user_id = rc.user_id
+WHERE rc.user_id IS NULL;</div>
+<div class="lbl">PySpark</div>
+<div class="code">frequent = visits_df \
+  .filter(datediff(current_date(),"visit_date") <= 7) \
+  .groupBy("user_id").count() \
+  .filter(col("count") > 3).select("user_id")
+
+buyers = orders_df \
+  .filter(datediff(current_date(),"order_date") <= 30) \
+  .select("user_id").distinct()
+
+contacted = contacts_df \
+  .filter(datediff(current_date(),"contact_date") <= 14) \
+  .select("user_id").distinct()
+
+# Inner join conditions 1 and 2, then anti-join condition 3
+frequent.join(buyers,"user_id") \
+        .join(contacted,"user_id","left_anti")</div>`
+    },
+    {
+      title:"More practice questions to try yourself", badge:"Practice", bc:"b-amber",
+      body:`
+<div class="lbl">Label the pattern, then solve</div>
+<div class="think">
+  <div class="think-row"><span class="think-q">Practice 1</span><span class="think-a">Find users who logged in on 3 consecutive days AND made a purchase in the last 7 days</span></div>
+  <div class="think-row"><span class="think-q">Practice 2</span><span class="think-a">Find users who have not placed an order in 6 months but visited the site last week</span></div>
+  <div class="think-row"><span class="think-q">Practice 3</span><span class="think-a">Find users whose last login was more than 30 days ago</span></div>
+  <div class="think-row"><span class="think-q">Practice 4</span><span class="think-a">Find users who visited every day for the last 7 days (full 7-day streak)</span></div>
+  <div class="think-row"><span class="think-q">Practice 5</span><span class="think-a">Find users who made more than 2 orders on the same day</span></div>
+</div>
+<div class="lbl">Answers — pattern labels</div>
+<div class="para">P1: C + A combined → streak CTE first, then join with Pattern A filter<br>
+P2: B + A combined → NOT IN recent orders, AND IN recent visits<br>
+P3: B — absence. MAX(login_date) < TODAY - 30<br>
+P4: C — streak = 7, AND latest day in streak = today<br>
+P5: A but grouped by user+date → HAVING COUNT(*) > 2</div>`
+    }
+  ]
+}
+];
+
+function buildTabs(){
+  const t=document.getElementById("tabs");
+  data.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(i===0?" active":"");
+    b.textContent=s.label;
+    b.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+      document.getElementById("s-"+s.id).classList.add("active");
+    };
+    t.appendChild(b);
+  });
+}
+function buildSecs(){
+  const c=document.getElementById("secs");
+  data.forEach((s,i)=>{
+    const sec=document.createElement("div");
+    sec.className="section"+(i===0?" active":"");
+    sec.id="s-"+s.id;
+    sec.innerHTML=`<div class="sec-title">${s.title}</div><div class="sec-sub">${s.sub}</div><div class="cards">${s.cards.map(buildCard).join("")}</div>`;
+    c.appendChild(sec);
+  });
+}
+function buildCard(p){
+  return `<div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="badge ${p.bc}">${p.badge}</span>
+      <span class="card-title">${p.title}</span>
+      <span class="chev">▼</span>
+    </div>
+    <div class="card-body">${p.body}</div>
+  </div>`;
+}
+function toggle(h){
+  const b=h.nextElementSibling,c=h.querySelector(".chev");
+  b.classList.toggle("open");c.classList.toggle("open");
+}
+buildTabs();buildSecs();
+</script>

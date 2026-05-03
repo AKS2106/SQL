@@ -1,0 +1,438 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{background:var(--color-background-success);color:var(--color-text-success)}
+.hlw td{background:var(--color-background-warning);color:var(--color-text-warning)}
+</style>
+
+<h3>Bucket 7 — Delta Lake</h3>
+<div class="sub">6 questions. Delta Lake is one of the hottest topics in DE interviews right now. The core idea: Delta Lake is Parquet files plus a transaction log. That log is what gives you ACID, time travel, MERGE, and schema evolution. Understand that and every question unlocks.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">Delta Lake vs Parquet — what is the difference and when to use each</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — what Delta Lake actually is</div>
+  <div class="p">Delta Lake is NOT a different file format. It is Parquet files plus a transaction log folder called <b>_delta_log/</b>. That log is a JSON file that records every change ever made to the table. The log is what gives Delta all its superpowers.</div>
+
+  <div class="flow">
+    <div class="fb">s3://bucket/orders/</div><div class="fa">contains</div>
+    <div class="fb">part-00000.parquet</div><div class="fa">+</div>
+    <div class="fb">part-00001.parquet</div><div class="fa">+</div>
+    <div class="fb">_delta_log/000.json</div><div class="fa">←</div>
+    <div class="fb">this is Delta Lake</div>
+  </div>
+
+  <table>
+    <tr><th>Feature</th><th>Parquet</th><th>Delta Lake</th></tr>
+    <tr><td>File format</td><td>Columnar binary</td><td>Parquet + _delta_log/</td></tr>
+    <tr><td>ACID transactions</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Updates / Deletes</td><td>No — append only</td><td>Yes — MERGE, UPDATE, DELETE</td></tr>
+    <tr><td>Time travel</td><td>No</td><td>Yes — query any past version</td></tr>
+    <tr><td>Schema enforcement</td><td>No</td><td>Yes — rejects wrong schema</td></tr>
+    <tr><td>Schema evolution</td><td>Manual mergeSchema</td><td>Managed with mergeSchema=true</td></tr>
+    <tr><td>Small file problem</td><td>Manual coalesce</td><td>OPTIMIZE command</td></tr>
+    <tr class="hl"><td>Use when</td><td>Simple append-only batch</td><td>Updates, corrections, SCD Type 2</td></tr>
+  </table>
+
+  <div class="lbl">When to choose each</div>
+  <div class="mrow"><span class="mk">Use Parquet when</span><span class="mv">Pipeline is append-only. No corrections needed. Cost-sensitive. Simple batch jobs. No need for history.</span></div>
+  <div class="mrow"><span class="mk">Use Delta when</span><span class="mv">Need to update or delete records. Late-arriving corrections. SCD Type 2. Schema changes frequently. Need audit trail.</span></div>
+
+<pre>
+# Writing Delta — same as Parquet but format="delta"
+df.write.format("delta") \
+    .mode("overwrite") \
+    .partitionBy("year","month") \
+    .save("s3://bucket/delta/orders/")
+
+# Reading Delta
+df = spark.read.format("delta") \
+    .load("s3://bucket/delta/orders/")
+
+# Or register as table and use SQL
+spark.sql("CREATE TABLE orders USING DELTA LOCATION 's3://bucket/delta/orders/'")
+spark.sql("SELECT * FROM orders WHERE year = 2024")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Delta Lake is not a new file format — it is Parquet files plus a transaction log folder called _delta_log. That log records every change and is what gives Delta ACID transactions, MERGE for upserts, time travel to query past versions, and managed schema evolution. I use plain Parquet for simple append-only pipelines. I use Delta when I need to update records, handle late-arriving corrections, or implement SCD Type 2."</div></div>
+  <div class="tip">Always say "_delta_log folder" when explaining Delta Lake. It shows you understand the implementation not just the marketing. That one detail signals real knowledge.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q2</span>
+  <span class="qt">Delta Lake MERGE — the upsert pattern</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What MERGE does — in plain English</div>
+  <div class="p">MERGE looks at each incoming record and asks: does this record already exist in my table? If yes — update it. If no — insert it. The whole operation is atomic — either all changes succeed or none of them do.</div>
+
+  <div class="flow">
+    <div class="fb">Incoming record</div><div class="fa">→</div>
+    <div class="fb">Match on key?</div><div class="fa">→</div>
+    <div class="fb">Yes → UPDATE</div>
+    <div class="fa">|</div>
+    <div class="fb">No → INSERT</div>
+  </div>
+
+  <div class="lbl">Why this matters — the problems MERGE solves</div>
+  <div class="mrow"><span class="mk">Late corrections</span><span class="mv">Order arrives late with updated amount. MERGE updates the existing record — no full rewrite needed.</span></div>
+  <div class="mrow"><span class="mk">Deduplication</span><span class="mv">Same order arrives twice. MERGE updates instead of inserting a second copy — no duplicates.</span></div>
+  <div class="mrow"><span class="mk">SCD Type 2</span><span class="mv">Customer changes address. MERGE closes old record and inserts new one with history preserved.</span></div>
+
+<pre>
+from delta.tables import DeltaTable
+
+# Target: existing Delta table
+target = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+
+# Source: new/updated records coming in
+updates_df = spark.read.parquet("s3://bucket/raw/order_updates/")
+
+# MERGE — upsert pattern
+target.alias("t").merge(
+    updates_df.alias("s"),
+    "t.order_id = s.order_id"     # match condition — join key
+).whenMatchedUpdate(set={         # if record EXISTS → update these cols
+    "status":     "s.status",
+    "amount":     "s.amount",
+    "updated_at": "s.updated_at"
+}).whenNotMatchedInsert(values={  # if record NEW → insert all cols
+    "order_id":   "s.order_id",
+    "customer_id":"s.customer_id",
+    "status":     "s.status",
+    "amount":     "s.amount",
+    "created_at": "s.created_at",
+    "updated_at": "s.updated_at"
+}).execute()
+
+# Shorthand — update ALL columns when matched, insert ALL when new
+target.alias("t").merge(
+    updates_df.alias("s"),
+    "t.order_id = s.order_id"
+).whenMatchedUpdateAll() \
+ .whenNotMatchedInsertAll() \
+ .execute()</pre>
+
+  <div class="lbl">MERGE with delete — handle soft deletes</div>
+<pre>
+# If source marks records as deleted, remove them from target
+target.alias("t").merge(
+    updates_df.alias("s"),
+    "t.order_id = s.order_id"
+).whenMatchedDelete(
+    condition="s.is_deleted = true"   # delete if flagged
+).whenMatchedUpdateAll() \
+ .whenNotMatchedInsertAll() \
+ .execute()</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"MERGE is Delta Lake's upsert — if a record matches on the join key I update it, if not I insert it. The whole operation is atomic — either everything succeeds or everything rolls back. I use it for late-arriving corrections so I never need a full table rewrite, for deduplication so duplicates naturally get updated instead of inserted twice, and for SCD Type 2 to manage slowly changing dimensions."</div></div>
+  <div class="win">The word atomic is key here. Parquet has no atomicity — if your write crashes halfway, you have partial data. Delta's transaction log means the write either fully commits or fully rolls back. That is the ACID guarantee.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">Time travel — query past versions of your data</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What time travel is</div>
+  <div class="p">Every change to a Delta table creates a new version in the transaction log. Delta keeps the old Parquet files around until you explicitly clean them up. This means you can query your table as it looked at any past point in time.</div>
+
+  <div class="lbl">Why this is useful in production</div>
+  <div class="mrow"><span class="mk">Audit requirement</span><span class="mv">"What did the orders table look like on January 1st?" — regulators ask this.</span></div>
+  <div class="mrow"><span class="mk">Debugging</span><span class="mv">"A bad job ran yesterday and corrupted data — show me what it looked like before." Then restore it.</span></div>
+  <div class="mrow"><span class="mk">Reproducibility</span><span class="mv">"Re-train the ML model on data as of 3 months ago." Read exactly that snapshot.</span></div>
+
+<pre>
+# Time travel by version number
+df_v0 = spark.read.format("delta") \
+    .option("versionAsOf", 0) \
+    .load("s3://bucket/delta/orders/")
+
+# Time travel by timestamp
+df_yesterday = spark.read.format("delta") \
+    .option("timestampAsOf", "2024-01-14 00:00:00") \
+    .load("s3://bucket/delta/orders/")
+
+# See all versions — what changed and when
+spark.sql("""
+    DESCRIBE HISTORY delta.`s3://bucket/delta/orders/`
+""").select(
+    "version","timestamp","operation","operationParameters"
+).show(10, truncate=False)
+
+# Restore table to a previous version (undo a bad job)
+from delta.tables import DeltaTable
+dt = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+dt.restoreToVersion(5)         # restore to version 5
+# or
+dt.restoreToTimestamp("2024-01-13 09:00:00")  # restore to timestamp</pre>
+
+  <div class="lbl">How long versions are kept — VACUUM</div>
+<pre>
+# By default Delta keeps 30 days of history
+# Old files not cleaned up automatically — VACUUM does it
+
+# Run VACUUM to delete files older than retention period
+spark.sql("""
+    VACUUM delta.`s3://bucket/delta/orders/`
+    RETAIN 168 HOURS   -- keep 7 days of history
+""")
+
+# WARNING: after VACUUM you CANNOT time travel beyond retention period
+# Default retention is 7 days minimum — do not go below this</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Delta Lake keeps every version of the table in its transaction log. I can query any past version by timestamp or version number — useful for audits, debugging bad pipeline runs, or ML model reproducibility. DESCRIBE HISTORY shows me what changed and when. If a bad job corrupts data I use restoreToVersion to roll back instantly. I run VACUUM periodically to clean up old files while keeping a sensible retention window like 7 days."</div></div>
+  <div class="tip">restoreToVersion is the production answer to "how do you recover from a bad pipeline run." Without Delta you would need to reprocess from raw data. With Delta it is one line of code.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">Schema evolution and schema enforcement in Delta Lake</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Two modes — know both</div>
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Schema enforcement (default)</div>
+      <div class="box-r">Delta rejects writes that do not match the existing schema. Protects data integrity. Good default for production — catches unexpected upstream changes immediately.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Schema evolution</div>
+      <div class="box-r">Delta automatically adds new columns when mergeSchema=true. Safe for planned schema changes. Use when you know upstream is adding columns.</div>
+    </div>
+  </div>
+
+<pre>
+# Schema enforcement — default behaviour
+df_new = spark.read.parquet("s3://bucket/raw/")
+df_new.write.format("delta").mode("append") \
+    .save("s3://bucket/delta/orders/")
+# If df_new has a new column → AnalysisException: schema mismatch
+# This is GOOD — it catches unexpected upstream changes
+
+# Schema evolution — add new columns automatically
+df_new.write.format("delta") \
+    .option("mergeSchema", "true") \
+    .mode("append") \
+    .save("s3://bucket/delta/orders/")
+# New columns added to table schema automatically
+# Old rows get NULL for the new column
+
+# Check current schema
+dt = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+dt.toDF().printSchema()
+
+# Full schema change history — when each column was added
+spark.sql("""
+    DESCRIBE HISTORY delta.`s3://bucket/delta/orders/`
+""").show()
+
+# Add column with ALTER TABLE — explicit and controlled
+spark.sql("""
+    ALTER TABLE delta.`s3://bucket/delta/orders/`
+    ADD COLUMNS (loyalty_tier STRING COMMENT 'Added 2024-01-15')
+""")</pre>
+
+  <div class="lbl">What if column TYPES change — the dangerous case</div>
+<pre>
+# Delta rejects type changes by default — this is intentional
+# amount was DoubleType, now source sends StringType — rejected
+
+# Fix: cast incoming data to match existing schema
+df_fixed = df_new.withColumn(
+    "amount", col("amount").cast(DoubleType())
+)
+df_fixed.write.format("delta").mode("append") \
+    .save("s3://bucket/delta/orders/")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Delta has two schema modes. Enforcement is the default — it rejects writes that don't match the schema. This protects data integrity and catches unexpected upstream changes immediately, which I want in production. For planned changes like a new column being added, I enable mergeSchema=true. Type changes are always explicit — I cast incoming data to match. The full schema change history is in DESCRIBE HISTORY so I always know what changed and when."</div></div>
+  <div class="ok">Schema enforcement catching unexpected changes is a feature not a limitation. Say it that way in interviews — "I keep enforcement on by default because I want to know immediately when upstream changes schema unexpectedly."</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Q5</span>
+  <span class="qt">OPTIMIZE and ZORDER — fixing small files and speeding up queries</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Two problems — one command solves both</div>
+  <div class="mrow"><span class="mk">Small files</span><span class="mv">Many small Parquet files build up over time from streaming writes or frequent appends. OPTIMIZE compacts them into larger files.</span></div>
+  <div class="mrow"><span class="mk">Slow queries</span><span class="mv">Queries on high-cardinality columns like customer_id scan many files. ZORDER co-locates related data so fewer files are read.</span></div>
+
+<pre>
+# OPTIMIZE — compact small files into larger ones (target ~1GB each)
+spark.sql("""
+    OPTIMIZE delta.`s3://bucket/delta/orders/`
+""")
+
+# OPTIMIZE with ZORDER — compact AND co-locate by query column
+# Best for columns you frequently filter or join on
+spark.sql("""
+    OPTIMIZE delta.`s3://bucket/delta/orders/`
+    ZORDER BY (customer_id)
+""")
+
+# Multiple ZORDER columns — most selective first
+spark.sql("""
+    OPTIMIZE delta.`s3://bucket/delta/orders/`
+    ZORDER BY (customer_id, order_date)
+""")</pre>
+
+  <div class="lbl">When to run OPTIMIZE</div>
+  <div class="mrow"><span class="mk">After streaming writes</span><span class="mv">Streaming creates many tiny files. Schedule OPTIMIZE every few hours as a maintenance job.</span></div>
+  <div class="mrow"><span class="mk">After MERGE</span><span class="mv">MERGE rewrites files and can fragment them. Run OPTIMIZE after large MERGE operations.</span></div>
+  <div class="mrow"><span class="mk">Scheduled maintenance</span><span class="mv">Add to your pipeline as a final step or run as a separate daily job.</span></div>
+
+<pre>
+# Auto-optimize — Delta automatically compacts on write
+spark.conf.set(
+    "spark.databricks.delta.autoOptimize.optimizeWrite","true"
+)
+spark.conf.set(
+    "spark.databricks.delta.autoOptimize.autoCompact","true"
+)
+
+# After OPTIMIZE — VACUUM removes old files no longer needed
+spark.sql("""
+    VACUUM delta.`s3://bucket/delta/orders/`
+    RETAIN 168 HOURS
+""")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"OPTIMIZE compacts small files into larger ones — same problem as coalesce but Delta manages it automatically. ZORDER goes a step further — it physically co-locates rows with similar values for a column so queries filtering on that column scan far fewer files. I run OPTIMIZE after streaming writes which create many tiny files, and after large MERGE operations. Then VACUUM to clean up the old files."</div></div>
+  <div class="tip">ZORDER is most effective on high-cardinality columns you frequently filter on — customer_id, product_id, user_id. Do not ZORDER on low-cardinality columns like status or year — partitioning handles those better.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q6</span>
+  <span class="qt">SCD Type 2 with Delta Lake MERGE — the complete pattern</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What SCD Type 2 is</div>
+  <div class="p">Slowly Changing Dimension Type 2 keeps full history when a dimension value changes. When a customer moves from London to Manchester — you do not overwrite London. You close the London record with an end date and insert a new Manchester record. Both rows exist so you can answer: "what city was this customer in when they placed order #123?"</div>
+
+  <table>
+    <tr><th>customer_id</th><th>city</th><th>start_date</th><th>end_date</th><th>is_current</th></tr>
+    <tr><td>C001</td><td>London</td><td>2023-01-01</td><td>2024-01-10</td><td>false</td></tr>
+    <tr class="hl"><td>C001</td><td>Manchester</td><td>2024-01-10</td><td>null</td><td>true</td></tr>
+  </table>
+
+<pre>
+from delta.tables import DeltaTable
+from pyspark.sql.functions import current_date, lit
+
+target = DeltaTable.forPath(spark, "s3://bucket/delta/customers/")
+
+# Incoming updates — customers whose data changed
+updates_df = spark.read.parquet("s3://bucket/raw/customer_updates/")
+
+# Step 1: Close existing current records that are changing
+target.alias("t").merge(
+    updates_df.alias("s"),
+    """t.customer_id = s.customer_id
+       AND t.is_current = true
+       AND t.city != s.city"""       # only if city actually changed
+).whenMatchedUpdate(set={
+    "end_date":   "current_date()",  # close old record today
+    "is_current": "false"            # mark as historical
+}).execute()
+
+# Step 2: Insert new current records for changed customers
+new_records = updates_df \
+    .withColumn("start_date", current_date()) \
+    .withColumn("end_date",   lit(None).cast("date")) \
+    .withColumn("is_current", lit(True))
+
+new_records.write.format("delta") \
+    .mode("append") \
+    .save("s3://bucket/delta/customers/")
+
+# Query: what city was customer C001 in on 2023-06-15?
+spark.sql("""
+    SELECT city FROM delta.`s3://bucket/delta/customers/`
+    WHERE customer_id = 'C001'
+    AND   start_date <= '2023-06-15'
+    AND   (end_date > '2023-06-15' OR end_date IS NULL)
+""")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"SCD Type 2 keeps full history when dimension data changes. With Delta Lake I use two steps: first a MERGE to close the existing current record by setting end_date to today and is_current to false — only for records where the value actually changed. Then append the new record with today as start_date, null end_date, and is_current true. Delta's ACID guarantees both steps are atomic so I never end up with two current records for the same customer."</div></div>
+  <div class="win">SCD Type 2 with Delta is a complete answer that combines MERGE, ACID, and data modelling knowledge in one question. If you can explain this clearly you are demonstrating 5 years of thinking in one answer.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 7 complete — 6 of 6 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:8px">
+  Q1 — Delta vs Parquet: Parquet files + _delta_log folder = Delta Lake. Use Delta when you need updates, corrections, or history<br>
+  Q2 — MERGE: match on key → update if exists, insert if new. Atomic. Solves duplicates and late corrections<br>
+  Q3 — Time travel: query any past version by timestamp or version. restoreToVersion to undo bad jobs<br>
+  Q4 — Schema evolution: enforcement on by default (catches surprises), mergeSchema=true for planned changes<br>
+  Q5 — OPTIMIZE + ZORDER: compact small files, co-locate related data for faster queries<br>
+  Q6 — SCD Type 2: close old record with end_date, insert new current record. Both steps atomic via Delta
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">The one phrase for this bucket: <b>"Parquet plus _delta_log"</b> — say it when explaining what Delta Lake is. Every other feature flows from that transaction log. Tell me when ready for the final bucket — Bucket 8: Pipeline Reliability.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

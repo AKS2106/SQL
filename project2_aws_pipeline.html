@@ -1,0 +1,651 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:120px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.folder{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;line-height:1.9;margin:8px 0}
+.fd{color:var(--color-text-info)}
+.ff{color:var(--color-text-primary)}
+.fc{color:var(--color-text-tertiary)}
+</style>
+
+<h3>Project 2 — AWS End-to-End Pipeline</h3>
+<div class="sub">Automobile sales data. S3 → Glue → Athena. 8 steps. Use your personal laptop for everything in this project. Complete one step, verify it works, then move to the next.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Step 1</span>
+  <span class="qt">What we are building — overview and architecture</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Business problem</div>
+  <div class="p">A used car marketplace needs to track listing performance, identify price anomalies, and generate weekly regional sales reports. This pipeline ingests raw vehicle listing data, processes it on AWS, and serves insights via SQL queries.</div>
+
+  <div class="lbl">Architecture — what you will build</div>
+  <div class="flow">
+    <div class="fb">CSV on S3 (raw)</div><div class="fa">→</div>
+    <div class="fb">Glue Crawler</div><div class="fa">→</div>
+    <div class="fb">Glue Catalog</div><div class="fa">→</div>
+    <div class="fb">Glue ETL Job (PySpark)</div><div class="fa">→</div>
+    <div class="fb">Parquet on S3 (processed)</div><div class="fa">→</div>
+    <div class="fb">Athena SQL</div>
+  </div>
+
+  <div class="lbl">AWS services you will use — and why each one</div>
+  <div class="mrow"><span class="mk">S3</span><span class="mv">Storage for raw CSV, processed Parquet, Glue scripts, and Athena results. The data lake foundation.</span></div>
+  <div class="mrow"><span class="mk">Glue Crawler</span><span class="mv">Scans S3, detects schema, registers table in Glue Catalog automatically.</span></div>
+  <div class="mrow"><span class="mk">Glue Catalog</span><span class="mv">Central metadata store — schema, location, partitions. Shared by Glue ETL and Athena.</span></div>
+  <div class="mrow"><span class="mk">Glue ETL Job</span><span class="mv">Runs PySpark code on managed Spark cluster. No cluster to manage.</span></div>
+  <div class="mrow"><span class="mk">Athena</span><span class="mv">Serverless SQL on S3. Query your Parquet output without loading into a database.</span></div>
+  <div class="mrow"><span class="mk">IAM</span><span class="mv">Permissions — Glue needs a role to read/write S3 and access Catalog.</span></div>
+
+  <div class="lbl">Dataset — free, no login needed</div>
+  <div class="p">Used Cars Dataset from GitHub — 426,880 vehicle listings with price, year, manufacturer, odometer, condition, and region.</div>
+<pre>
+https://raw.githubusercontent.com/nicholasgasior/ds-datasets/master/cars/vehicles.csv</pre>
+  <div class="tip">This dataset is 150MB — big enough to justify cloud processing, small enough to stay within AWS free tier. Your total AWS cost for this project should be under $1.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Step 2</span>
+  <span class="qt">Install and configure AWS CLI on your personal laptop</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Install AWS CLI</div>
+<pre>
+# Download installer — open this in your browser on personal laptop:
+https://awscli.amazonaws.com/AWSCLIV2.msi
+
+# Run the installer — click through defaults
+# Then open a NEW Command Prompt and verify:
+aws --version
+# Should show: aws-cli/2.x.x Python/3.x.x Windows/...</pre>
+
+  <div class="lbl">Create an IAM user for CLI access — do this in AWS Console</div>
+  <div class="mrow"><span class="mk">1. Go to IAM</span><span class="mv">AWS Console → search IAM → Users → Create User</span></div>
+  <div class="mrow"><span class="mk">2. Username</span><span class="mv">de-project-user</span></div>
+  <div class="mrow"><span class="mk">3. Permissions</span><span class="mv">Attach policies directly → tick these 4: AmazonS3FullAccess, AWSGlueConsoleFullAccess, AmazonAthenaFullAccess, IAMReadOnlyAccess</span></div>
+  <div class="mrow"><span class="mk">4. Access key</span><span class="mv">After creating user → Security credentials tab → Create access key → CLI use case → Download CSV</span></div>
+
+  <div class="lbl">Configure AWS CLI with your keys</div>
+<pre>
+aws configure
+
+# It will ask 4 questions — answer like this:
+AWS Access Key ID:     [paste your access key from CSV]
+AWS Secret Access Key: [paste your secret key from CSV]
+Default region name:   us-east-1
+Default output format: json</pre>
+
+  <div class="lbl">Verify it works</div>
+<pre>
+aws sts get-caller-identity
+
+# Should return JSON like:
+# {
+#   "UserId": "AIDAXXXXXXXXXX",
+#   "Account": "123456789012",
+#   "Arn": "arn:aws:iam::123456789012:user/de-project-user"
+# }</pre>
+
+  <div class="win">Success check: aws sts get-caller-identity returns your account details without an error. If you see "Unable to locate credentials" — run aws configure again.</div>
+  <div class="tip">Never commit your AWS keys to GitHub. They are in ~/.aws/credentials on your machine — not in your project folder. The .gitignore we set up already protects against accidental commits.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Step 3</span>
+  <span class="qt">Create S3 bucket and upload the dataset</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Create the project folder on personal laptop</div>
+<pre>
+mkdir C:\projects\de-auto-aws-pipeline
+cd C:\projects\de-auto-aws-pipeline
+mkdir src sql</pre>
+
+  <div class="lbl">Download the dataset</div>
+<pre>
+curl -o vehicles.csv "https://raw.githubusercontent.com/nicholasgasior/ds-datasets/master/cars/vehicles.csv"
+
+# Verify it downloaded correctly
+# Should be around 150MB and ~426k rows</pre>
+
+  <div class="lbl">Create S3 bucket — replace YOUR-NAME with something unique</div>
+<pre>
+# Bucket names must be globally unique across all AWS accounts
+# Use your name + project to make it unique
+aws s3 mb s3://YOUR-NAME-de-auto-pipeline --region us-east-1
+
+# Example: aws s3 mb s3://john-de-auto-pipeline --region us-east-1</pre>
+
+  <div class="lbl">Create the folder structure inside S3</div>
+<pre>
+# Upload raw CSV to S3
+aws s3 cp vehicles.csv s3://YOUR-NAME-de-auto-pipeline/raw/vehicles/vehicles.csv
+
+# Create other folders by uploading placeholder files
+echo "placeholder" > placeholder.txt
+aws s3 cp placeholder.txt s3://YOUR-NAME-de-auto-pipeline/processed/
+aws s3 cp placeholder.txt s3://YOUR-NAME-de-auto-pipeline/scripts/
+aws s3 cp placeholder.txt s3://YOUR-NAME-de-auto-pipeline/athena-results/
+del placeholder.txt</pre>
+
+  <div class="lbl">Verify everything is in S3</div>
+<pre>
+aws s3 ls s3://YOUR-NAME-de-auto-pipeline/ --recursive
+
+# Should show:
+# raw/vehicles/vehicles.csv   (~150MB)
+# processed/placeholder.txt
+# scripts/placeholder.txt
+# athena-results/placeholder.txt</pre>
+
+  <div class="win">Success check: aws s3 ls shows vehicles.csv in the raw/vehicles/ folder. Your S3 data lake structure is ready.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 4</span>
+  <span class="qt">Create IAM role for Glue — Glue needs permission to access S3</span>
+</div>
+<div class="qb">
+  <div class="lbl">Why Glue needs its own IAM role</div>
+  <div class="p">When Glue runs your PySpark job it needs permission to read from S3 (raw data), write to S3 (processed output), and access the Glue Catalog. You give it these permissions via an IAM role.</div>
+
+  <div class="lbl">Create the role in AWS Console</div>
+  <div class="mrow"><span class="mk">1. Go to IAM</span><span class="mv">AWS Console → IAM → Roles → Create Role</span></div>
+  <div class="mrow"><span class="mk">2. Trusted entity</span><span class="mv">AWS Service → Glue → Next</span></div>
+  <div class="mrow"><span class="mk">3. Permissions</span><span class="mv">Search and tick: AmazonS3FullAccess, AWSGlueServiceRole</span></div>
+  <div class="mrow"><span class="mk">4. Role name</span><span class="mv">AWSGlueServiceRole-de-auto-pipeline</span></div>
+  <div class="mrow"><span class="mk">5. Create role</span><span class="mv">Click Create Role — copy the ARN shown, you need it in Step 6</span></div>
+
+  <div class="lbl">Verify role was created</div>
+<pre>
+aws iam get-role --role-name AWSGlueServiceRole-de-auto-pipeline
+
+# Should return role details with the ARN
+# Copy the "Arn" value — looks like:
+# arn:aws:iam::123456789012:role/AWSGlueServiceRole-de-auto-pipeline</pre>
+
+  <div class="win">Success check: aws iam get-role returns the role without error. Note down the ARN — you will need it in Step 6.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 5</span>
+  <span class="qt">Create Glue Crawler — auto-detect schema from S3</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What the Glue Crawler does</div>
+  <div class="p">The Crawler scans your raw CSV in S3, figures out the schema (column names and types), and registers it as a table in the Glue Catalog. This means Glue ETL and Athena both know the table structure without you defining it manually.</div>
+
+  <div class="lbl">Create Glue Database first</div>
+<pre>
+aws glue create-database \
+    --database-input '{
+        "Name": "auto_pipeline_db",
+        "Description": "Vehicle listings data lake"
+    }'</pre>
+
+  <div class="lbl">Create the Crawler via AWS Console (easier than CLI for first time)</div>
+  <div class="mrow"><span class="mk">1. Go to Glue</span><span class="mv">AWS Console → AWS Glue → Crawlers → Create Crawler</span></div>
+  <div class="mrow"><span class="mk">2. Name</span><span class="mv">vehicles-raw-crawler</span></div>
+  <div class="mrow"><span class="mk">3. Data source</span><span class="mv">S3 → s3://YOUR-NAME-de-auto-pipeline/raw/vehicles/</span></div>
+  <div class="mrow"><span class="mk">4. IAM role</span><span class="mv">AWSGlueServiceRole-de-auto-pipeline</span></div>
+  <div class="mrow"><span class="mk">5. Target database</span><span class="mv">auto_pipeline_db</span></div>
+  <div class="mrow"><span class="mk">6. Create and run</span><span class="mv">Create Crawler → Run Crawler (takes 1-2 minutes)</span></div>
+
+  <div class="lbl">Verify the table was created</div>
+<pre>
+aws glue get-tables --database-name auto_pipeline_db
+
+# Should show a table called "vehicles" with columns:
+# id, url, region, price, year, manufacturer, model,
+# condition, odometer, title_status, transmission, etc.</pre>
+
+  <div class="win">Success check: aws glue get-tables shows a "vehicles" table with column definitions. The Glue Catalog now knows your data structure.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 6</span>
+  <span class="qt">Write the Glue ETL script and upload to S3</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Create src\glue_transform.py on your personal laptop</div>
+<pre>
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+from awsglue.dynamicframe import DynamicFrame
+from pyspark.sql.functions import (
+    col, when, avg, round as round_,
+    count, lit, regexp_replace, trim
+)
+from pyspark.sql.window import Window
+
+# ── Glue boilerplate ─────────────────────────────────────────────
+args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+sc   = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job  = Job(glueContext)
+job.init(args["JOB_NAME"], args)
+spark.sparkContext.setLogLevel("ERROR")
+
+BUCKET   = "YOUR-NAME-de-auto-pipeline"   # ← replace with your bucket
+OUT_PATH = f"s3://{BUCKET}/processed/vehicles/"
+
+print("=" * 55)
+print("  AUTO PIPELINE — GLUE ETL JOB")
+print("=" * 55)
+
+# ── Step 1: Read from Glue Catalog ───────────────────────────────
+print("\n[1/5] Reading from Glue Catalog...")
+dyf = glueContext.create_dynamic_frame.from_catalog(
+    database           = "auto_pipeline_db",
+    table_name         = "vehicles",
+    transformation_ctx = "raw_vehicles"
+)
+df = dyf.toDF()
+print(f"  Loaded: {df.count():,} rows, {len(df.columns)} columns")
+
+# ── Step 2: Clean and validate ───────────────────────────────────
+print("\n[2/5] Cleaning...")
+
+df = df \
+    .filter(col("price").isNotNull() & (col("price") > 0)) \
+    .filter(col("year").isNotNull()  & (col("year")  > 1990)) \
+    .filter(col("odometer").isNotNull()) \
+    .withColumn("price",    col("price").cast("double")) \
+    .withColumn("year",     col("year").cast("integer")) \
+    .withColumn("odometer", col("odometer").cast("double")) \
+    .withColumn("manufacturer",
+        trim(regexp_replace(col("manufacturer"), "[^a-zA-Z ]", "")))
+
+print(f"  After cleaning: {df.count():,} rows")
+
+# ── Step 3: Add business features ────────────────────────────────
+print("\n[3/5] Adding features...")
+
+# Vehicle age
+from pyspark.sql.functions import lit as lit_
+df = df.withColumn("vehicle_age",
+    lit_(2024).cast("integer") - col("year"))
+
+# Price tier
+df = df.withColumn("price_tier",
+    when(col("price") <  5000,  "Budget")
+    .when(col("price") < 15000, "Economy")
+    .when(col("price") < 30000, "Mid-range")
+    .otherwise("Premium"))
+
+# Mileage tier
+df = df.withColumn("mileage_tier",
+    when(col("odometer") <  30000, "Low")
+    .when(col("odometer") < 80000, "Medium")
+    .when(col("odometer") < 150000,"High")
+    .otherwise("Very High"))
+
+# Price per mile (value metric)
+df = df.withColumn("price_per_mile",
+    when(col("odometer") > 0,
+         round_(col("price") / col("odometer"), 4))
+    .otherwise(None))
+
+# Compare to segment average — is listing underpriced?
+w_segment = Window.partitionBy("manufacturer","condition")
+df = df \
+    .withColumn("avg_price_segment",
+        round_(avg("price").over(w_segment), 2)) \
+    .withColumn("vs_segment_avg",
+        round_(col("price") - col("avg_price_segment"), 2)) \
+    .withColumn("is_underpriced",
+        when(col("vs_segment_avg") < -2000, True)
+        .otherwise(False))
+
+# ── Step 4: Summary stats ────────────────────────────────────────
+print("\n[4/5] Summary by price tier:")
+df.groupBy("price_tier") \
+  .agg(
+      count("*").alias("listings"),
+      round_(avg("price"), 0).alias("avg_price"),
+      round_(avg("vehicle_age"), 1).alias("avg_age_yrs")
+  ).orderBy("avg_price").show()
+
+print("\nTop 5 manufacturers by listing count:")
+df.groupBy("manufacturer") \
+  .count() \
+  .orderBy(col("count").desc()) \
+  .limit(5).show()
+
+# ── Step 5: Write to S3 as Parquet ───────────────────────────────
+print(f"\n[5/5] Writing to S3: {OUT_PATH}")
+df.coalesce(8) \
+  .write \
+  .mode("overwrite") \
+  .partitionBy("price_tier") \
+  .parquet(OUT_PATH)
+
+print("\n✓ ETL complete")
+job.commit()   # CRITICAL — advances Job Bookmarks</pre>
+
+  <div class="lbl">Replace bucket name then upload script to S3</div>
+<pre>
+# Replace YOUR-NAME in the script first, then:
+aws s3 cp src/glue_transform.py s3://YOUR-NAME-de-auto-pipeline/scripts/glue_transform.py
+
+# Verify upload
+aws s3 ls s3://YOUR-NAME-de-auto-pipeline/scripts/</pre>
+
+  <div class="win">Success check: aws s3 ls shows glue_transform.py in the scripts/ folder. Your ETL code is now on AWS ready for Glue to run.</div>
+  <div class="tip">Notice job.commit() at the very end. Without it Job Bookmarks never advance — every run reprocesses all files. This is the detail we covered in Bucket 5.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 7</span>
+  <span class="qt">Create and run the Glue ETL job</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Create the Glue job via AWS Console</div>
+  <div class="mrow"><span class="mk">1. Go to Glue</span><span class="mv">AWS Console → AWS Glue → ETL Jobs → Create Job</span></div>
+  <div class="mrow"><span class="mk">2. Type</span><span class="mv">Spark script editor → Upload script → select your glue_transform.py file</span></div>
+  <div class="mrow"><span class="mk">3. Job name</span><span class="mv">auto-vehicles-etl-pipeline</span></div>
+  <div class="mrow"><span class="mk">4. IAM role</span><span class="mv">AWSGlueServiceRole-de-auto-pipeline</span></div>
+  <div class="mrow"><span class="mk">5. Glue version</span><span class="mv">Glue 3.0 (Spark 3.1)</span></div>
+  <div class="mrow"><span class="mk">6. Worker type</span><span class="mv">G.1X — 1 DPU, good for this dataset size</span></div>
+  <div class="mrow"><span class="mk">7. Number of workers</span><span class="mv">2 — minimum, keeps cost low</span></div>
+  <div class="mrow"><span class="mk">8. Job bookmark</span><span class="mv">Enable — under Advanced properties → Job bookmark → Enable</span></div>
+  <div class="mrow"><span class="mk">9. Save and Run</span><span class="mv">Save → Run Job</span></div>
+
+  <div class="lbl">Monitor the job run</div>
+<pre>
+# Check job run status via CLI
+aws glue get-job-runs --job-name auto-vehicles-etl-pipeline
+
+# Or watch in AWS Console:
+# Glue → ETL Jobs → auto-vehicles-etl-pipeline → Run history
+# Status goes: STARTING → RUNNING → SUCCEEDED (takes 3-6 minutes)</pre>
+
+  <div class="lbl">Verify output in S3</div>
+<pre>
+aws s3 ls s3://YOUR-NAME-de-auto-pipeline/processed/vehicles/ --recursive
+
+# Should show folders like:
+# processed/vehicles/price_tier=Budget/part-00000.parquet
+# processed/vehicles/price_tier=Economy/part-00000.parquet
+# processed/vehicles/price_tier=Mid-range/part-00000.parquet
+# processed/vehicles/price_tier=Premium/part-00000.parquet</pre>
+
+  <div class="win">Success check: Glue job status = SUCCEEDED and processed/vehicles/ has 4 subfolders by price_tier. Your first cloud ETL job ran successfully.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bg">Step 8</span>
+  <span class="qt">Query with Athena — your SQL on S3</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Set up Athena output location first</div>
+  <div class="mrow"><span class="mk">1. Go to Athena</span><span class="mv">AWS Console → Amazon Athena → Settings → Manage</span></div>
+  <div class="mrow"><span class="mk">2. Query result location</span><span class="mv">s3://YOUR-NAME-de-auto-pipeline/athena-results/</span></div>
+  <div class="mrow"><span class="mk">3. Save</span><span class="mv">Click Save — Athena now has somewhere to write query results</span></div>
+
+  <div class="lbl">Run a Crawler on processed data to register it in Catalog</div>
+  <div class="mrow"><span class="mk">Create new Crawler</span><span class="mv">AWS Glue → Crawlers → Create Crawler → Name: vehicles-processed-crawler → Source: s3://YOUR-NAME-de-auto-pipeline/processed/vehicles/ → Same role and database → Run it</span></div>
+
+  <div class="lbl">Now query with Athena — open sql\analysis.sql and run these</div>
+<pre>
+-- Set database first in Athena console dropdown: auto_pipeline_db
+
+-- Q1: Listing count and average price by price tier
+SELECT
+    price_tier,
+    COUNT(*)                              AS total_listings,
+    ROUND(AVG(price), 0)                  AS avg_price,
+    ROUND(AVG(vehicle_age), 1)            AS avg_age_years,
+    ROUND(AVG(odometer)/1000, 0)          AS avg_miles_k
+FROM vehicles
+GROUP BY price_tier
+ORDER BY avg_price;
+
+-- Q2: Top 10 manufacturers by number of listings
+SELECT
+    manufacturer,
+    COUNT(*)                              AS listings,
+    ROUND(AVG(price), 0)                  AS avg_price,
+    ROUND(AVG(odometer)/1000, 0)          AS avg_miles_k
+FROM vehicles
+WHERE manufacturer IS NOT NULL
+GROUP BY manufacturer
+ORDER BY listings DESC
+LIMIT 10;
+
+-- Q3: Underpriced listings — potential deals
+-- Cars priced more than $2000 below their segment average
+SELECT
+    manufacturer,
+    model,
+    year,
+    price,
+    avg_price_segment,
+    vs_segment_avg,
+    condition,
+    odometer,
+    region
+FROM vehicles
+WHERE is_underpriced = true
+    AND condition IN ('good','excellent','like new')
+ORDER BY vs_segment_avg ASC
+LIMIT 20;
+
+-- Q4: Price by condition — how condition affects value
+SELECT
+    condition,
+    COUNT(*)                              AS listings,
+    ROUND(AVG(price), 0)                  AS avg_price,
+    ROUND(MIN(price), 0)                  AS min_price,
+    ROUND(MAX(price), 0)                  AS max_price
+FROM vehicles
+WHERE condition IS NOT NULL
+GROUP BY condition
+ORDER BY avg_price DESC;
+
+-- Q5: Window function — rank manufacturers by avg price within region
+-- Shows top 3 most expensive brands per region
+WITH ranked AS (
+    SELECT
+        region,
+        manufacturer,
+        ROUND(AVG(price), 0)              AS avg_price,
+        COUNT(*)                          AS listings,
+        DENSE_RANK() OVER (
+            PARTITION BY region
+            ORDER BY AVG(price) DESC
+        )                                 AS price_rank
+    FROM vehicles
+    WHERE manufacturer IS NOT NULL
+        AND region IS NOT NULL
+    GROUP BY region, manufacturer
+    HAVING COUNT(*) >= 10
+)
+SELECT * FROM ranked
+WHERE price_rank <= 3
+ORDER BY region, price_rank;</pre>
+
+  <div class="lbl">Screenshot these results — they go in your README</div>
+  <div class="mrow"><span class="mk">Screenshot 1</span><span class="mv">Q1 result showing price tiers — shows your pipeline created meaningful segments</span></div>
+  <div class="mrow"><span class="mk">Screenshot 2</span><span class="mv">Q3 underpriced listings — shows the business insight your pipeline surfaces</span></div>
+  <div class="mrow"><span class="mk">Screenshot 3</span><span class="mv">Athena "Data scanned" amount — proves partition pruning worked (should be small)</span></div>
+
+  <div class="win">Success check: All 5 queries return results in Athena. Screenshot at least Q1 and Q3. These screenshots are your portfolio evidence that the pipeline actually ran on AWS.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bg">Step 9</span>
+  <span class="qt">Push to GitHub with README</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Create .gitignore first</div>
+<pre>
+# In C:\projects\de-auto-aws-pipeline
+type nul > .gitignore</pre>
+
+<pre>
+# Paste into .gitignore:
+*.csv
+*.parquet
+__pycache__/
+*.pyc
+.env
+.aws/
+venv/</pre>
+
+  <div class="lbl">Create README.md — paste and fill in your numbers</div>
+<pre>
+# Automobile Sales Pipeline — AWS End-to-End
+
+End-to-end data pipeline on AWS processing 426,880 vehicle
+listings. Raw CSV → S3 → Glue Crawler → Glue ETL (PySpark)
+→ Parquet on S3 → Athena SQL queries.
+
+## Business Problem
+A used car marketplace needs to identify underpriced listings,
+track regional pricing trends, and generate weekly sales reports.
+Manual analysis took hours — this pipeline produces insights in
+minutes on demand.
+
+## Architecture
+Raw CSV → S3 (raw zone) → Glue Crawler (schema detection)
+→ Glue Catalog → Glue ETL Job (PySpark transform)
+→ S3 (processed Parquet, partitioned by price_tier)
+→ Athena (SQL queries) → Business insights
+
+## AWS Services Used
+S3, Glue Crawler, Glue Catalog, Glue ETL, Athena, IAM
+
+## Key Results
+- Records processed: 426,880 listings
+- Underpriced listings identified: [X] (priced $2000+ below segment avg)
+- Athena data scanned for Q1: [X MB] (partition pruning working)
+- Glue job duration: [X minutes]
+
+## Key Technical Decisions
+- Parquet + partitionBy(price_tier): downstream Athena queries
+  filter by price tier — partition pruning reduces scan cost
+- coalesce(8): prevents small files problem from Glue defaults
+- Window function for segment avg: AVG OVER (PARTITION BY
+  manufacturer, condition) — compares each listing to its
+  direct competitors without collapsing the DataFrame
+- job.commit(): ensures Job Bookmarks advance so reruns only
+  process new files — not the full dataset again
+
+## How to Run
+1. Configure AWS CLI: aws configure
+2. Create S3 bucket and upload CSV (see Step 3 in setup guide)
+3. Run Glue Crawler to detect schema
+4. Upload script: aws s3 cp src/glue_transform.py s3://BUCKET/scripts/
+5. Run Glue ETL job from AWS Console
+6. Query results in Athena using sql/analysis.sql
+
+## Skills Demonstrated
+AWS S3, Glue, Athena, IAM | PySpark on managed Spark cluster
+Window functions | Partition pruning | Cloud ETL pipeline design</pre>
+
+  <div class="lbl">Create GitHub repo and push</div>
+<pre>
+cd C:\projects\de-auto-aws-pipeline
+git init
+git add .
+git commit -m "initial: AWS Glue ETL pipeline for vehicle listings"
+
+# Create repo on GitHub named: de-auto-aws-pipeline
+git remote add origin https://github.com/YOUR_USERNAME/de-auto-aws-pipeline.git
+git branch -M main
+git push -u origin main</pre>
+
+  <div class="win">Success check: repo is live on GitHub with src/glue_transform.py, sql/analysis.sql, and README.md. No CSV or Parquet files — they are in .gitignore.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Project 2 — 9 steps</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.8;margin-bottom:8px">
+  Step 1 — Architecture overview<br>
+  Step 2 — Install and configure AWS CLI<br>
+  Step 3 — Create S3 bucket and upload dataset<br>
+  Step 4 — Create IAM role for Glue<br>
+  Step 5 — Create and run Glue Crawler<br>
+  Step 6 — Write and upload Glue ETL script<br>
+  Step 7 — Create and run Glue ETL job<br>
+  Step 8 — Query with Athena, take screenshots<br>
+  Step 9 — Push to GitHub with README
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">Daily plan: Steps 2+3 today (30 min). Steps 4+5 tomorrow (20 min). Steps 6+7 next day (45 min). Steps 8+9 final day (30 min). Project 2 done in 4 days.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

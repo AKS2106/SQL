@@ -1,0 +1,575 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+.tab{padding:7px 16px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.tab.active,.tab:hover{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.sec{display:none}.sec.active{display:block}
+.sec-title{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.6}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.ch{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer}
+.ch:hover{background:var(--color-background-secondary)}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.ct{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.chev{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.chev.open{transform:rotate(180deg)}
+.cb{display:none;padding:4px 16px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.cb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:7px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.num-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--color-background-info);color:var(--color-text-info);font-size:11px;font-weight:500;flex-shrink:0}
+</style>
+
+<h3>DE System Design — Complete Guide</h3>
+<div class="sub">Concepts explained through real case studies. Healthcare, Automobile, and Laptop/Electronics sectors. Start with the Foundations tab — every other tab builds on it.</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="secs"></div>
+
+<script>
+const D=[
+{
+  id:"foundations", label:"Foundations",
+  title:"System design foundations — what every DE must know",
+  sub:"Before any case study — these are the 10 core concepts. Every system design question is built from these building blocks. Learn these and the case studies become easy.",
+  cards:[
+    {
+      badge:"Must Read", bc:"bi",
+      title:"What is DE system design — and what does the interviewer want",
+      body:`
+<div class="lbl">What they are testing</div>
+<div class="p">The interviewer does not expect a perfect answer. They want to see how you THINK. Do you ask the right questions? Do you understand trade-offs? Do you know what breaks at scale? That is it.</div>
+<div class="lbl">The 5-step framework — say this structure every time</div>
+<div class="mrow"><span class="mk"><span class="num-badge">1</span> Clarify</span><span class="mv">Ask questions before drawing anything. Volume? Batch or real-time? Who reads the data? What is the SLA for freshness?</span></div>
+<div class="mrow"><span class="mk"><span class="num-badge">2</span> Estimate scale</span><span class="mv">How many rows per day? GB or TB? Peak vs average load? This determines which tools to pick.</span></div>
+<div class="mrow"><span class="mk"><span class="num-badge">3</span> Design layers</span><span class="mv">Ingestion → Storage → Processing → Serving → Monitoring. Walk through each layer.</span></div>
+<div class="mrow"><span class="mk"><span class="num-badge">4</span> Discuss trade-offs</span><span class="mv">Why this tool over that one? Batch vs streaming? Cost vs latency? What would you change at 10x scale?</span></div>
+<div class="mrow"><span class="mk"><span class="num-badge">5</span> Failure handling</span><span class="mv">What if the job fails halfway? What if a file is corrupt? What if data arrives late? Always address these.</span></div>
+<div class="say"><div class="say-l">Open every system design answer with this</div><div class="say-t">"Before I design anything, let me clarify a few things — is this batch or real-time? What is the data volume per day? Who are the downstream consumers — analysts, dashboards, or ML models? What is the acceptable latency for data freshness?"</div></div>
+<div class="tip">Never start drawing architecture without asking at least 2 clarifying questions. Interviewers deliberately leave requirements vague to see if you ask. Jumping straight to the answer is a red flag.</div>`
+    },
+    {
+      badge:"Core Concept", bc:"bi",
+      title:"The 5 layers of every data pipeline — memorise this",
+      body:`
+<div class="lbl">Every pipeline — no matter the industry — has exactly these 5 layers</div>
+<div class="mrow"><span class="mk">1. Ingestion</span><span class="mv">How does data enter the system? File drop on S3, API call, database replication, IoT device, event stream. Format: CSV, JSON, Avro, Parquet.</span></div>
+<div class="mrow"><span class="mk">2. Storage</span><span class="mv">Where does data live at each stage? Raw zone (original, never delete), Processed zone (clean, Parquet), Serving layer (Redshift, Athena, DynamoDB).</span></div>
+<div class="mrow"><span class="mk">3. Processing</span><span class="mv">What transforms the data? Glue + PySpark for batch. Spark Streaming / Kinesis for real-time. Airflow for orchestration.</span></div>
+<div class="mrow"><span class="mk">4. Serving</span><span class="mv">How do consumers access the data? Athena for ad-hoc SQL. Redshift for dashboards. DynamoDB for millisecond app lookups. APIs for external consumers.</span></div>
+<div class="mrow"><span class="mk">5. Monitoring</span><span class="mv">How do you know it is working? CloudWatch metrics. SNS alerts. Data quality checks. Row count reconciliation. SLA tracking.</span></div>
+<div class="flow">
+  <div class="fb">Raw data</div><div class="fa">→</div>
+  <div class="fb">Ingestion</div><div class="fa">→</div>
+  <div class="fb">Raw zone S3</div><div class="fa">→</div>
+  <div class="fb">Processing</div><div class="fa">→</div>
+  <div class="fb">Processed zone</div><div class="fa">→</div>
+  <div class="fb">Serving layer</div><div class="fa">→</div>
+  <div class="fb">Consumer</div>
+</div>
+<div class="ok">This 5-layer structure is your answer skeleton for ANY system design question. Healthcare, auto, finance — the layers never change. Only the specific tools and data volumes change.</div>`
+    },
+    {
+      badge:"Key Terms", bc:"ba",
+      title:"10 terms every DE system design answer needs",
+      body:`
+<div class="lbl">Learn these — they come up in every system design discussion</div>
+<div class="mrow"><span class="mk">Data Lake</span><span class="mv">Central S3 repository storing raw data in original format. Never delete raw data. Think of it as your source of truth you can always reprocess from.</span></div>
+<div class="mrow"><span class="mk">Data Warehouse</span><span class="mv">Structured, query-optimised store — Redshift, Snowflake. Pre-aggregated, schema-enforced. Fast for dashboards and BI tools.</span></div>
+<div class="mrow"><span class="mk">Data Lakehouse</span><span class="mv">Combination — S3 storage like a lake, but with warehouse features (ACID, schema enforcement) via Delta Lake or Apache Iceberg.</span></div>
+<div class="mrow"><span class="mk">ETL vs ELT</span><span class="mv">ETL: Transform before loading (old way — Glue transforms then loads to Redshift). ELT: Load raw then transform in warehouse (modern — S3 → Redshift → dbt transforms).</span></div>
+<div class="mrow"><span class="mk">SLA</span><span class="mv">Service Level Agreement — the deadline for data freshness. "Dashboard must show data within 1 hour of event" is an SLA. Drives whether you need batch or streaming.</span></div>
+<div class="mrow"><span class="mk">Idempotency</span><span class="mv">Running the pipeline twice gives the same result. Critical for reliability. Achieved with overwrite mode on partitions or Delta MERGE.</span></div>
+<div class="mrow"><span class="mk">Lineage</span><span class="mv">Tracking where data came from and what transformed it. "This dashboard number came from this table which came from this raw file." Used for debugging and compliance.</span></div>
+<div class="mrow"><span class="mk">Partitioning</span><span class="mv">Splitting data into folders by column value (year/month/day). Makes reads faster by skipping irrelevant folders — called partition pruning.</span></div>
+<div class="mrow"><span class="mk">Schema-on-read vs write</span><span class="mv">Schema-on-write: enforce schema when writing (Delta, Redshift). Schema-on-read: apply schema when reading (raw S3 CSV). Lake uses read, warehouse uses write.</span></div>
+<div class="mrow"><span class="mk">OLAP vs OLTP</span><span class="mv">OLTP: operational database, many small transactions (MySQL, Postgres). OLAP: analytical queries, large scans (Redshift, Athena). DE works with OLAP mostly.</span></div>`
+    },
+    {
+      badge:"Decision Framework", bc:"bg",
+      title:"Batch vs Streaming — when to choose which",
+      body:`
+<div class="lbl">The most asked trade-off question in DE system design</div>
+<div class="grid2">
+  <div class="box"><div class="box-t">Use Batch when</div><div class="box-r">• Data freshness of hours is acceptable<br>• Large historical datasets<br>• ML model training<br>• Cost is a priority<br>• Daily/weekly reports<br>• Complex multi-step transforms</div></div>
+  <div class="box"><div class="box-t">Use Streaming when</div><div class="box-r">• Need data in seconds or minutes<br>• Fraud/anomaly detection<br>• Real-time dashboards<br>• IoT sensor alerts<br>• Event-driven actions<br>• Customer-facing features</div></div>
+</div>
+<div class="lbl">Lambda Architecture — the real-world answer</div>
+<div class="p">Most production systems use BOTH. Batch for historical accuracy and reprocessing. Streaming for real-time freshness. Results merged at the serving layer. This is called Lambda Architecture.</div>
+<div class="flow">
+  <div class="fb">Raw events</div><div class="fa">→</div>
+  <div class="fb">Batch layer (S3+Glue)</div><div class="fa">→</div>
+  <div class="fb">Batch view</div>
+</div>
+<div class="flow">
+  <div class="fb">Raw events</div><div class="fa">→</div>
+  <div class="fb">Speed layer (Kinesis+Spark)</div><div class="fa">→</div>
+  <div class="fb">Real-time view</div>
+</div>
+<div class="flow">
+  <div class="fb">Batch view + Real-time view</div><div class="fa">→</div>
+  <div class="fb">Merged serving layer</div><div class="fa">→</div>
+  <div class="fb">Dashboard / API</div>
+</div>
+<div class="say"><div class="say-l">Say this when asked batch vs streaming</div><div class="say-t">"My first question is always — what is the SLA for data freshness? If hours are acceptable, batch is simpler and cheaper. If minutes or seconds are needed, streaming. In most production systems I would design a Lambda architecture — batch for historical accuracy and streaming for real-time updates, merged at the serving layer."</div></div>`
+    },
+    {
+      badge:"Storage Design", bc:"ba",
+      title:"Data lake zones — raw, processed, serving",
+      body:`
+<div class="lbl">The 3-zone pattern every DE uses</div>
+<div class="mrow"><span class="mk">Raw zone</span><span class="mv">Exact copy of source data. Never transform, never delete. If anything goes wrong you can always reprocess from here. Compression optional. Original format.</span></div>
+<div class="mrow"><span class="mk">Processed zone</span><span class="mv">Cleaned, validated, enriched data. Parquet format, partitioned by date. This is what pipelines read from. Idempotent writes — safe to reprocess.</span></div>
+<div class="mrow"><span class="mk">Serving/curated zone</span><span class="mv">Aggregated, business-ready data. Optimised for specific queries. Could be Parquet, Delta, or loaded into Redshift. What dashboards and analysts query.</span></div>
+<pre>
+s3://company-datalake/
+├── raw/                    ← exact copy of source, never modified
+│   ├── healthcare/admissions/dt=2024-01-15/
+│   └── auto/listings/dt=2024-01-15/
+├── processed/              ← clean Parquet, partitioned, idempotent
+│   ├── healthcare/admissions/dt=2024-01-15/
+│   └── auto/listings/price_tier=Budget/
+└── serving/                ← aggregated, dashboard-ready
+    ├── healthcare/daily_readmission_summary/
+    └── auto/regional_price_report/</pre>
+<div class="tip">Raw zone is your insurance policy. Whatever mistakes happen in processing, you can always reprocess from raw. Never skip it — never write directly to processed from source.</div>`
+    },
+    {
+      badge:"Orchestration", bc:"bp",
+      title:"Airflow — orchestrating pipeline dependencies",
+      body:`
+<div class="lbl">What orchestration means</div>
+<div class="p">You have 5 pipeline jobs. Job 3 can only run after Jobs 1 and 2 finish. Job 5 can only run after Job 4. If Job 2 fails, Jobs 3 and 5 should not run. Airflow manages these dependencies, schedules runs, retries failures, and alerts on problems.</div>
+<div class="lbl">Key Airflow terms</div>
+<div class="mrow"><span class="mk">DAG</span><span class="mv">Directed Acyclic Graph. The definition of your pipeline — what tasks run, in what order, on what schedule. Think of it as a recipe.</span></div>
+<div class="mrow"><span class="mk">Task</span><span class="mv">One step in the DAG — e.g. "run Glue job", "check file arrived", "send alert". Each task runs independently and can retry on failure.</span></div>
+<div class="mrow"><span class="mk">Trigger</span><span class="mv">What starts the DAG — a cron schedule (every day at 2am), an external event (file landed on S3), or manual trigger.</span></div>
+<div class="mrow"><span class="mk">Dependency</span><span class="mv">task_b.set_upstream(task_a) means task_b only runs after task_a succeeds. This is how you prevent downstream jobs running on bad data.</span></div>
+<pre>
+# Simple Airflow DAG structure
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from datetime import datetime
+
+with DAG("healthcare_pipeline",
+         schedule_interval="0 2 * * *",   # every day 2am
+         start_date=datetime(2024,1,1)) as dag:
+
+    ingest   = PythonOperator(task_id="ingest",   python_callable=run_ingest)
+    quality  = PythonOperator(task_id="quality",  python_callable=run_quality)
+    transform= PythonOperator(task_id="transform",python_callable=run_transform)
+    report   = PythonOperator(task_id="report",   python_callable=run_report)
+
+    ingest >> quality >> transform >> report
+    # >> means "then" — quality runs after ingest, etc.</pre>
+<div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I use Airflow to orchestrate pipeline dependencies — it ensures downstream jobs only run after upstream ones succeed, handles retries with backoff, and alerts the team on failures. On AWS I'd use MWAA — managed Airflow — so no cluster to maintain."</div></div>`
+    }
+  ]
+},
+{
+  id:"healthcare", label:"Healthcare Case Study",
+  title:"Case Study 1 — Healthcare: Patient Readmission Pipeline",
+  sub:"Design a data pipeline for a hospital group to reduce 30-day patient readmissions. Uses AWS. Covers batch processing, real-time alerts, data governance (HIPAA), and SCD Type 2.",
+  cards:[
+    {
+      badge:"Scenario", bc:"bi",
+      title:"The business problem — what the interviewer tells you",
+      body:`
+<div class="p">"We are a network of 50 hospitals across the UK. We want to build a data platform to: (1) track patient readmissions within 30 days, (2) alert clinical teams when a high-risk patient is discharged, (3) produce daily operational reports for hospital management, and (4) enable our data science team to build readmission prediction models. We process about 5,000 admissions per day across all hospitals."</div>
+<div class="lbl">Your clarifying questions — ask these before designing</div>
+<div class="mrow"><span class="mk">Freshness SLA?</span><span class="mv">"When a patient is discharged, how quickly does the clinical team need to see the alert? Minutes or hours?" → Drives batch vs streaming decision.</span></div>
+<div class="mrow"><span class="mk">Data sensitivity?</span><span class="mv">"Is this patient data subject to GDPR/HIPAA regulations?" → Always yes in healthcare. Drives encryption, access control, audit logging.</span></div>
+<div class="mrow"><span class="mk">Consumers?</span><span class="mv">"Who queries the data — SQL analysts, a dashboard, or an ML platform?" → Drives serving layer choice.</span></div>
+<div class="mrow"><span class="mk">History?</span><span class="mv">"Do we need historical patient records or only current?" → Drives SCD Type 2 design.</span></div>
+<div class="say"><div class="say-l">After clarifying — state your assumptions</div><div class="say-t">"Based on your answers I'll assume: clinical alerts needed within 15 minutes of discharge (streaming needed), patient data is HIPAA-regulated (encryption + audit required), analysts use SQL via Athena, and we need full patient history for SCD Type 2."</div></div>`
+    },
+    {
+      badge:"Architecture", bc:"ba",
+      title:"Full system design — healthcare pipeline",
+      body:`
+<div class="lbl">Layer 1 — Ingestion</div>
+<div class="mrow"><span class="mk">Source</span><span class="mv">Hospital EHR systems (Epic, Cerner) export HL7/FHIR events via API. Two streams: batch daily export (admissions history) + real-time discharge events.</span></div>
+<div class="mrow"><span class="mk">Batch</span><span class="mv">S3 file drop daily at 2am. Lambda triggered by S3 PUT event → starts Glue ETL job.</span></div>
+<div class="mrow"><span class="mk">Real-time</span><span class="mv">Discharge events → API Gateway → Kinesis Data Streams → Spark Structured Streaming consumer.</span></div>
+<div class="lbl">Layer 2 — Storage</div>
+<pre>
+s3://hospital-datalake/
+├── raw/admissions/dt=2024-01-15/         ← encrypted, never delete
+├── processed/admissions/dt=2024-01-15/   ← clean Parquet
+└── delta/patient_history/                ← SCD Type 2 via Delta MERGE</pre>
+<div class="lbl">Layer 3 — Processing</div>
+<div class="mrow"><span class="mk">Batch job</span><span class="mv">AWS Glue + PySpark. Reads raw → validates (null patient_id, future dates) → quarantines bad records → adds readmission flag → writes Parquet partitioned by hospital_id and dt.</span></div>
+<div class="mrow"><span class="mk">Streaming job</span><span class="mv">Spark Structured Streaming on EMR. Reads discharge events from Kinesis → joins with patient risk score from DynamoDB → filters high-risk → triggers SNS alert to clinical team within 15 minutes.</span></div>
+<div class="lbl">Layer 4 — Serving</div>
+<div class="mrow"><span class="mk">Athena</span><span class="mv">SQL queries by data analysts. "Show me readmission rate by hospital for last 30 days."</span></div>
+<div class="mrow"><span class="mk">Redshift</span><span class="mv">Pre-aggregated daily summaries for management dashboards in QuickSight.</span></div>
+<div class="mrow"><span class="mk">SageMaker Feature Store</span><span class="mv">ML team reads patient features for readmission prediction model training.</span></div>
+<div class="lbl">Layer 5 — Monitoring + Governance</div>
+<div class="mrow"><span class="mk">HIPAA compliance</span><span class="mv">S3 SSE-KMS encryption at rest. VPC endpoints — no public internet access. CloudTrail audit logs for all data access. Patient IDs hashed before analytics layer.</span></div>
+<div class="mrow"><span class="mk">Quality checks</span><span class="mv">AWS Deequ data quality framework. Alert if readmission rate changes more than 20% day over day (upstream data issue signal).</span></div>`
+    },
+    {
+      badge:"Key Design Decision", bc:"bg",
+      title:"SCD Type 2 — why it matters in healthcare",
+      body:`
+<div class="lbl">The problem</div>
+<div class="p">Patient John was in Ward A when admitted in January. He moved to Ward B in March. When a doctor asks "which ward was John in during his January admission?" — you need the historical record, not today's current ward.</div>
+<div class="lbl">SCD Type 2 solution — Delta Lake MERGE</div>
+<pre>
+# When patient data changes — close old record, insert new
+target.alias("t").merge(
+    updates.alias("s"),
+    "t.patient_id = s.patient_id AND t.is_current = true"
+).whenMatchedUpdate(set={
+    "end_date":   "current_date()",
+    "is_current": "false"
+}).execute()
+
+# Insert new current record
+new_df.withColumn("start_date", current_date()) \
+      .withColumn("end_date",   lit(None)) \
+      .withColumn("is_current", lit(True)) \
+      .write.format("delta").mode("append") \
+      .save("s3://hospital/delta/patients/")</pre>
+<div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"In healthcare patient demographics change — ward, consultant, diagnosis code. I use SCD Type 2 with Delta Lake MERGE to keep full history. Every change closes the old record with an end_date and inserts a new current record. This means I can answer 'what was the patient's status on any given date' — essential for audit and clinical research."</div></div>`
+    },
+    {
+      badge:"Trade-offs", bc:"br",
+      title:"Trade-off questions the interviewer will ask",
+      body:`
+<div class="lbl">Q: Why Kinesis instead of Kafka for real-time alerts?</div>
+<div class="p">Kinesis is fully managed on AWS — no cluster to operate, auto-scaling, integrated with Lambda and Glue. Kafka gives more control and is better for multi-cloud or on-premise. For a hospital staying on AWS, Kinesis is simpler and cheaper to operate.</div>
+<div class="lbl">Q: Why Delta Lake instead of plain Parquet?</div>
+<div class="p">Patient records change — ward transfers, updated diagnoses, corrected data. Plain Parquet is append-only — you would have to rewrite entire partitions for corrections. Delta MERGE handles updates atomically without full rewrite. HIPAA also benefits from Delta's audit trail — every change is logged.</div>
+<div class="lbl">Q: What if the streaming job crashes mid-shift?</div>
+<div class="p">Checkpointing. I always set a checkpoint location in S3. Spark records which Kinesis offsets were processed. On restart it reads from the last checkpoint — no events lost, no duplicates. This is the streaming equivalent of idempotency.</div>
+<div class="lbl">Q: How do you handle HIPAA compliance in the pipeline?</div>
+<div class="p">Four layers: encryption at rest (SSE-KMS on S3), encryption in transit (HTTPS/TLS), access control (IAM roles, no direct S3 access), and audit logging (CloudTrail records every API call). Patient IDs are hashed before leaving the raw zone — analytics layer never sees real patient identifiers.</div>
+<div class="tip">HIPAA trade-off to mention: hashing patient IDs protects privacy but makes debugging harder. Solution: maintain a secure mapping table accessible only to authorised clinical staff, separate from the analytics layer.</div>`
+    }
+  ]
+},
+{
+  id:"auto", label:"Automobile Case Study",
+  title:"Case Study 2 — Automobile: Connected Vehicle Data Platform",
+  sub:"Design a data platform for a car manufacturer processing IoT sensor data from 500,000 connected vehicles. Predictive maintenance, recall detection, and regional sales analytics.",
+  cards:[
+    {
+      badge:"Scenario", bc:"bi",
+      title:"The business problem",
+      body:`
+<div class="p">"We manufacture 500,000 vehicles, all connected to our cloud. Vehicles send sensor data every 30 seconds — engine temp, RPM, battery, fuel. We want to: (1) detect engine failures before they happen (predictive maintenance), (2) identify if a component defect affects multiple vehicles (recall detection), (3) analyse regional sales and service patterns, and (4) give drivers real-time alerts in the companion app."</div>
+<div class="lbl">Scale estimation — do this out loud in the interview</div>
+<pre>
+500,000 vehicles × 1 event per 30 seconds
+= ~16,667 events per second
+= ~1 million events per minute
+= ~1.4 billion events per day
+
+Each event ~500 bytes JSON
+= ~700 GB raw data per day
+= ~21 TB per month
+
+→ This is definitely streaming + S3 data lake at scale
+→ Cannot process event-by-event in Lambda — need Spark Streaming on EMR</pre>
+<div class="ok">Always do the math out loud. "500k vehicles sending every 30 seconds is about 17,000 events per second — that immediately tells me I need a distributed streaming solution like Kinesis with multiple shards, not a simple Lambda function."</div>`
+    },
+    {
+      badge:"Architecture", bc:"ba",
+      title:"Full system design — connected vehicle platform",
+      body:`
+<div class="lbl">Layer 1 — Ingestion (high volume streaming)</div>
+<div class="mrow"><span class="mk">IoT Core</span><span class="mv">AWS IoT Core receives MQTT messages from vehicles. Managed, scales automatically, handles device authentication.</span></div>
+<div class="mrow"><span class="mk">Kinesis</span><span class="mv">IoT Core routes to Kinesis Data Streams. 17 shards (1MB/s each = 17MB/s capacity with headroom). Partition key = vehicle_id for ordered processing per vehicle.</span></div>
+<div class="mrow"><span class="mk">Kinesis Firehose</span><span class="mv">Parallel stream to Firehose which batches and writes raw JSON to S3 every 5 minutes. Zero-code raw data preservation.</span></div>
+<div class="lbl">Layer 2 — Storage (tiered)</div>
+<pre>
+s3://auto-datalake/
+├── raw/telemetry/year=2024/month=01/day=15/hour=10/  ← Firehose writes here
+├── processed/telemetry/vehicle_id=VH001/dt=2024-01-15/
+├── processed/maintenance_alerts/dt=2024-01-15/
+├── delta/vehicle_registry/     ← SCD Type 2: VIN, owner, warranty
+└── serving/regional_summary/dt=2024-01-15/</pre>
+<div class="lbl">Layer 3 — Processing (two paths)</div>
+<div class="mrow"><span class="mk">Real-time path</span><span class="mv">EMR + Spark Structured Streaming. 5-minute tumbling windows per vehicle. If avg engine temp > 100°C or RPM > 5500 → write to DynamoDB → API Gateway notifies driver app within 30 seconds.</span></div>
+<div class="mrow"><span class="mk">Batch path</span><span class="mv">Daily Glue job at 3am. Reads processed Parquet, calculates 30-day rolling averages, identifies vehicles with degrading sensor trends, generates predictive maintenance scores.</span></div>
+<div class="lbl">Layer 4 — Serving</div>
+<div class="mrow"><span class="mk">DynamoDB</span><span class="mv">Real-time alerts for driver app. Millisecond reads. Key: vehicle_id. Value: latest alert + maintenance score.</span></div>
+<div class="mrow"><span class="mk">Athena</span><span class="mv">Engineering teams query: "Show all vehicles with engine_temp > 95 in last 7 days grouped by manufacturing batch" — recall investigation.</span></div>
+<div class="mrow"><span class="mk">Redshift</span><span class="mv">Regional sales and service centre analytics. QuickSight dashboards for operations teams.</span></div>`
+    },
+    {
+      badge:"Key Design Decision", bc:"bg",
+      title:"Predictive maintenance — feature engineering in PySpark",
+      body:`
+<div class="lbl">The concept</div>
+<div class="p">Instead of alerting when something breaks (reactive), we alert when sensor trends show it is about to break (predictive). This requires calculating rolling statistics over the last 7 days of vehicle data.</div>
+<pre>
+from pyspark.sql.window import Window
+from pyspark.sql.functions import avg, max, stddev, lag, datediff
+
+# 7-day rolling window per vehicle
+w_7d = Window.partitionBy("vehicle_id") \
+             .orderBy("timestamp") \
+             .rowsBetween(-7*24*120, 0)  # 7 days of 30-sec intervals
+
+df = df \
+    .withColumn("avg_temp_7d",  avg("engine_temp").over(w_7d)) \
+    .withColumn("max_temp_7d",  max("engine_temp").over(w_7d)) \
+    .withColumn("std_temp_7d",  stddev("engine_temp").over(w_7d)) \
+    .withColumn("temp_trend",   col("engine_temp") - lag("engine_temp",1).over(
+        Window.partitionBy("vehicle_id").orderBy("timestamp"))) \
+    .withColumn("risk_score",
+        when((col("avg_temp_7d") > 95) & (col("std_temp_7d") > 5), "HIGH")
+        .when(col("avg_temp_7d") > 90, "MEDIUM")
+        .otherwise("LOW"))</pre>
+<div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"For predictive maintenance I use window functions to calculate 7-day rolling averages and standard deviation per vehicle. A rising average combined with high variance in temperature suggests a developing problem. I generate a risk score and write it to DynamoDB so the driver app can surface it in real time."</div></div>`
+    },
+    {
+      badge:"Trade-offs", bc:"br",
+      title:"Trade-off questions the interviewer will ask",
+      body:`
+<div class="lbl">Q: 17,000 events/second — how many Kinesis shards?</div>
+<div class="p">Each shard handles 1MB/s write. At 500 bytes per event × 17,000 = ~8.5MB/s. I need 9 shards minimum. I would provision 17 for 2x headroom — vehicles send more during rush hours. Auto-scaling handles spikes beyond that.</div>
+<div class="lbl">Q: Why partition by vehicle_id in Kinesis?</div>
+<div class="p">Ordering matters — I need to see readings from the same vehicle in sequence to detect trends. Using vehicle_id as partition key ensures all readings from VH001 go to the same shard in order. If I used a random key, VH001's readings would scatter across shards and ordering would be lost.</div>
+<div class="lbl">Q: How do you handle a vehicle that goes offline for 3 days?</div>
+<div class="p">Gap detection. I track last_seen timestamp in DynamoDB per vehicle. A Lambda runs every hour checking for vehicles not seen in 24 hours — flags them as offline, sends alert to service team. When the vehicle reconnects, Spark processes all buffered events in order using the event timestamp not the arrival timestamp.</div>
+<div class="lbl">Q: How would you design a recall detection system?</div>
+<div class="p">Group vehicles by manufacturing batch (same factory, same week) and component supplier. If a specific batch shows statistically higher engine failure rate, flag for recall investigation. Athena SQL: GROUP BY manufacturing_batch, COUNT anomalies, compare to fleet average. Alert if rate is 3x fleet average.</div>
+<div class="tip">Recall detection is a great example of why you keep raw data forever. A defect might only become apparent 2 years after manufacture. You need to go back and reprocess historical sensor data with new knowledge.</div>`
+    }
+  ]
+},
+{
+  id:"laptop", label:"Laptop / Electronics Case Study",
+  title:"Case Study 3 — Laptops/Electronics: E-commerce Analytics Platform",
+  sub:"Design a data platform for an electronics retailer (laptops, phones, accessories). Customer behaviour, inventory management, pricing intelligence, and supply chain analytics.",
+  cards:[
+    {
+      badge:"Scenario", bc:"bi",
+      title:"The business problem",
+      body:`
+<div class="p">"We are an electronics retailer selling laptops, phones, and accessories online and in 200 stores. We process 50,000 orders per day. We need: (1) real-time inventory updates when stock falls below threshold, (2) customer purchase journey analysis to reduce cart abandonment, (3) dynamic pricing intelligence — adjust prices based on competitor prices and demand, (4) supply chain analytics — predict which products will run out of stock."</div>
+<div class="lbl">Scale estimation</div>
+<pre>
+50,000 orders/day = ~35 orders/minute (average)
+Peak: Black Friday = 10x = 350 orders/minute = 6 orders/second
+
+Website events (views, clicks, add-to-cart): 100x orders
+= 5,000,000 website events/day = ~58 events/second
+
+Inventory updates: every order + every store sale
+= 50,000 inventory events/day (manageable, not high volume)
+
+→ Website events need streaming
+→ Orders and inventory can be near-real-time batch (every 5 min)
+→ Pricing and supply chain can be daily batch</pre>`
+    },
+    {
+      badge:"Architecture", bc:"ba",
+      title:"Full system design — electronics retail platform",
+      body:`
+<div class="lbl">Layer 1 — Ingestion (3 different sources)</div>
+<div class="mrow"><span class="mk">Website clickstream</span><span class="mv">JavaScript SDK sends events (page_view, add_to_cart, checkout_start, purchase) to API Gateway → Kinesis → Spark Streaming. 58 events/second.</span></div>
+<div class="mrow"><span class="mk">Order system</span><span class="mv">Order DB (Postgres) → AWS DMS (Database Migration Service) replicates changes to S3 every 5 minutes. CDC (Change Data Capture) — only changed rows.</span></div>
+<div class="mrow"><span class="mk">Competitor prices</span><span class="mv">Lambda function runs hourly, calls competitor price APIs, writes JSON to S3. External data enrichment.</span></div>
+<div class="lbl">Layer 2 — Storage</div>
+<pre>
+s3://retail-datalake/
+├── raw/clickstream/dt=2024-01-15/hour=10/
+├── raw/orders/dt=2024-01-15/
+├── raw/competitor_prices/dt=2024-01-15/
+├── processed/customer_sessions/dt=2024-01-15/
+├── processed/order_summary/dt=2024-01-15/
+├── delta/inventory/         ← real-time inventory levels
+├── delta/product_catalogue/ ← SCD Type 2: price history
+└── serving/pricing_recommendations/</pre>
+<div class="lbl">Layer 3 — Processing</div>
+<div class="mrow"><span class="mk">Clickstream streaming</span><span class="mv">Spark Streaming sessionises clickstream (group events within 30-min inactivity window per user). Identifies abandoned carts in real-time → triggers email within 1 hour.</span></div>
+<div class="mrow"><span class="mk">Inventory batch (5-min)</span><span class="mv">Glue job reads order CDC → updates Delta inventory table using MERGE → triggers SNS alert to purchasing team when stock falls below reorder_point.</span></div>
+<div class="mrow"><span class="mk">Pricing daily batch</span><span class="mv">Reads competitor prices + our sales velocity + inventory levels → calculates optimal price → writes recommendations to Redshift for pricing team review.</span></div>
+<div class="lbl">Layer 4 — Serving</div>
+<div class="mrow"><span class="mk">DynamoDB</span><span class="mv">Real-time inventory API — store staff check stock levels. Millisecond reads. Key: product_id + store_id.</span></div>
+<div class="mrow"><span class="mk">Redshift</span><span class="mv">Pricing intelligence dashboard, cart abandonment funnel, regional sales reports.</span></div>
+<div class="mrow"><span class="mk">Athena</span><span class="mv">Ad-hoc analysis: "Which laptop models have highest return rate?" "What is conversion rate for products with vs without review videos?"</span></div>`
+    },
+    {
+      badge:"Key Design Decision", bc:"bg",
+      title:"Customer journey funnel — sessionisation in PySpark",
+      body:`
+<div class="lbl">The concept</div>
+<div class="p">A session is a sequence of events from one user within a period of inactivity. User visits, clicks 5 products, adds one to cart, then leaves. 45 minutes later returns and buys. That is two sessions. Understanding where users drop off in the funnel drives CX improvements — directly your expertise.</div>
+<pre>
+from pyspark.sql.window import Window
+from pyspark.sql.functions import lag, datediff, sum as sum_, col, when
+
+# Sessionise — new session if gap > 30 minutes
+w = Window.partitionBy("user_id").orderBy("event_time")
+
+df = df \
+    .withColumn("prev_time", lag("event_time").over(w)) \
+    .withColumn("gap_mins",
+        (col("event_time").cast("long") - col("prev_time").cast("long")) / 60) \
+    .withColumn("new_session",
+        when(col("gap_mins") > 30, 1).otherwise(0)) \
+    .withColumn("session_id",
+        sum_("new_session").over(
+            w.rowsBetween(Window.unboundedPreceding, 0)))
+
+# Funnel analysis — conversion at each stage
+funnel = df.groupBy("dt").agg(
+    countDistinct(when(col("event")=="page_view","user_id")).alias("visitors"),
+    countDistinct(when(col("event")=="add_to_cart","user_id")).alias("added_to_cart"),
+    countDistinct(when(col("event")=="checkout_start","user_id")).alias("started_checkout"),
+    countDistinct(when(col("event")=="purchase","user_id")).alias("purchased")
+)</pre>
+<div class="say"><div class="say-l">Say this — connect to your CX background</div><div class="say-t">"This is actually the same funnel analysis I used to do manually in my CX role. Now I build the pipeline that generates it automatically for any date range. Sessionisation is the key step — grouping events by inactivity window so we can see complete customer journeys rather than isolated clicks."</div></div>`
+    },
+    {
+      badge:"Trade-offs", bc:"br",
+      title:"Trade-off questions the interviewer will ask",
+      body:`
+<div class="lbl">Q: How do you handle Black Friday — 10x normal traffic?</div>
+<div class="p">Three strategies. First, pre-scale Kinesis shards before the event — add shards a day before, remove after. Second, EMR auto-scaling — Spark cluster adds executors when queue depth grows. Third, DynamoDB auto-scaling handles the inventory read spike automatically. I would also increase Lambda concurrency limits beforehand and set CloudWatch alarms at 70% capacity to alert before hitting limits.</div>
+<div class="lbl">Q: Competitor prices change hourly — how do you keep pricing recommendations fresh?</div>
+<div class="p">Two-tier approach. EventBridge triggers Lambda hourly to scrape competitor prices and write to S3. A separate Glue job runs every 4 hours reading the latest prices + our sales velocity to generate recommendations. The pricing team gets updated recommendations 6 times a day. For high-velocity products like featured laptops, I would increase frequency to every hour.</div>
+<div class="lbl">Q: How do you handle a product that appears in both online and store sales?</div>
+<div class="p">This is an inventory consistency problem. Both channels write to the same Delta inventory table using MERGE with the product_id + location_id as the key. Delta's ACID guarantees mean if an online order and a store sale happen simultaneously for the last unit, one MERGE succeeds and one fails — preventing overselling. The failed transaction retries and sees zero stock, returns "out of stock" to the customer.</div>
+<div class="lbl">Q: How would you design supply chain analytics to predict stockouts?</div>
+<div class="p">Three inputs: current stock levels, historical sales velocity by product + season, and supplier lead times. Daily batch job calculates days_of_stock = current_inventory / avg_daily_sales. If days_of_stock < supplier_lead_time, flag for reorder. I would use a simple linear regression on 90 days of sales history to account for seasonality — laptop sales spike in September (back to school) and November (Black Friday).</div>
+<div class="tip">Supply chain + ML is a great answer extension. Even mentioning "I would use a simple model for seasonality" shows you think end-to-end, not just about the pipeline.</div>`
+    }
+  ]
+},
+{
+  id:"common-qs", label:"Common Questions",
+  title:"Most asked DE system design questions — with answers",
+  sub:"These specific questions come up in almost every DE system design interview. Know all of them.",
+  cards:[
+    {
+      badge:"Very Common", bc:"br",
+      title:"Design a pipeline that processes data from multiple sources",
+      body:`
+<div class="lbl">What they want to hear</div>
+<div class="p">Multiple sources means you need a standardised ingestion layer — every source lands in raw zone in its own format, then a common processing layer normalises everything into a unified schema.</div>
+<pre>
+# Pattern: fan-in to common schema
+Sources:
+  Hospital A → HL7 format → s3://raw/hospital_a/
+  Hospital B → CSV format  → s3://raw/hospital_b/
+  Hospital C → JSON format → s3://raw/hospital_c/
+
+Processing:
+  Each hospital has its own Glue job normalising to common schema:
+    patient_id, admission_date, discharge_date, diagnosis_code, hospital_id
+
+  All land in:  s3://processed/admissions/dt=2024-01-15/
+
+  Single downstream job reads all of processed/ — one schema, all hospitals</pre>
+<div class="say"><div class="say-l">Say this</div><div class="say-t">"I use a medallion architecture — each source has its own raw zone preserving original format. A source-specific transform normalises to a common schema in the processed zone. Downstream jobs only read from processed — they don't know or care about source format differences. Adding a new source means adding one new ingestion job, nothing else changes."</div></div>`
+    },
+    {
+      badge:"Very Common", bc:"br",
+      title:"How do you ensure data consistency across multiple pipelines?",
+      body:`
+<div class="lbl">Three techniques — mention all three</div>
+<div class="mrow"><span class="mk">1. Single source of truth</span><span class="mv">All pipelines read from the same processed zone in S3. Never read from raw directly in downstream jobs. If processed is updated, all pipelines automatically see the new version next run.</span></div>
+<div class="mrow"><span class="mk">2. Idempotent writes</span><span class="mv">Every pipeline uses overwrite mode on partitions or Delta MERGE. If two pipelines write the same partition, the result is the same as one write. No duplicates, no partial data.</span></div>
+<div class="mrow"><span class="mk">3. Row count reconciliation</span><span class="mv">After every pipeline run, compare row count at source vs destination. If counts differ by more than 0.1%, alert and halt downstream jobs until investigated.</span></div>
+<div class="say"><div class="say-l">Say this</div><div class="say-t">"Consistency comes from three things: a single source of truth that all pipelines read from, idempotent writes so reruns never create duplicates, and row count reconciliation after every run to catch any mismatch before it propagates downstream."</div></div>`
+    },
+    {
+      badge:"Very Common", bc:"ba",
+      title:"How would you migrate from on-premise to AWS?",
+      body:`
+<div class="lbl">The phased approach — never recommend big bang migration</div>
+<div class="mrow"><span class="mk">Phase 1 — Replicate</span><span class="mv">Use AWS DMS or AWS DataSync to replicate on-premise data to S3 without changing anything. Run both systems in parallel. Validate data matches.</span></div>
+<div class="mrow"><span class="mk">Phase 2 — Process on AWS</span><span class="mv">Move ETL jobs to Glue while still reading from replicated S3 data. On-premise jobs still run as backup. Compare outputs.</span></div>
+<div class="mrow"><span class="mk">Phase 3 — Serve on AWS</span><span class="mv">Move dashboards and queries to Athena/Redshift. Validate results match on-premise reports exactly.</span></div>
+<div class="mrow"><span class="mk">Phase 4 — Cut over</span><span class="mv">Stop on-premise jobs. AWS becomes primary. Keep on-premise available for 30 days as rollback option.</span></div>
+<div class="say"><div class="say-l">Say this</div><div class="say-t">"I would do a phased migration never a big bang. First replicate data to S3, then move processing to Glue while running both in parallel, then move serving to Athena. Only cut over when outputs match exactly. Keep on-premise available as rollback for 30 days. The key is never having a day where both systems are down."</div></div>`
+    },
+    {
+      badge:"Common", bc:"ba",
+      title:"How do you handle schema changes from upstream systems?",
+      body:`
+<div class="lbl">The three types and solutions</div>
+<div class="mrow"><span class="mk">New column added</span><span class="mv">Safe. Use mergeSchema=true in Spark reads. Old records get NULL for new column. Glue Crawler re-run updates Catalog. Add defensive column check in code.</span></div>
+<div class="mrow"><span class="mk">Column type changed</span><span class="mv">Risky. Schema enforcement in Delta Lake rejects the write immediately — you know about it. Cast explicitly after coordinating with upstream team.</span></div>
+<div class="mrow"><span class="mk">Column removed</span><span class="mv">Old data still has it. New data doesn't. Most dangerous — downstream queries referencing that column break silently. Implement schema registry to alert when columns disappear.</span></div>
+<div class="lbl">Schema registry concept</div>
+<div class="p">A schema registry (AWS Glue Schema Registry or Confluent) stores the expected schema for each data source. Every new file is validated against the registry before processing. Schema changes require explicit approval — preventing silent breaking changes.</div>
+<div class="say"><div class="say-l">Say this</div><div class="say-t">"I handle schema evolution at three levels. Glue Crawler detects new columns and updates the Catalog. Delta Lake's schema enforcement rejects unexpected type changes immediately rather than silently corrupting data. For production I add a schema registry — every incoming file is validated against the expected schema before the pipeline processes it."</div></div>`
+    },
+    {
+      badge:"Common", bc:"bg",
+      title:"CTE vs subquery vs temp table — when to use which",
+      body:`
+<div class="lbl">This is asked as a SQL question but is really a system design question</div>
+<div class="mrow"><span class="mk">Subquery</span><span class="mv">Use for simple one-off logic that is used once. Readable enough without naming. No performance benefit in most engines.</span></div>
+<div class="mrow"><span class="mk">CTE</span><span class="mv">Use when the same logic is referenced multiple times in one query, or when you want to break complex logic into named steps. Same performance as subquery in most engines but far more readable.</span></div>
+<div class="mrow"><span class="mk">Temp table</span><span class="mv">Use when the intermediate result is large, used across multiple queries, or needs an index. Materialised to disk — better performance for complex multi-step pipelines. In Spark: .cache() or .persist() is the equivalent.</span></div>
+<div class="say"><div class="say-l">Say this</div><div class="say-t">"Subquery for simple one-off logic. CTE when I need to reuse the same logic or want readable step-by-step named logic in one query. Temp table when intermediate results are large or needed across multiple separate queries — in PySpark the equivalent is .cache() + .persist() to avoid recomputing the same transformation multiple times."</div></div>`
+    }
+  ]
+}
+];
+
+function build(){
+  const T=document.getElementById("tabs");
+  const S=document.getElementById("secs");
+  D.forEach((pg,i)=>{
+    const btn=document.createElement("button");
+    btn.className="tab"+(i===0?" active":"");
+    btn.textContent=pg.label;
+    btn.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".sec").forEach(x=>x.classList.remove("active"));
+      document.getElementById("pg-"+pg.id).classList.add("active");
+    };
+    T.appendChild(btn);
+    const sec=document.createElement("div");
+    sec.className="sec"+(i===0?" active":"");
+    sec.id="pg-"+pg.id;
+    sec.innerHTML=`<div class="sec-title">${pg.title}</div><div class="sec-sub">${pg.sub}</div><div class="cards">${pg.cards.map(c=>`<div class="card"><div class="ch" onclick="tog(this)"><span class="badge ${c.bc}">${c.badge}</span><span class="ct">${c.title}</span><span class="chev">▼</span></div><div class="cb">${c.body}</div></div>`).join("")}</div>`;
+    S.appendChild(sec);
+  });
+}
+function tog(h){
+  h.nextElementSibling.classList.toggle("open");
+  h.querySelector(".chev").classList.toggle("open");
+}
+build();
+</script>

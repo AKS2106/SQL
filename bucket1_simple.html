@@ -1,0 +1,286 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:115px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+</style>
+
+<h3>Bucket 1 — Reading &amp; Writing Files</h3>
+<div class="sub">6 questions. Click each one to expand. Read the concept first, then the code, then the green box — that's what you say in the interview.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">Parquet vs CSV vs JSON — differences and when to use each</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Understand this first — before the code</div>
+  <div class="grid3">
+    <div class="box"><div class="box-t">Parquet</div><div class="box-r">Columnar binary format. Schema stored inside. Spark reads only columns it needs. 3–5x smaller than CSV. <b>Default choice.</b></div></div>
+    <div class="box"><div class="box-t">CSV</div><div class="box-r">Plain text rows. No schema stored — Spark guesses it. Reads all columns every time. Largest size. Use for external system exports.</div></div>
+    <div class="box"><div class="box-t">JSON</div><div class="box-r">Text key-value pairs. Handles nested and flexible schemas. Slower due to parsing. Use for APIs and varied schemas.</div></div>
+  </div>
+  <div class="lbl">The key insight to mention — columnar reading</div>
+  <div class="p">If your query needs only 2 columns from a 50-column table — Parquet reads only those 2 off disk. CSV reads all 50 and throws 48 away. That is why Parquet is 10–20x faster for analytics.</div>
+  <div class="lbl">Code</div>
+<pre>from pyspark.sql.types import *
+
+# Parquet — simplest, schema already inside the file
+df = spark.read.parquet("s3://bucket/data/")
+
+# CSV — always define schema yourself, never let Spark guess
+schema = StructType([
+    StructField("user_id", StringType(),    True),
+    StructField("event",   StringType(),    True),
+    StructField("amount",  DoubleType(),    True),
+    StructField("ts",      TimestampType(), True)
+])
+df = spark.read \
+    .option("header", "true") \
+    .option("mode", "DROPMALFORMED") \
+    .schema(schema) \
+    .csv("s3://bucket/logs/")
+
+# JSON — multiline if one record spans multiple lines
+df = spark.read \
+    .option("multiline", "true") \
+    .option("mode", "PERMISSIVE") \
+    .option("columnNameOfCorruptRecord", "_corrupt_record") \
+    .json("s3://bucket/events/")</pre>
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Parquet is my default for any analytical workload — it's columnar so Spark only reads the columns it needs, and schema is embedded so no inference needed. CSV when receiving data from external systems. JSON when schema is nested or varies per record."</div></div>
+  <div class="tip">Never use inferSchema=True on CSV in production. Spark reads the entire file twice and can guess wrong — a column with mostly numbers but one "N/A" row becomes StringType.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q2</span>
+  <span class="qt">Read modes — PERMISSIVE, DROPMALFORMED, FAILFAST</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What are "bad rows"</div>
+  <div class="p">A bad row is one Spark cannot parse — wrong type, missing columns, or broken JSON. These three modes tell Spark what to do when it hits one.</div>
+  <div class="mrow"><span class="mk">PERMISSIVE (default)</span><span class="mv">Keeps bad rows. Puts the raw broken text into a column called _corrupt_record. Good fields are parsed, bad ones become NULL. Use this when you want to inspect what went wrong.</span></div>
+  <div class="mrow"><span class="mk">DROPMALFORMED</span><span class="mv">Silently drops bad rows. No error, no record. Use when bad rows are noise — but risky because you don't know how many were dropped.</span></div>
+  <div class="mrow"><span class="mk">FAILFAST</span><span class="mv">Throws an exception on the very first bad row and stops the job. Use for strict pipelines where any bad row means something is seriously wrong upstream.</span></div>
+<pre>
+# PERMISSIVE — capture bad rows in _corrupt_record column
+df = spark.read \
+    .option("mode", "PERMISSIVE") \
+    .option("columnNameOfCorruptRecord", "_corrupt_record") \
+    .schema(schema) \
+    .csv("s3://bucket/logs/")
+
+df.filter(col("_corrupt_record").isNotNull()).show()
+
+# DROPMALFORMED — silently ignore bad rows
+df = spark.read.option("mode","DROPMALFORMED").schema(schema) \
+    .csv("s3://bucket/logs/")
+
+# FAILFAST — crash immediately on first bad row
+df = spark.read.option("mode","FAILFAST").schema(schema) \
+    .csv("s3://bucket/logs/")</pre>
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I always use PERMISSIVE in development — it shows me what bad data looks like. In production I use PERMISSIVE with a quarantine write so bad rows are preserved for investigation. FAILFAST for strict financial pipelines where one bad row means something is seriously wrong upstream."</div></div>
+  <div class="tip">DROPMALFORMED is tempting but dangerous — you have no idea how many rows were silently lost. Always at minimum count and log the bad rows.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">Corrupt file in S3 — separate valid and bad records (quarantine pattern)</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The quarantine pattern — production standard</div>
+  <div class="p">Never silently drop bad records. Write them to a quarantine folder with metadata so someone can investigate and reprocess later.</div>
+<pre>
+from pyspark.sql.functions import col, input_file_name, current_timestamp
+
+# Step 1: Read with PERMISSIVE
+df = spark.read \
+    .option("mode", "PERMISSIVE") \
+    .option("columnNameOfCorruptRecord", "_corrupt_record") \
+    .schema(schema) \
+    .json("s3://bucket/raw/events/")
+
+# Step 2: Split into valid and bad
+valid_df = df.filter(col("_corrupt_record").isNull()) \
+             .drop("_corrupt_record")
+
+bad_df = df.filter(col("_corrupt_record").isNotNull()) \
+           .withColumn("source_file", input_file_name()) \
+           .withColumn("ingested_at", current_timestamp())
+
+# Step 3: Log counts — always know your bad rate
+total   = df.count()
+bad_cnt = bad_df.count()
+print(f"Bad rows: {bad_cnt}/{total} = {100*bad_cnt/total:.1f}%")
+
+# Step 4: Write valid to processed zone
+valid_df.write.mode("append") \
+    .partitionBy("event_date") \
+    .parquet("s3://bucket/processed/")
+
+# Step 5: Write bad to quarantine zone
+bad_df.write.mode("append").json("s3://bucket/quarantine/")
+
+# Step 6: Alert if bad rate is too high
+if total > 0 and bad_cnt / total > 0.05:
+    import boto3
+    boto3.client("sns").publish(
+        TopicArn="arn:aws:sns:us-east-1:123:alerts",
+        Message=f"Bad record rate: {bad_cnt}/{total}",
+        Subject="Data quality alert"
+    )</pre>
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I use PERMISSIVE mode to capture bad rows, split the DataFrame into valid and bad, write valid to processed and bad to quarantine with source filename and timestamp. I also alert if bad rate crosses 5%."</div></div>
+  <div class="ok">The source_file and ingested_at columns on the bad DataFrame are what makes this production-grade. Without them you can't trace where the bad data came from.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">Large CSV in Python without loading all data into memory</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Why it is a problem</div>
+  <div class="p">pd.read_csv("10gb_file.csv") loads all 10GB into RAM. If your machine has 8GB — it crashes. Solution: read and process one chunk at a time.</div>
+<pre>
+import pandas as pd
+
+chunk_size = 100_000   # 100k rows in memory at a time
+results = []
+
+for chunk in pd.read_csv("large_file.csv", chunksize=chunk_size):
+    # Only this chunk is in memory right now
+    filtered = chunk[chunk["status"] == "active"]
+    agg = filtered.groupby("dept")["salary"].sum()
+    results.append(agg)
+
+# Combine all chunk results at the end
+final = pd.concat(results).groupby(level=0).sum()
+print(final)</pre>
+  <div class="lbl">When to use PySpark instead</div>
+<pre>
+# PySpark — no chunking needed, Spark handles distribution
+df = spark.read.option("header","true").schema(schema) \
+    .csv("s3://bucket/large_file.csv")
+df.filter(col("status")=="active") \
+  .groupBy("dept").agg(sum("salary")).show()</pre>
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"In Python I use pandas chunksize — process 100k rows at a time so only that chunk is in memory. For files over 5GB I move to PySpark — no chunking needed since Spark distributes automatically across executors."</div></div>
+  <div class="tip">They will ask: "When pandas vs PySpark?" — pandas for files under 5GB on one machine. PySpark for larger files or when you need distributed processing.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q5</span>
+  <span class="qt">Schema changes in Parquet — add column, type change, removed column</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">3 types of changes — each handled differently</div>
+  <div class="mrow"><span class="mk">New column added</span><span class="mv">Safe. Old files return NULL for the new column. Use mergeSchema=true when reading so Spark unifies both schemas.</span></div>
+  <div class="mrow"><span class="mk">Column type changed</span><span class="mv">Risky. Cast explicitly. Or use Delta Lake which handles type evolution safely.</span></div>
+  <div class="mrow"><span class="mk">Column removed</span><span class="mv">Old files still have it. New files don't. Usually safe — monitor downstream queries that may depend on it.</span></div>
+<pre>
+# New column — mergeSchema unifies old and new file schemas
+df = spark.read \
+    .option("mergeSchema", "true") \
+    .parquet("s3://bucket/data/")
+# Old files: new_col = NULL  |  New files: new_col = real value
+
+# Type changed — cast it explicitly after reading
+df = df.withColumn("price", col("price").cast(DoubleType()))
+
+# Safest for ongoing schema changes — use Delta Lake
+df.write.format("delta") \
+    .option("mergeSchema", "true") \
+    .mode("append") \
+    .save("s3://bucket/delta/orders/")</pre>
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Adding a column is safe — old files return NULL with mergeSchema. Type changes I handle with explicit casting. For production pipelines with frequent schema changes I use Delta Lake — it handles all three cases safely with a full history of what changed."</div></div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q6</span>
+  <span class="qt">Glue job writing thousands of small files — how to fix it</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Why it happens</div>
+  <div class="p">Spark writes one file per partition. After a filter or join Spark keeps many partitions even though much less data remains. 500 partitions × 1MB each = 500 small files. Reading them is slow — every file needs a separate S3 request.</div>
+  <div class="lbl">The fix — reduce partitions before writing</div>
+<pre>
+# Problem: too many tiny files
+df.write.parquet("s3://bucket/output/")
+
+# Fix 1: coalesce — reduces partitions, NO full shuffle (cheaper)
+df.coalesce(8).write.parquet("s3://bucket/output/")
+
+# Fix 2: repartition — full shuffle, perfectly even distribution
+# Use when coalesce gives uneven file sizes
+df.repartition(8).write.parquet("s3://bucket/output/")
+
+# Fix 3: repartition by column — best for partitioned output
+df.repartition(8, "dept") \
+  .write.partitionBy("dept") \
+  .parquet("s3://bucket/output/")
+
+# Fix 4: Delta Lake OPTIMIZE — compacts files automatically
+spark.sql("OPTIMIZE delta.`s3://bucket/delta/orders/`")</pre>
+  <div class="lbl">coalesce vs repartition — know both</div>
+  <div class="mrow"><span class="mk">coalesce(N)</span><span class="mv">No full shuffle. Moves data locally. Faster and cheaper. May give slightly uneven files. Use this first.</span></div>
+  <div class="mrow"><span class="mk">repartition(N)</span><span class="mv">Full shuffle across cluster. Perfectly even. More expensive. Use when data is skewed or coalesce gives uneven results.</span></div>
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Small files happen because Spark keeps too many partitions after filtering. I use coalesce before writing — no full shuffle so it's cheaper. Target is 128 to 256MB per file. For Delta Lake I run OPTIMIZE periodically to compact files automatically."</div></div>
+  <div class="tip">Rule of thumb: 128–256MB per output file. For 2GB of data coalesce(10) gives ~200MB files. Always check actual file sizes in S3 after writing.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px">Bucket 1 complete — 6 of 6 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7">Before moving on — pick any 2 questions, close this guide, and say the answer out loud in 3 sentences. If you can do that you own Bucket 1. Tell me when you are ready for Bucket 2 — Performance.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

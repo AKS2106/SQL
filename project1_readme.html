@@ -1,0 +1,393 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+</style>
+
+<h3>Project 1 — README Guide</h3>
+<div class="sub">Two parts. First — what separates a weak README from a strong one. Second — the full README template to copy, fill in, and commit today.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Part 1</span>
+  <span class="qt">What makes a README strong vs weak</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What recruiters look for in under 30 seconds</div>
+  <div class="diff">
+    <div class="box">
+      <div class="box-t">Weak README</div>
+      <div class="box-r">
+        "This is a PySpark project."<br><br>
+        Lists technologies used.<br><br>
+        Shows how to run the code.<br><br>
+        No context. No decisions. No impact.
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-t">Strong README</div>
+      <div class="box-r">
+        Starts with the business problem.<br><br>
+        Explains WHY each decision was made.<br><br>
+        Shows what the output looks like.<br><br>
+        Connects to real-world impact.
+      </div>
+    </div>
+  </div>
+  <div class="lbl">The 6 sections every strong DE README has</div>
+  <div class="p">
+  1. Business problem — why does this pipeline exist<br>
+  2. Architecture diagram — what the data flow looks like<br>
+  3. What this pipeline produces — the actual output<br>
+  4. Key technical decisions — WHY you chose each tool<br>
+  5. How to run — exact commands, nothing assumed<br>
+  6. Skills demonstrated — what the reader should take away
+  </div>
+  <div class="ok">Section 4 "Key technical decisions" is what separates junior and senior portfolios. Anyone can list tools used. Explaining why you chose Parquet over CSV, why you used coalesce(4), why you partitioned — that shows engineering thinking.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bg">Part 2</span>
+  <span class="qt">Full README — copy this, fill in your numbers, commit</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Open README.md in VS Code, replace everything with this</div>
+  <div class="p">Replace anything in [square brackets] with your actual numbers from running the pipeline.</div>
+<pre>
+# Healthcare Readmission Batch Pipeline
+
+A PySpark batch pipeline that processes 101,766 hospital patient
+records to identify readmission patterns, flag high-risk patients,
+and produce a daily summary report for clinical operations teams.
+
+---
+
+## Business Problem
+
+Hospitals in the US lose billions annually to preventable 30-day
+readmissions. The CMS Hospital Readmissions Reduction Program
+penalises hospitals financially for excess readmissions.
+
+This pipeline processes raw patient admission records daily to:
+- Identify patients readmitted within 30 days
+- Categorise patients by risk tier (High / Medium / Low)
+- Surface departments and age groups with highest readmission rates
+- Give the clinical ops team actionable data every morning
+
+---
+
+## Architecture
+
+```
+Raw CSV (S3 / local)
+       ↓
+  ingest.py        → validates schema, replaces nulls, saves Parquet
+       ↓
+  quality.py       → 6 data quality checks, flags bad records
+       ↓
+  transform.py     → adds readmission flag, risk tier, age groups
+       ↓
+Parquet output     → partitioned by risk_tier
+       ↓
+  SQL / Athena     → ad-hoc analysis queries
+```
+
+---
+
+## What This Pipeline Produces
+
+| Output | Description |
+|---|---|
+| Readmission flag | 1 if patient readmitted within 30 days, 0 otherwise |
+| Risk tier | High (7+ days), Medium (4-6 days), Low (1-3 days) |
+| Age group | Cleaned from raw bracket format into readable labels |
+| LOS category | Short / Medium / Long length of stay |
+| Quality report | Pass/Fail for 6 checks printed on every run |
+
+**Results from this dataset (101,766 records):**
+- Readmission rate within 30 days: [X]%
+- High risk patients: [X] ([X]%)
+- Quality checks: [X]/6 passed
+
+---
+
+## Key Technical Decisions
+
+**Parquet over CSV for processed data**
+Spark reads only the columns it needs from Parquet — columnar format.
+For a 50-column dataset this is significantly faster than CSV which
+reads all columns every time.
+
+**Explicit schema — no inferSchema**
+inferSchema reads the entire file twice and can guess types wrong.
+Defining schema explicitly is production standard and catches
+upstream type changes immediately.
+
+**coalesce(4) before writing**
+Default Spark shuffle creates too many small files. coalesce(4)
+reduces to 4 output files — right-sized for a 100k row dataset
+targeting ~128MB per file.
+
+**partitionBy("risk_tier") on output**
+Downstream queries almost always filter by risk tier. Partitioning
+means Spark skips non-matching folders — partition pruning reduces
+scan cost significantly at scale.
+
+**PERMISSIVE read mode with "?" replacement**
+This dataset uses "?" for missing values. PERMISSIVE mode keeps all
+rows and the "?" replacement converts them to proper NULL so all
+downstream aggregations handle missing data correctly.
+
+---
+
+## How to Run
+
+**Requirements**
+- Python 3.8+
+- Java 8 or Java 11 (not Java 17)
+- Windows: also requires winutils.exe (see setup notes)
+
+**Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**Download the dataset**
+```
+https://raw.githubusercontent.com/14Richa/Patient-Readmission-Analysis/main/diabetic_data.csv
+```
+Save it to: `data/raw/diabetic_data.csv`
+
+**Run the full pipeline**
+```bash
+python main.py
+```
+
+**Or run individual steps**
+```bash
+python src/ingest.py      # Step 1: read and clean raw CSV
+python src/quality.py     # Step 2: run data quality checks
+python src/transform.py   # Step 3: add business logic
+```
+
+**Expected output**
+```
+============================================================
+  HEALTHCARE READMISSION BATCH PIPELINE
+============================================================
+
+[1/3] Ingestion...
+✓ Loaded 101,766 rows, 26 columns
+✓ After cleaning: 101,766 rows
+✓ Saved Parquet to: data/processed/cleaned/
+
+[2/3] Data quality checks...
+  [✓ PASS] null_patient_ids: 0 rows
+  [✓ PASS] null_encounter_ids: 0 rows
+  ...
+
+[3/3] Transforming...
+  Readmitted within 30d: [X]
+  +----------+---------------+------------------+
+  |risk_tier |total_patients |readmit_rate_pct  |
+  +----------+---------------+------------------+
+  ...
+
+============================================================
+  PIPELINE COMPLETE
+  Output: data/processed/output/
+============================================================
+```
+
+---
+
+## Project Structure
+
+```
+de-healthcare-batch-pipeline/
+├── data/
+│   ├── raw/               ← place diabetic_data.csv here
+│   └── processed/
+│       ├── cleaned/       ← Parquet output from ingest.py
+│       └── output/        ← partitioned Parquet from transform.py
+├── src/
+│   ├── ingest.py          ← read, validate, save Parquet
+│   ├── transform.py       ← business logic transforms
+│   └── quality.py         ← data quality checks
+├── sql/
+│   └── analysis.sql       ← SQL queries for Athena / Spark SQL
+├── tests/
+│   └── test_transforms.py ← unit tests
+├── main.py                ← runs full pipeline
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Skills Demonstrated
+
+| Skill | Where |
+|---|---|
+| PySpark DataFrame API | ingest.py, transform.py |
+| Explicit schema definition | ingest.py |
+| Data quality framework | quality.py |
+| Window functions | transform.py (risk tier, age group) |
+| Parquet partitioning | transform.py (partitionBy risk_tier) |
+| CASE WHEN logic | transform.py (risk tier, LOS category) |
+| Production patterns | coalesce, PERMISSIVE mode, null handling |
+
+---
+
+## Background
+
+Built as part of my transition from Customer Experience to
+Data Engineering. In my CX role I used this kind of readmission
+data to make decisions manually — this pipeline automates the
+data preparation that used to take hours into a reproducible
+daily job.
+
+---
+
+*Dataset: Diabetes 130-US Hospitals (UCI ML Repository, 1999-2008)*
+*101,766 patient records across 130 US hospitals*</pre>
+
+  <div class="lbl">Fill in these numbers from your actual pipeline run</div>
+  <div class="p">Open your terminal output from when you ran main.py and find:<br><br>
+  — Readmission rate: look for readmit_rate_pct in the summary table<br>
+  — High risk count: look for total_patients where risk_tier = High<br>
+  — Quality checks passed: count how many showed ✓ PASS
+  </div>
+  <div class="win">Once filled in, save the file and run: git add README.md → git commit -m "docs: complete README with results and decisions" → git push</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Bonus</span>
+  <span class="qt">SQL analysis queries — add these to sql/analysis.sql</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Open sql\analysis.sql and paste this</div>
+  <div class="p">These run against your transformed Parquet via Spark SQL. Having SQL queries in your repo shows you think about how downstream analysts will use your pipeline output.</div>
+<pre>
+-- Register table first in Python:
+-- df.createOrReplaceTempView("admissions")
+
+-- Q1: Readmission rate by risk tier
+SELECT
+    risk_tier,
+    COUNT(*)                                      AS total_patients,
+    SUM(is_readmission_30d)                       AS readmissions,
+    ROUND(100.0 * SUM(is_readmission_30d)
+          / COUNT(*), 1)                          AS readmit_rate_pct
+FROM admissions
+GROUP BY risk_tier
+ORDER BY readmit_rate_pct DESC;
+
+-- Q2: Readmission rate by age group
+SELECT
+    age_group,
+    COUNT(*)                                      AS patients,
+    ROUND(100.0 * SUM(is_readmission_30d)
+          / COUNT(*), 1)                          AS readmit_rate_pct
+FROM admissions
+GROUP BY age_group
+ORDER BY readmit_rate_pct DESC;
+
+-- Q3: Top 5 medical specialties by readmission rate
+-- Only specialties with 100+ patients for statistical significance
+WITH specialty_stats AS (
+    SELECT
+        medical_specialty,
+        COUNT(*)                                  AS patients,
+        ROUND(100.0 * SUM(is_readmission_30d)
+              / COUNT(*), 1)                      AS readmit_rate_pct
+    FROM admissions
+    WHERE medical_specialty IS NOT NULL
+    GROUP BY medical_specialty
+    HAVING COUNT(*) >= 100
+)
+SELECT *
+FROM specialty_stats
+ORDER BY readmit_rate_pct DESC
+LIMIT 5;
+
+-- Q4: Patients with multiple admissions (high risk for readmission)
+SELECT
+    patient_nbr,
+    COUNT(*)                                      AS total_visits,
+    SUM(is_readmission_30d)                       AS readmit_count,
+    ROUND(AVG(time_in_hospital), 1)               AS avg_los_days,
+    MAX(num_medications)                          AS max_medications
+FROM admissions
+GROUP BY patient_nbr
+HAVING COUNT(*) > 1
+ORDER BY total_visits DESC
+LIMIT 20;
+
+-- Q5: Average medications by risk tier and readmission status
+SELECT
+    risk_tier,
+    is_readmission_30d,
+    COUNT(*)                                      AS patients,
+    ROUND(AVG(num_medications), 1)                AS avg_medications,
+    ROUND(AVG(num_lab_procedures), 1)             AS avg_lab_procedures
+FROM admissions
+GROUP BY risk_tier, is_readmission_30d
+ORDER BY risk_tier, is_readmission_30d DESC;</pre>
+
+  <div class="tip">To run these queries add this to the bottom of transform.py temporarily:<br>df.createOrReplaceTempView("admissions")<br>spark.sql("SELECT risk_tier, COUNT(*) FROM admissions GROUP BY 1").show()</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">After this — Project 1 is fully portfolio ready</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.8;margin-bottom:8px">
+  1. Fill in your actual numbers in the README<br>
+  2. Add the SQL queries to sql/analysis.sql<br>
+  3. Commit and push both files<br>
+  4. Pin the repo on your GitHub profile<br>
+  5. Write a LinkedIn post about it (template in the portfolio guide)
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">Once that is done tell me and we move straight into Project 2 — the AWS pipeline. That one is where you set up S3, Glue, and Athena for the first time.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

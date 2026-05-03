@@ -1,0 +1,409 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{background:var(--color-background-danger);color:var(--color-text-danger)}
+</style>
+
+<h3>Bucket 4 — Data Quality</h3>
+<div class="sub">5 questions. The core idea: bad data is inevitable. Your job is not to prevent it — it is to detect it, separate it, preserve it, and alert on it. Every question here tests whether you think about data defensively.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">What is data quality — the 4 layers every pipeline needs</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea</div>
+  <div class="p">Data quality is not one check — it is four layers, each catching different types of problems. In interviews, listing all four layers immediately signals that you think about data like a senior engineer.</div>
+
+  <div class="mrow"><span class="mk">Layer 1 — Schema</span><span class="mv">Does the data have the right columns and types? A column that should be integer arriving as string breaks downstream queries silently.</span></div>
+  <div class="mrow"><span class="mk">Layer 2 — Completeness</span><span class="mv">Are required fields NULL? A customer record with no customer_id is useless — cannot join it to anything.</span></div>
+  <div class="mrow"><span class="mk">Layer 3 — Business rules</span><span class="mv">Does the data make sense? Salary cannot be negative. Age must be 0–120. Order date cannot be in the future.</span></div>
+  <div class="mrow"><span class="mk">Layer 4 — Volume / stats</span><span class="mv">Did the expected amount of data arrive? If yesterday had 100k rows and today has 500 — something broke upstream. Alert immediately.</span></div>
+
+<pre>
+from pyspark.sql.functions import col, count, when, current_date, datediff
+
+def run_quality_checks(df, job_name):
+    total = df.count()
+    results = {}
+
+    # Layer 1 — schema validated at read time via .schema()
+
+    # Layer 2 — completeness: count NULLs in critical columns
+    results["null_user_ids"]  = df.filter(col("user_id").isNull()).count()
+    results["null_amounts"]   = df.filter(col("amount").isNull()).count()
+
+    # Layer 3 — business rules
+    results["negative_amount"] = df.filter(col("amount") < 0).count()
+    results["future_dates"]    = df.filter(
+        col("order_date") > current_date()
+    ).count()
+    results["invalid_status"]  = df.filter(
+        ~col("status").isin(["active","inactive","pending"])
+    ).count()
+
+    # Layer 4 — volume check (compare to yesterday stored in DynamoDB)
+    results["total_rows"] = total
+
+    # Print results
+    for check, cnt in results.items():
+        status = "PASS" if cnt == 0 else "FAIL"
+        print(f"[{status}] {check}: {cnt} rows affected")
+
+    return results</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I think about data quality in four layers: schema validation at read time, completeness checks for required fields, business rule checks like salary cannot be negative, and volume checks to catch upstream failures. Each layer catches different problems and together they give me confidence the data is trustworthy."</div></div>
+  <div class="win">Listing four layers unprompted makes you sound like someone who has dealt with real production data quality issues. Most candidates only mention NULLs.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q2</span>
+  <span class="qt">How do you separate valid and corrupted records in a JSON file</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What corrupted JSON looks like</div>
+  <div class="p">JSON corruption can mean: broken syntax (missing closing brace), wrong data types, missing required fields, or values that fail business rules. Each needs a different detection method.</div>
+
+  <div class="flow">
+    <div class="fb">Read with PERMISSIVE</div><div class="fa">→</div>
+    <div class="fb">Structural check (_corrupt_record)</div><div class="fa">→</div>
+    <div class="fb">Business rule checks</div><div class="fa">→</div>
+    <div class="fb">Split valid / bad</div><div class="fa">→</div>
+    <div class="fb">Write to separate zones</div>
+  </div>
+
+<pre>
+from pyspark.sql.functions import (
+    col, when, lit, input_file_name,
+    current_timestamp, concat_ws
+)
+
+# Step 1: Read with PERMISSIVE — broken JSON goes to _corrupt_record
+df = spark.read \
+    .option("mode", "PERMISSIVE") \
+    .option("columnNameOfCorruptRecord", "_corrupt_record") \
+    .schema(schema) \
+    .json("s3://bucket/raw/events/")
+
+# Step 2: Add a reason column — WHY is each row bad
+df = df.withColumn("fail_reason",
+    when(col("_corrupt_record").isNotNull(),
+         lit("broken_json"))
+    .when(col("user_id").isNull(),
+         lit("null_user_id"))
+    .when(col("amount").isNull(),
+         lit("null_amount"))
+    .when(col("amount") < 0,
+         lit("negative_amount"))
+    .when(col("event_date") > current_date(),
+         lit("future_date"))
+    .otherwise(lit(None))   # None means valid
+)
+
+# Step 3: Split into valid and bad
+valid_df = df.filter(col("fail_reason").isNull()) \
+             .drop("fail_reason", "_corrupt_record")
+
+bad_df = df.filter(col("fail_reason").isNotNull()) \
+           .withColumn("source_file", input_file_name()) \
+           .withColumn("flagged_at",  current_timestamp())
+
+# Step 4: Log the split
+total = df.count()
+bad   = bad_df.count()
+print(f"Valid: {total-bad} | Bad: {bad} ({100*bad/total:.1f}%)")
+
+# Step 5: Write each to separate S3 locations
+valid_df.write.mode("append").parquet("s3://bucket/processed/")
+bad_df.write.mode("append").json("s3://bucket/quarantine/")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I read with PERMISSIVE mode which puts broken JSON into a _corrupt_record column. Then I add a fail_reason column using CASE WHEN — checking for broken JSON, NULL required fields, negative amounts, future dates. I split on that column — valid records go to processed, bad records go to quarantine with the source filename and timestamp. The fail_reason tells whoever investigates exactly why each record failed."</div></div>
+  <div class="tip">The fail_reason column is what separates a basic answer from a great one. Without it you have a pile of bad records with no idea why they failed.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">Handle duplicate rows while processing in chunks</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Two types of duplicates — handle them differently</div>
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Within-chunk duplicates</div>
+      <div class="box-r">Same record appears twice in the same batch. Fix: dropDuplicates() or ROW_NUMBER within the chunk before writing.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Cross-chunk duplicates</div>
+      <div class="box-r">Record in chunk 1 also appears in chunk 2 (e.g. a reprocessed file). Fix: Delta Lake MERGE or check against existing data before inserting.</div>
+    </div>
+  </div>
+
+  <div class="lbl">Fix 1 — dropDuplicates for within-chunk dedup</div>
+<pre>
+# Simple dedup — keep one row per unique key
+df_deduped = df.dropDuplicates(["order_id"])
+
+# Dedup keeping specific row — e.g. keep the most recent
+from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number
+
+w = Window.partitionBy("order_id").orderBy(col("updated_at").desc())
+df_deduped = df.withColumn("rn", row_number().over(w)) \
+               .filter(col("rn") == 1) \
+               .drop("rn")</pre>
+
+  <div class="lbl">Fix 2 — Delta Lake MERGE for cross-chunk dedup (best for production)</div>
+<pre>
+from delta.tables import DeltaTable
+
+target = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+
+# MERGE = if record exists update it, if not insert it
+# This handles duplicates from any source automatically
+target.alias("t").merge(
+    df_deduped.alias("s"),
+    "t.order_id = s.order_id"          # match on primary key
+).whenMatchedUpdateAll() \             # update if already exists
+ .whenNotMatchedInsertAll() \          # insert if new
+ .execute()</pre>
+
+  <div class="lbl">Fix 3 — pandas chunked dedup (for large CSV processing)</div>
+<pre>
+import pandas as pd
+
+seen_ids = set()   # track IDs already processed
+clean_chunks = []
+
+for chunk in pd.read_csv("large_file.csv", chunksize=100_000):
+    # Remove within-chunk duplicates
+    chunk = chunk.drop_duplicates(subset=["order_id"])
+    # Remove cross-chunk duplicates
+    chunk = chunk[~chunk["order_id"].isin(seen_ids)]
+    seen_ids.update(chunk["order_id"].tolist())
+    clean_chunks.append(chunk)
+
+final = pd.concat(clean_chunks)</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"There are two kinds of duplicates — within a chunk and across chunks. Within a chunk I use dropDuplicates or ROW_NUMBER to keep the most recent record. Across chunks the cleanest solution is Delta Lake MERGE — it upserts so whether a record is new or already exists, the result is always correct. For pandas chunking I maintain a seen_ids set across chunks."</div></div>
+  <div class="ok">Delta Lake MERGE is the production answer to cross-chunk duplicates. It is worth mentioning even if you also give the dropDuplicates answer — shows you know the modern approach.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">Identify bad records and compute unique users after filtering — S3 logs question</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The question from your interview list</div>
+  <div class="p">"Given S3 logs with user activities, identify bad records and compute how many unique users remain after filtering."</div>
+  <div class="p">This is a practical version of Q2 — apply the quarantine pattern then count distinct users on the clean data.</div>
+
+<pre>
+from pyspark.sql.functions import (
+    col, when, lit, countDistinct,
+    input_file_name, current_timestamp, current_date
+)
+
+# Step 1: Read S3 logs
+df = spark.read \
+    .option("mode", "PERMISSIVE") \
+    .option("columnNameOfCorruptRecord", "_corrupt_record") \
+    .schema(schema) \
+    .json("s3://bucket/logs/user_activity/")
+
+# Step 2: Tag each row with a reason if it is bad
+df = df.withColumn("fail_reason",
+    when(col("_corrupt_record").isNotNull(), lit("broken_json"))
+    .when(col("user_id").isNull(),           lit("null_user_id"))
+    .when(col("event_type").isNull(),        lit("null_event"))
+    .when(col("timestamp").isNull(),         lit("null_timestamp"))
+    .when(col("timestamp") > current_date(), lit("future_timestamp"))
+    .otherwise(lit(None))
+)
+
+# Step 3: Split valid and bad
+valid_df = df.filter(col("fail_reason").isNull()) \
+             .drop("fail_reason", "_corrupt_record")
+
+bad_df = df.filter(col("fail_reason").isNotNull()) \
+           .withColumn("source_file", input_file_name()) \
+           .withColumn("flagged_at",  current_timestamp())
+
+# Step 4: Summary of bad records by reason
+print("=== Bad record breakdown ===")
+bad_df.groupBy("fail_reason") \
+      .count() \
+      .orderBy(col("count").desc()) \
+      .show()
+
+# Step 5: Count unique users in valid data
+unique_users = valid_df.select(
+    countDistinct("user_id").alias("unique_users")
+)
+unique_users.show()
+
+# Step 6: Write both zones
+valid_df.write.mode("append").parquet("s3://bucket/processed/logs/")
+bad_df.write.mode("append").json("s3://bucket/quarantine/logs/")</pre>
+
+  <div class="lbl">Expected output you can describe</div>
+  <table>
+    <tr><th>fail_reason</th><th>count</th></tr>
+    <tr><td>null_user_id</td><td>1,243</td></tr>
+    <tr><td>broken_json</td><td>567</td></tr>
+    <tr><td>future_timestamp</td><td>89</td></tr>
+    <tr class="hl"><td>Total bad</td><td>1,899</td></tr>
+  </table>
+  <table>
+    <tr><th>unique_users (after filtering)</th></tr>
+    <tr><td>84,321</td></tr>
+  </table>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I read with PERMISSIVE mode, tag each bad row with a fail_reason column using CASE WHEN, split into valid and bad DataFrames, write both to separate S3 zones, then run countDistinct on user_id on the clean DataFrame. I also group by fail_reason to show the breakdown of why records failed — that gives the team visibility into upstream data issues."</div></div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q5</span>
+  <span class="qt">How do you get alerted when data quality fails or pipeline breaks</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The alerting stack on AWS</div>
+  <div class="mrow"><span class="mk">CloudWatch</span><span class="mv">Monitors Glue job metrics — duration, records processed, DPU usage. Set alarms on job failure or high error rate.</span></div>
+  <div class="mrow"><span class="mk">SNS</span><span class="mv">Simple Notification Service. Sends email or Slack message when CloudWatch alarm fires or when your code explicitly publishes a message.</span></div>
+  <div class="mrow"><span class="mk">Step Functions</span><span class="mv">Orchestrates multi-step pipelines. Each step has retry logic and on-failure transitions to an alert step.</span></div>
+
+  <div class="lbl">Pattern 1 — alert from within your Spark job</div>
+<pre>
+import boto3
+
+def send_alert(subject, message, topic_arn):
+    sns = boto3.client("sns", region_name="us-east-1")
+    sns.publish(
+        TopicArn=topic_arn,
+        Subject=subject,
+        Message=message
+    )
+
+# Use in pipeline
+try:
+    total = df.count()
+    bad   = bad_df.count()
+
+    # Alert if bad rate exceeds threshold
+    if total > 0 and (bad / total) > 0.05:
+        send_alert(
+            subject="Data quality alert — orders pipeline",
+            message=f"Bad record rate: {bad}/{total} = {100*bad/total:.1f}%\nJob: orders_pipeline\nDate: {date.today()}",
+            topic_arn="arn:aws:sns:us-east-1:123456:pipeline-alerts"
+        )
+
+    # Alert if volume drops unexpectedly
+    expected_min = 10_000
+    if total < expected_min:
+        send_alert(
+            subject="Low volume alert — orders pipeline",
+            message=f"Only {total} records received. Expected at least {expected_min}.",
+            topic_arn="arn:aws:sns:us-east-1:123456:pipeline-alerts"
+        )
+
+except Exception as e:
+    # Alert on any job failure
+    send_alert(
+        subject="FAILURE — orders pipeline",
+        message=f"Pipeline failed with error: {str(e)}",
+        topic_arn="arn:aws:sns:us-east-1:123456:pipeline-alerts"
+    )
+    raise   # re-raise so Glue marks job as failed</pre>
+
+  <div class="lbl">Pattern 2 — CloudWatch alarm on Glue job failure</div>
+<pre>
+# Terraform — create CloudWatch alarm for Glue job failure
+resource "aws_cloudwatch_metric_alarm" "glue_failure" {
+  alarm_name          = "orders-pipeline-failure"
+  metric_name         = "glue.driver.aggregate.numFailedTasks"
+  namespace           = "Glue"
+  statistic           = "Sum"
+  period              = 300
+  evaluation_periods  = 1
+  threshold           = 1
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  alarm_actions       = ["arn:aws:sns:us-east-1:123:pipeline-alerts"]
+}</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I have two layers of alerting. First, my pipeline code sends an SNS message if the bad record rate exceeds a threshold or if total volume drops unexpectedly — these are business logic alerts. Second, CloudWatch monitors the Glue job itself and fires an SNS alarm if the job fails or runs too long — these are infrastructure alerts. Both feed into the same SNS topic so the team gets one stream of notifications."</div></div>
+  <div class="tip">Two layers of alerting — business logic alerts from your code AND infrastructure alerts from CloudWatch. Mentioning both shows you think about monitoring at multiple levels.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 4 complete — 5 of 5 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:8px">
+  Q1 — Four quality layers: schema, completeness, business rules, volume<br>
+  Q2 — Separate valid and bad: PERMISSIVE + fail_reason column + quarantine write<br>
+  Q3 — Duplicates: dropDuplicates within chunk, Delta MERGE across chunks<br>
+  Q4 — S3 logs: read → tag bad rows → split → count distinct users on clean data<br>
+  Q5 — Alerting: SNS from code for business alerts + CloudWatch for job failures
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">The key phrase for this bucket: <b>fail_reason column</b>. Whenever you talk about bad records always mention tagging them with a reason. That one detail separates a junior answer from a senior one. Tell me when ready for Bucket 5 — AWS Glue.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

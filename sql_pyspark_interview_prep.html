@@ -1,0 +1,568 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.container { padding: 1rem 0; }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.nav-btn { padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.nav-btn.active, .nav-btn:hover { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.section { display: none; }
+.section.active { display: block; }
+.pattern-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.pattern-desc { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 1.25rem; }
+.problems-grid { display: flex; flex-direction: column; gap: 10px; }
+.problem-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.problem-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; user-select: none; }
+.problem-header:hover { background: var(--color-background-secondary); }
+.problem-num { font-size: 11px; font-weight: 500; background: var(--color-background-secondary); color: var(--color-text-secondary); padding: 3px 8px; border-radius: 10px; min-width: fit-content; }
+.problem-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.chevron { font-size: 12px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+.chevron.open { transform: rotate(180deg); }
+.problem-body { display: none; padding: 0 16px 16px; border-top: 0.5px solid var(--color-border-tertiary); }
+.problem-body.open { display: block; }
+.concept-tag { display: inline-block; font-size: 11px; padding: 2px 8px; background: var(--color-background-info); color: var(--color-text-info); border-radius: 10px; margin: 10px 0 8px; }
+.explanation { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 10px; }
+.code-block { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); white-space: pre; overflow-x: auto; line-height: 1.7; margin-bottom: 10px; }
+.tip { background: var(--color-background-warning); border-left: 3px solid var(--color-border-warning); padding: 8px 12px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; font-size: 12px; color: var(--color-text-warning); line-height: 1.5; }
+.section-label { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin: 14px 0 4px; }
+.difficulty { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.d-easy { background: var(--color-background-success); color: var(--color-text-success); }
+.d-medium { background: var(--color-background-warning); color: var(--color-text-warning); }
+.d-hard { background: var(--color-background-danger); color: var(--color-text-danger); }
+</style>
+
+<div class="container">
+<h2 class="sr-only">SQL and PySpark interview preparation guide organized by topic patterns</h2>
+
+<div class="nav" id="nav"></div>
+<div id="sections"></div>
+</div>
+
+<script>
+const data = [
+  {
+    id: "subqueries",
+    label: "Subqueries",
+    title: "Pattern 1 — Subqueries & filtering",
+    desc: "A subquery is a query inside another query. Think of it as: first answer a smaller question, then use that answer in a bigger question.",
+    problems: [
+      {
+        num: "P31", title: "Employees earning more than average salary", diff: "easy",
+        concept: "Subquery in WHERE",
+        explain: "First calculate the average salary, then filter employees whose salary is above it. The inner query runs first.",
+        sql: `SELECT name, salary
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);`,
+        pyspark: `avg_sal = df.agg(avg("salary")).collect()[0][0]
+df.filter(col("salary") > avg_sal).select("name","salary")`,
+        tip: "The inner query (SELECT AVG...) runs first and returns one number. Then the outer query uses that number to filter."
+      },
+      {
+        num: "P32", title: "2nd highest salary", diff: "medium",
+        concept: "Subquery with MAX / NOT IN",
+        explain: "Find the highest salary, then find the highest salary that is NOT that value — that gives you the 2nd highest.",
+        sql: `SELECT MAX(salary) AS second_highest
+FROM employees
+WHERE salary < (SELECT MAX(salary) FROM employees);`,
+        pyspark: `from pyspark.sql.functions import dense_rank
+from pyspark.sql.window import Window
+w = Window.orderBy(col("salary").desc())
+df.withColumn("rnk", dense_rank().over(w)).filter(col("rnk") == 2)`,
+        tip: "In PySpark always prefer dense_rank for Nth highest — it's cleaner and handles ties."
+      },
+      {
+        num: "P33", title: "Employees in departments in New York", diff: "easy",
+        concept: "Subquery with IN",
+        explain: "First get all department IDs from New York. Then find employees whose department_id is in that list.",
+        sql: `SELECT name FROM employees
+WHERE department_id IN (
+  SELECT id FROM departments WHERE location = 'New York'
+);`,
+        pyspark: `ny_depts = dept_df.filter(col("location")=="New York").select("id")
+emp_df.join(ny_depts, emp_df.department_id == ny_depts.id, "inner")`,
+        tip: "Subquery with IN = inner join. Both give the same result."
+      },
+      {
+        num: "P34", title: "Salary higher than at least one IT employee", diff: "medium",
+        concept: "ANY / EXISTS logic",
+        explain: "Get the minimum salary in IT. Any employee earning more than the minimum earns more than 'at least one' IT employee.",
+        sql: `SELECT name, salary FROM employees
+WHERE salary > (
+  SELECT MIN(salary) FROM employees e
+  JOIN departments d ON e.dept_id = d.id
+  WHERE d.name = 'IT'
+);`,
+        pyspark: `min_it = emp_df.join(dept_df.filter(col("name")=="IT"), "dept_id").agg(min("salary")).collect()[0][0]
+emp_df.filter(col("salary") > min_it)`,
+        tip: "'More than at least one' = 'more than the minimum'. That's the key insight."
+      },
+      {
+        num: "P35", title: "Department with highest average salary", diff: "medium",
+        concept: "Subquery in FROM",
+        explain: "Create a derived table (subquery in FROM) of dept averages, then find the max from it.",
+        sql: `SELECT dept_id, avg_salary
+FROM (
+  SELECT dept_id, AVG(salary) AS avg_salary
+  FROM employees GROUP BY dept_id
+) AS dept_avgs
+ORDER BY avg_salary DESC
+LIMIT 1;`,
+        pyspark: `dept_avgs = df.groupBy("dept_id").agg(avg("salary").alias("avg_salary"))
+dept_avgs.orderBy(col("avg_salary").desc()).limit(1)`,
+        tip: "A subquery in FROM is called a derived table. It's like creating a temporary result set."
+      }
+    ]
+  },
+  {
+    id: "case-group",
+    label: "CASE & GROUP BY",
+    title: "Pattern 2 — CASE expressions & grouping",
+    desc: "CASE is SQL's if-else. Use it to create new categories from existing data, then GROUP BY to count/aggregate those categories.",
+    problems: [
+      {
+        num: "P37", title: "Senior/Junior label by hire date", diff: "easy",
+        concept: "CASE WHEN",
+        explain: "CASE works like if-else. Check a condition, return a value, otherwise return another.",
+        sql: `SELECT name,
+  CASE WHEN YEAR(hire_date) < 2020 THEN 'Senior'
+       ELSE 'Junior' END AS level
+FROM employees;`,
+        pyspark: `from pyspark.sql.functions import when, year
+df.withColumn("level",
+  when(year("hire_date") < 2020, "Senior").otherwise("Junior"))`,
+        tip: "In PySpark, CASE WHEN = when().otherwise(). You can chain multiple .when() calls."
+      },
+      {
+        num: "P38", title: "Count employees hired per year", diff: "easy",
+        concept: "GROUP BY + date extraction",
+        explain: "Extract the year from hire_date, then group by that year and count.",
+        sql: `SELECT YEAR(hire_date) AS year, COUNT(*) AS total
+FROM employees
+GROUP BY YEAR(hire_date)
+ORDER BY year;`,
+        pyspark: `df.withColumn("year", year("hire_date"))
+  .groupBy("year").count().orderBy("year")`,
+        tip: "Always extract the part of the date you need (year/month/day) before grouping."
+      },
+      {
+        num: "P39", title: "Salary categories and counts", diff: "medium",
+        concept: "CASE inside GROUP BY",
+        explain: "First create the category with CASE, then GROUP BY that category and count.",
+        sql: `SELECT 
+  CASE WHEN salary < 60000 THEN 'Low'
+       WHEN salary <= 75000 THEN 'Medium'
+       ELSE 'High' END AS category,
+  COUNT(*) AS count
+FROM employees
+GROUP BY category;`,
+        pyspark: `df.withColumn("category",
+    when(col("salary") < 60000, "Low")
+    .when(col("salary") <= 75000, "Medium")
+    .otherwise("High")
+  ).groupBy("category").count()`,
+        tip: "CASE conditions are checked in order — first match wins. Put the narrowest condition first."
+      }
+    ]
+  },
+  {
+    id: "window",
+    label: "Window Functions",
+    title: "Pattern 3 — Window functions",
+    desc: "Window functions do calculations across related rows WITHOUT collapsing them into one row (unlike GROUP BY). The OVER() clause defines the 'window' of rows.",
+    problems: [
+      {
+        num: "P41", title: "Rank employees by salary", diff: "easy",
+        concept: "ROW_NUMBER OVER",
+        explain: "ROW_NUMBER assigns 1,2,3... with no gaps and no ties. ORDER BY inside OVER() sets the ranking order.",
+        sql: `SELECT name, salary,
+  ROW_NUMBER() OVER (ORDER BY salary DESC) AS rank
+FROM employees;`,
+        pyspark: `from pyspark.sql.window import Window
+w = Window.orderBy(col("salary").desc())
+df.withColumn("rank", row_number().over(w))`,
+        tip: "ROW_NUMBER = unique number even for ties. RANK = same number for ties but gaps after. DENSE_RANK = same number for ties, no gaps."
+      },
+      {
+        num: "P43", title: "Rank within each department", diff: "medium",
+        concept: "DENSE_RANK with PARTITION BY",
+        explain: "PARTITION BY restarts the ranking for each department. Think of it as: 'rank employees, but reset the counter for each department'.",
+        sql: `SELECT name, dept_id, salary,
+  DENSE_RANK() OVER (
+    PARTITION BY dept_id 
+    ORDER BY salary DESC
+  ) AS dept_rank
+FROM employees;`,
+        pyspark: `w = Window.partitionBy("dept_id").orderBy(col("salary").desc())
+df.withColumn("dept_rank", dense_rank().over(w))`,
+        tip: "PARTITION BY is the key concept — it's like GROUP BY but doesn't collapse rows."
+      },
+      {
+        num: "P44", title: "Top 2 highest paid per department", diff: "medium",
+        concept: "Filter after window function",
+        explain: "First rank within each department using DENSE_RANK, then filter where rank <= 2.",
+        sql: `SELECT * FROM (
+  SELECT name, dept_id, salary,
+    DENSE_RANK() OVER (
+      PARTITION BY dept_id ORDER BY salary DESC
+    ) AS rnk
+  FROM employees
+) WHERE rnk <= 2;`,
+        pyspark: `w = Window.partitionBy("dept_id").orderBy(col("salary").desc())
+df.withColumn("rnk", dense_rank().over(w)).filter(col("rnk") <= 2)`,
+        tip: "You can't filter on a window function in the same SELECT — wrap it in a subquery or CTE first."
+      },
+      {
+        num: "P45", title: "Each employee with the next higher salary (LEAD)", diff: "medium",
+        concept: "LEAD / LAG",
+        explain: "LEAD looks at the next row. LAG looks at the previous row. Both are ordered by the window ORDER BY.",
+        sql: `SELECT name, salary,
+  LEAD(salary) OVER (ORDER BY salary) AS next_salary
+FROM employees;`,
+        pyspark: `from pyspark.sql.functions import lead
+w = Window.orderBy("salary")
+df.withColumn("next_salary", lead("salary").over(w))`,
+        tip: "LEAD(col, 1) = next row. LEAD(col, 2) = 2 rows ahead. LAG = same but previous rows."
+      },
+      {
+        num: "P47", title: "Running total of salaries", diff: "medium",
+        concept: "SUM with ROWS UNBOUNDED",
+        explain: "A running total adds up all salaries from the first row up to the current row. Use SUM with ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.",
+        sql: `SELECT name, salary,
+  SUM(salary) OVER (
+    ORDER BY emp_id
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS running_total
+FROM employees;`,
+        pyspark: `w = Window.orderBy("emp_id").rowsBetween(Window.unboundedPreceding, Window.currentRow)
+df.withColumn("running_total", sum_("salary").over(w))`,
+        tip: "Without ROWS BETWEEN clause, PySpark uses the default frame which may give unexpected results. Always specify it for running totals."
+      },
+      {
+        num: "P48", title: "Count of employees earning more in same department", diff: "hard",
+        concept: "Correlated window logic",
+        explain: "For each employee, count how many in their department earn strictly more. Use SUM(CASE WHEN ...) as a window function.",
+        sql: `SELECT name, salary, dept_id,
+  SUM(CASE WHEN salary > e.salary THEN 1 ELSE 0 END)
+    OVER (PARTITION BY dept_id) AS earn_more
+FROM employees e;`,
+        pyspark: `# Self join approach
+df.alias("a").join(df.alias("b"), "dept_id") \
+  .filter(col("b.salary") > col("a.salary")) \
+  .groupBy("a.name","a.salary","a.dept_id") \
+  .agg(count("b.emp_id").alias("earn_more"))`,
+        tip: "This is a 'self-comparison within partition' problem. Self-join approach is often clearer in PySpark."
+      },
+      {
+        num: "P50", title: "Percentile rank by salary", diff: "hard",
+        concept: "PERCENT_RANK",
+        explain: "PERCENT_RANK gives a value from 0 to 1 showing where an employee stands. 0 = lowest, 1 = highest.",
+        sql: `SELECT name, salary,
+  PERCENT_RANK() OVER (ORDER BY salary) AS pct_rank
+FROM employees;`,
+        pyspark: `from pyspark.sql.functions import percent_rank
+w = Window.orderBy("salary")
+df.withColumn("pct_rank", percent_rank().over(w))`,
+        tip: "Formula: (rank - 1) / (total rows - 1). The first row is always 0, last is always 1."
+      }
+    ]
+  },
+  {
+    id: "cte",
+    label: "CTEs",
+    title: "Pattern 4 — CTEs (Common Table Expressions)",
+    desc: "A CTE is a named temporary result you define at the top with WITH. It makes queries readable — instead of nested subqueries, you give each step a name.",
+    problems: [
+      {
+        num: "P51", title: "Rewrite subquery as CTE", diff: "easy",
+        concept: "WITH clause",
+        explain: "Same logic as a subquery but written at the top. Easier to read and reuse.",
+        sql: `WITH avg_salary AS (
+  SELECT AVG(salary) AS avg_sal FROM employees
+)
+SELECT name, salary
+FROM employees, avg_salary
+WHERE salary > avg_sal;`,
+        pyspark: `# PySpark: create a temp view or reuse the dataframe
+avg_val = df.agg(avg("salary").alias("avg_sal"))
+df.crossJoin(avg_val).filter(col("salary") > col("avg_sal"))`,
+        tip: "CTE vs Subquery: Same performance usually. CTEs are better when you reuse the same logic multiple times."
+      },
+      {
+        num: "P52", title: "Multiple CTEs — high earners per department", diff: "hard",
+        concept: "Chained CTEs",
+        explain: "Define multiple CTEs one after another, separated by commas. Each CTE can reference the ones before it.",
+        sql: `WITH high_earners AS (
+  SELECT * FROM employees WHERE salary > 65000
+),
+dept_counts AS (
+  SELECT dept_id, COUNT(*) AS cnt
+  FROM high_earners GROUP BY dept_id
+)
+SELECT dept_id, cnt FROM dept_counts WHERE cnt >= 2;`,
+        pyspark: `high = df.filter(col("salary") > 65000)
+counts = high.groupBy("dept_id").count()
+counts.filter(col("count") >= 2)`,
+        tip: "Think of multiple CTEs as building blocks — define simple things first, combine them after."
+      },
+      {
+        num: "P53", title: "Recursive CTE — management chain", diff: "hard",
+        concept: "Recursive CTE",
+        explain: "A recursive CTE references itself. It starts with a base case (top-level managers), then keeps joining to find the next level down.",
+        sql: `WITH RECURSIVE chain AS (
+  SELECT emp_id, name, manager_id, 0 AS level
+  FROM employees WHERE manager_id IS NULL  -- base
+  UNION ALL
+  SELECT e.emp_id, e.name, e.manager_id, c.level+1
+  FROM employees e
+  JOIN chain c ON e.manager_id = c.emp_id  -- recursive
+)
+SELECT * FROM chain;`,
+        pyspark: `# PySpark doesn't support recursive CTEs natively
+# Use iterative joins or GraphX for hierarchy traversal`,
+        tip: "Recursive CTEs = two parts: base case (start) + recursive part (join back to itself). Always has UNION ALL."
+      },
+      {
+        num: "P57", title: "Remove duplicates keeping lowest ID", diff: "medium",
+        concept: "CTE + ROW_NUMBER dedup",
+        explain: "Use ROW_NUMBER partitioned by name. Row 1 = lowest ID. Delete or keep only rows where row number = 1.",
+        sql: `WITH dupes AS (
+  SELECT *, ROW_NUMBER() OVER (
+    PARTITION BY name ORDER BY emp_id
+  ) AS rn
+  FROM employees
+)
+SELECT * FROM dupes WHERE rn = 1;`,
+        pyspark: `w = Window.partitionBy("name").orderBy("emp_id")
+df.withColumn("rn", row_number().over(w)).filter(col("rn") == 1).drop("rn")`,
+        tip: "This is the standard dedup pattern: ROW_NUMBER + PARTITION BY the duplicate key + keep rn=1."
+      },
+      {
+        num: "P58", title: "2nd highest salary in each department using CTE", diff: "hard",
+        concept: "CTE + window + filter",
+        explain: "Rank within each department using DENSE_RANK, then use a CTE to filter rank = 2.",
+        sql: `WITH ranked AS (
+  SELECT name, dept_id, salary,
+    DENSE_RANK() OVER (
+      PARTITION BY dept_id ORDER BY salary DESC
+    ) AS rnk
+  FROM employees
+)
+SELECT * FROM ranked WHERE rnk = 2;`,
+        pyspark: `w = Window.partitionBy("dept_id").orderBy(col("salary").desc())
+ranked = df.withColumn("rnk", dense_rank().over(w))
+ranked.filter(col("rnk") == 2)`,
+        tip: "Combining CTE + window function is extremely common in interviews. Master this pattern."
+      }
+    ]
+  },
+  {
+    id: "patterns",
+    label: "Common Patterns",
+    title: "Pattern 5 — Classic interview patterns",
+    desc: "These are recurring patterns that appear in almost every SQL interview. Recognize the pattern, apply the template.",
+    problems: [
+      {
+        num: "Dup", title: "Find duplicate records", diff: "easy",
+        concept: "GROUP BY + HAVING COUNT > 1",
+        explain: "Group by the column that defines a duplicate, then use HAVING to keep only groups with more than 1 row.",
+        sql: `-- Find duplicate emails
+SELECT email, COUNT(*) AS cnt
+FROM employees
+GROUP BY email
+HAVING COUNT(*) > 1;`,
+        pyspark: `df.groupBy("email").count().filter(col("count") > 1)`,
+        tip: "HAVING filters after grouping. WHERE filters before grouping. Always use HAVING with aggregates."
+      },
+      {
+        num: "DOD", title: "Day-over-day / month-over-month change", diff: "medium",
+        concept: "LAG for self-comparison",
+        explain: "Use LAG to bring yesterday's value to the current row. Subtract to get the change.",
+        sql: `SELECT date, revenue,
+  LAG(revenue) OVER (ORDER BY date) AS prev_revenue,
+  revenue - LAG(revenue) OVER (ORDER BY date) AS daily_change
+FROM sales;`,
+        pyspark: `w = Window.orderBy("date")
+df.withColumn("prev", lag("revenue").over(w)) \
+  .withColumn("change", col("revenue") - col("prev"))`,
+        tip: "LAG is the go-to for 'compare with previous row/period'. For month-over-month, partition by year, order by month."
+      },
+      {
+        num: "GAP", title: "Find gaps in sequences", diff: "hard",
+        concept: "Self-join or LAG to find missing numbers",
+        explain: "Use ROW_NUMBER and compare with actual ID — if ID - row_number is not constant, there's a gap.",
+        sql: `SELECT emp_id + 1 AS gap_start
+FROM employees e
+WHERE NOT EXISTS (
+  SELECT 1 FROM employees e2 
+  WHERE e2.emp_id = e.emp_id + 1
+);`,
+        pyspark: `w = Window.orderBy("emp_id")
+df.withColumn("next_id", lead("emp_id").over(w)) \
+  .filter(col("next_id") - col("emp_id") > 1)`,
+        tip: "Gap = current ID + 1 is missing. Use LEAD to get the next ID, check if difference > 1."
+      },
+      {
+        num: "ACT", title: "Active user filter (3 visits in 7 days, purchase in 30 days)", diff: "hard",
+        concept: "Date range filtering + subquery",
+        explain: "For each condition, write a separate subquery. Then combine with AND/OR or JOINs.",
+        sql: `SELECT user_id FROM (
+  SELECT user_id, COUNT(*) as visits
+  FROM visits
+  WHERE visit_date >= CURRENT_DATE - 7
+  GROUP BY user_id HAVING visits > 3
+) frequent
+WHERE user_id IN (
+  SELECT user_id FROM orders
+  WHERE order_date >= CURRENT_DATE - 30
+)
+AND user_id NOT IN (
+  SELECT user_id FROM contacts
+  WHERE contact_date >= CURRENT_DATE - 14
+);`,
+        pyspark: `from pyspark.sql.functions import current_date, datediff
+recent = visits.filter(datediff(current_date(),"visit_date") <= 7) \
+               .groupBy("user_id").count().filter(col("count") > 3)
+purchased = orders.filter(datediff(current_date(),"order_date") <= 30).select("user_id").distinct()
+contacted = contacts.filter(datediff(current_date(),"contact_date") <= 14).select("user_id").distinct()
+recent.join(purchased,"user_id").join(contacted,"user_id","left_anti")`,
+        tip: "Break multi-condition problems into separate CTEs/subqueries. left_anti join = NOT IN in PySpark."
+      },
+      {
+        num: "CUS", title: "Customers with no order in 6 months", diff: "medium",
+        concept: "LEFT JOIN + IS NULL (anti-join)",
+        explain: "LEFT JOIN customers to recent orders. Customers with no match get NULL — filter on NULL to find inactive ones.",
+        sql: `SELECT c.customer_id, c.name
+FROM customers c
+LEFT JOIN orders o 
+  ON c.customer_id = o.customer_id
+  AND o.order_date >= CURRENT_DATE - 180
+WHERE o.customer_id IS NULL;`,
+        pyspark: `recent_orders = orders.filter(
+  datediff(current_date(),"order_date") <= 180
+).select("customer_id").distinct()
+customers.join(recent_orders, "customer_id", "left_anti")`,
+        tip: "LEFT JOIN + WHERE right side IS NULL = customers with no matching order. In PySpark use left_anti join — it's the same thing, cleaner syntax."
+      },
+      {
+        num: "P55", title: "Performance issue: YEAR(hire_date) = 2020", diff: "medium",
+        concept: "Index-friendly query rewriting",
+        explain: "Wrapping a column in a function (YEAR()) prevents index usage. Rewrite to use a range condition on the raw column.",
+        sql: `-- BAD (no index used)
+WHERE YEAR(hire_date) = 2020
+
+-- GOOD (index can be used)
+WHERE hire_date >= '2020-01-01' 
+  AND hire_date < '2021-01-01'`,
+        pyspark: `# In PySpark: same principle — use range filter
+df.filter((col("hire_date") >= "2020-01-01") & (col("hire_date") < "2021-01-01"))`,
+        tip: "Rule: Never apply functions to a column you want to filter on. Transform the right side instead."
+      }
+    ]
+  },
+  {
+    id: "dept-avg",
+    label: "Dept Avg & Percentile",
+    title: "Pattern 6 — Department comparisons",
+    desc: "Compare individual values to group averages. Very common interview topic — shows you understand window functions vs GROUP BY.",
+    problems: [
+      {
+        num: "P49", title: "Employees earning more than their dept average", diff: "medium",
+        concept: "AVG as window function",
+        explain: "Use AVG() as a window function with PARTITION BY dept. This calculates the dept average for each row without collapsing them.",
+        sql: `SELECT name, salary, dept_id,
+  AVG(salary) OVER (PARTITION BY dept_id) AS dept_avg
+FROM employees
+WHERE salary > AVG(salary) OVER (PARTITION BY dept_id);
+
+-- Cleaner with CTE:
+WITH dept_avgs AS (
+  SELECT *, AVG(salary) OVER (PARTITION BY dept_id) AS dept_avg
+  FROM employees
+)
+SELECT name, salary, dept_avg FROM dept_avgs WHERE salary > dept_avg;`,
+        pyspark: `w = Window.partitionBy("dept_id")
+df.withColumn("dept_avg", avg("salary").over(w)) \
+  .filter(col("salary") > col("dept_avg"))`,
+        tip: "Can't use window function in WHERE directly in SQL. Wrap in CTE or subquery first."
+      },
+      {
+        num: "P60", title: "Departments where dept avg > company avg", diff: "hard",
+        concept: "Multiple CTEs — two levels of averaging",
+        explain: "Calculate department average and company average separately in CTEs, then compare them.",
+        sql: `WITH dept_avg AS (
+  SELECT dept_id, AVG(salary) AS d_avg
+  FROM employees GROUP BY dept_id
+),
+company_avg AS (
+  SELECT AVG(salary) AS c_avg FROM employees
+)
+SELECT dept_id, d_avg
+FROM dept_avg, company_avg
+WHERE d_avg > c_avg;`,
+        pyspark: `d_avg = df.groupBy("dept_id").agg(avg("salary").alias("d_avg"))
+c_avg = df.agg(avg("salary").alias("c_avg"))
+d_avg.crossJoin(c_avg).filter(col("d_avg") > col("c_avg"))`,
+        tip: "crossJoin with a single-row dataframe is the PySpark way to compare against a scalar value."
+      }
+    ]
+  }
+];
+
+function buildNav() {
+  const nav = document.getElementById("nav");
+  data.forEach((s, i) => {
+    const btn = document.createElement("button");
+    btn.className = "nav-btn" + (i===0?" active":"");
+    btn.textContent = s.label;
+    btn.onclick = () => {
+      document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".section").forEach(sec=>sec.classList.remove("active"));
+      document.getElementById("sec-"+s.id).classList.add("active");
+    };
+    nav.appendChild(btn);
+  });
+}
+
+function buildSections() {
+  const container = document.getElementById("sections");
+  data.forEach((s, i) => {
+    const sec = document.createElement("div");
+    sec.className = "section" + (i===0?" active":"");
+    sec.id = "sec-"+s.id;
+    sec.innerHTML = `<div class="pattern-title">${s.title}</div><div class="pattern-desc">${s.desc}</div><div class="problems-grid">${s.problems.map(buildCard).join("")}</div>`;
+    container.appendChild(sec);
+  });
+}
+
+function buildCard(p) {
+  const diffClass = p.diff === "easy" ? "d-easy" : p.diff === "medium" ? "d-medium" : "d-hard";
+  return `<div class="problem-card">
+    <div class="problem-header" onclick="toggleCard(this)">
+      <span class="problem-num">${p.num}</span>
+      <span class="problem-title">${p.title}</span>
+      <span class="difficulty ${diffClass}">${p.diff}</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="problem-body">
+      <span class="concept-tag">${p.concept}</span>
+      <p class="explanation">${p.explain}</p>
+      <div class="section-label">SQL</div>
+      <div class="code-block">${p.sql}</div>
+      <div class="section-label">PySpark</div>
+      <div class="code-block">${p.pyspark}</div>
+      <div class="tip">Key insight: ${p.tip}</div>
+    </div>
+  </div>`;
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chev = header.querySelector(".chevron");
+  body.classList.toggle("open");
+  chev.classList.toggle("open");
+}
+
+buildNav();
+buildSections();
+</script>

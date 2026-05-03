@@ -1,0 +1,686 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.tab{padding:7px 16px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.tab.active,.tab:hover{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.section{display:none}.section.active{display:block}
+.sec-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.6}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer}
+.card-head:hover{background:var(--color-background-secondary)}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px;white-space:nowrap}
+.b-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.b-green{background:var(--color-background-success);color:var(--color-text-success)}
+.b-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.b-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.card-title{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.chev{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.chev.open{transform:rotate(180deg)}
+.card-body{display:none;padding:4px 16px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.card-body.open{display:block}
+.lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+.para{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.code{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.7;margin-bottom:8px}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin-top:6px}
+.insight{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin-top:6px}
+.info{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin-top:6px}
+.arch{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.arch-step{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 11px;font-size:12px;color:var(--color-text-primary);display:flex;align-items:center;gap:5px}
+.arch-step:after{content:"→";color:var(--color-text-tertiary);font-size:11px;margin-left:6px}
+.arch-step:last-child:after{content:""}
+.week-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:10px 0}
+.week-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.week-num{font-size:11px;font-weight:500;color:var(--color-text-tertiary);margin-bottom:4px}
+.week-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.week-tasks{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.checklist{list-style:none;padding:0;margin:8px 0}
+.checklist li{font-size:13px;color:var(--color-text-secondary);line-height:1.7;padding-left:16px;position:relative}
+.checklist li:before{content:"·";position:absolute;left:4px;color:var(--color-text-tertiary);font-size:16px;top:-2px}
+.stack-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.stack-pill{font-size:12px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);background:var(--color-background-primary)}
+.proj-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.meta-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 12px}
+.meta-label{font-size:11px;color:var(--color-text-tertiary);margin-bottom:3px}
+.meta-val{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.folder{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin:8px 0;font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);line-height:1.8}
+.folder .dir{color:var(--color-text-info)}
+.folder .file{color:var(--color-text-primary)}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Data engineering portfolio project guide — 3 projects with step-by-step instructions</h2>
+<div class="tabs" id="tabs"></div>
+<div id="secs"></div>
+</div>
+
+<script>
+const data = [
+{
+  id:"overview", label:"Roadmap", title:"Your 3-project portfolio plan",
+  sub:"Three projects that build on each other. Each one teaches a new layer of DE skills. Together they cover batch, streaming, data quality, AWS, PySpark, and SQL — everything a hiring manager looks for.",
+  cards:[
+    {
+      title:"Why 3 projects and how to pick them", badge:"Strategy", bc:"b-blue",
+      body:`
+<div class="lbl">The rule: each project should demonstrate one hard skill clearly</div>
+<div class="proj-meta">
+  <div class="meta-box"><div class="meta-label">Project 1</div><div class="meta-val">Batch pipeline + SQL</div></div>
+  <div class="meta-box"><div class="meta-label">Project 2</div><div class="meta-val">AWS end-to-end</div></div>
+  <div class="meta-box"><div class="meta-label">Project 3</div><div class="meta-val">Streaming + real-time</div></div>
+  <div class="meta-box"><div class="meta-label">Domain</div><div class="meta-val">Health or Auto</div></div>
+</div>
+<div class="para">Use public datasets — no company data needed. Kaggle, data.gov, UCI ML repo, and NYC open data all have excellent free datasets that look professional.</div>
+<div class="insight">Career changer tip: Frame every project README with "business problem first". Engineers write about code. Data engineers write about the problem they solved. That difference stands out.</div>`
+    },
+    {
+      title:"8-week build timeline", badge:"Timeline", bc:"b-green",
+      body:`
+<div class="week-grid">
+  <div class="week-card"><div class="week-num">Week 1–2</div><div class="week-title">Project 1</div><div class="week-tasks">Local PySpark + SQL analysis. Focus on getting something working end-to-end.</div></div>
+  <div class="week-card"><div class="week-num">Week 3–4</div><div class="week-title">Project 2</div><div class="week-tasks">Move to AWS. S3 + Glue + Athena. Add data quality checks.</div></div>
+  <div class="week-card"><div class="week-num">Week 5–6</div><div class="week-title">Project 3</div><div class="week-tasks">Streaming with Kinesis or Kafka locally. Add alerting logic.</div></div>
+  <div class="week-card"><div class="week-num">Week 7–8</div><div class="week-title">Polish</div><div class="week-tasks">READMEs, architecture diagrams, GitHub cleanup, LinkedIn posts.</div></div>
+</div>
+<div class="tip">Start with Project 1 this week. Don't wait until everything is "perfect" to push to GitHub. Commit every day — even small changes. Activity graph matters.</div>`
+    },
+    {
+      title:"What recruiters actually look at on GitHub", badge:"Recruiter View", bc:"b-amber",
+      body:`
+<div class="lbl">In order of what they check first</div>
+<div class="para">1. README — does it have a clear problem statement, architecture diagram, and how-to-run?<br>2. Folder structure — is the code organized like a real project?<br>3. Code quality — functions, comments, no hardcoded credentials<br>4. Commit history — regular commits over weeks (not one giant dump)<br>5. Technologies used — does it match the job description?</div>
+<div class="lbl">Profile-level things to fix first</div>
+<div class="para">• Pin your 3 best repos on your profile<br>• Add a profile README (GitHub supports it — it's the file in a repo named your-username)<br>• Use consistent repo naming: de-healthcare-batch-pipeline not "project1"</div>
+<div class="info">GitHub is your resume for DE roles. Treat every repo like you'd treat a work deliverable.</div>`
+    }
+  ]
+},
+{
+  id:"proj1", label:"Project 1 — Batch", title:"Project 1 — Healthcare batch pipeline",
+  sub:"Analyse hospital patient data: find readmission patterns, high-cost departments, and patient flow trends. Uses PySpark locally + SQL. No cloud needed. Build time: 1–2 weeks.",
+  cards:[
+    {
+      title:"Project overview & dataset", badge:"Setup", bc:"b-blue",
+      body:`
+<div class="lbl">Business problem to write in your README</div>
+<div class="para">"Hospitals lose millions annually to preventable 30-day readmissions. This pipeline processes patient admission records to identify high-risk patient segments, flag departments with above-average readmission rates, and produce a daily summary report for the clinical operations team."</div>
+<div class="lbl">Free dataset to use</div>
+<div class="para">Search Kaggle: "Hospital patient readmission dataset" or "MIMIC hospital admissions". Download as CSV. 50k–200k rows is ideal — big enough to justify PySpark, small enough to run locally.</div>
+<div class="proj-meta">
+  <div class="meta-box"><div class="meta-label">Rows</div><div class="meta-val">~100k records</div></div>
+  <div class="meta-box"><div class="meta-label">Runtime</div><div class="meta-val">Local PySpark</div></div>
+  <div class="meta-box"><div class="meta-label">Output</div><div class="meta-val">Parquet + CSV report</div></div>
+  <div class="meta-box"><div class="meta-label">Time to build</div><div class="meta-val">~10 hours</div></div>
+</div>
+<div class="stack-row">
+  <span class="stack-pill">Python 3.10+</span>
+  <span class="stack-pill">PySpark 3.x</span>
+  <span class="stack-pill">pandas</span>
+  <span class="stack-pill">SQL (via Spark SQL)</span>
+  <span class="stack-pill">Jupyter Notebook</span>
+  <span class="stack-pill">matplotlib</span>
+</div>`
+    },
+    {
+      title:"Folder structure — copy this exactly", badge:"Structure", bc:"b-green",
+      body:`
+<div class="lbl">Use this structure — it looks professional</div>
+<div class="folder">
+<span class="dir">de-healthcare-batch-pipeline/</span>
+├── <span class="dir">data/</span>
+│   ├── <span class="dir">raw/</span>          ← original CSV files
+│   └── <span class="dir">processed/</span>   ← output Parquet files
+├── <span class="dir">notebooks/</span>
+│   └── <span class="file">exploration.ipynb</span>  ← EDA, quick analysis
+├── <span class="dir">src/</span>
+│   ├── <span class="file">ingest.py</span>      ← read + validate raw data
+│   ├── <span class="file">transform.py</span>   ← PySpark transformations
+│   ├── <span class="file">quality.py</span>    ← data quality checks
+│   └── <span class="file">report.py</span>     ← generate final output
+├── <span class="dir">sql/</span>
+│   └── <span class="file">analysis_queries.sql</span>
+├── <span class="dir">tests/</span>
+│   └── <span class="file">test_transforms.py</span>
+├── <span class="file">main.py</span>            ← runs the full pipeline
+├── <span class="file">requirements.txt</span>
+└── <span class="file">README.md</span>
+</div>
+<div class="tip">Add data/ to .gitignore so you don't push patient data to GitHub. Mention in README: "Download dataset from [link] and place in data/raw/"</div>`
+    },
+    {
+      title:"Core PySpark code to write", badge:"Code", bc:"b-purple",
+      body:`
+<div class="lbl">transform.py — the main logic</div>
+<div class="code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+from pyspark.sql.window import Window
+
+def create_readmission_features(df):
+    w = Window.partitionBy("patient_id").orderBy("admission_date")
+    
+    return df \
+        .withColumn("prev_discharge", lag("discharge_date").over(w)) \
+        .withColumn("days_between",
+            datediff(col("admission_date"), col("prev_discharge"))) \
+        .withColumn("is_readmission",
+            when(col("days_between") <= 30, 1).otherwise(0)) \
+        .withColumn("los_days",
+            datediff(col("discharge_date"), col("admission_date"))) \
+        .withColumn("risk_tier",
+            when(col("los_days") > 14, "high")
+            .when(col("los_days") > 7, "medium")
+            .otherwise("low"))
+
+def dept_summary(df):
+    return df.groupBy("department").agg(
+        count("*").alias("total_admissions"),
+        sum("is_readmission").alias("readmissions"),
+        avg("los_days").alias("avg_los"),
+        round(100*sum("is_readmission")/count("*"),1).alias("readmit_rate_pct")
+    ).orderBy(col("readmit_rate_pct").desc())</div>
+<div class="lbl">quality.py — data validation</div>
+<div class="code">def run_quality_checks(df):
+    total = df.count()
+    checks = {
+        "null_patient_ids": df.filter(col("patient_id").isNull()).count(),
+        "negative_los": df.filter(
+            datediff(col("discharge_date"),col("admission_date")) < 0
+        ).count(),
+        "future_admissions": df.filter(
+            col("admission_date") > current_date()
+        ).count()
+    }
+    for check, count_ in checks.items():
+        status = "PASS" if count_ == 0 else "FAIL"
+        print(f"[{status}] {check}: {count_}/{total} rows affected")
+    return checks</div>`
+    },
+    {
+      title:"SQL queries to include (shows SQL skill)", badge:"SQL", bc:"b-green",
+      body:`
+<div class="lbl">analysis_queries.sql — register PySpark df as temp view first</div>
+<div class="code">-- Register in Python: df.createOrReplaceTempView("admissions")
+
+-- Q1: Departments above average readmission rate
+WITH dept_rates AS (
+  SELECT department,
+    COUNT(*) AS admissions,
+    ROUND(100.0*SUM(is_readmission)/COUNT(*),1) AS readmit_pct
+  FROM admissions GROUP BY department
+),
+avg_rate AS (SELECT AVG(readmit_pct) AS avg_r FROM dept_rates)
+SELECT d.*, ROUND(d.readmit_pct - a.avg_r,1) AS vs_avg
+FROM dept_rates d, avg_rate a
+WHERE d.readmit_pct > a.avg_r
+ORDER BY vs_avg DESC;
+
+-- Q2: Top 3 diagnoses by avg length of stay
+SELECT diagnosis_code, diagnosis_desc,
+  COUNT(*) AS cases,
+  ROUND(AVG(los_days),1) AS avg_los,
+  DENSE_RANK() OVER (ORDER BY AVG(los_days) DESC) AS los_rank
+FROM admissions
+GROUP BY diagnosis_code, diagnosis_desc
+QUALIFY los_rank <= 3;</div>
+<div class="insight">Running SQL on Spark DataFrames (createOrReplaceTempView) shows you understand both PySpark and SQL together — exactly what DE interviewers want to see.</div>`
+    },
+    {
+      title:"README template — copy and fill in", badge:"README", bc:"b-amber",
+      body:`
+<div class="lbl">Use this exact structure for your README.md</div>
+<div class="code"># Healthcare Readmission Batch Pipeline
+
+## Business problem
+Hospitals need to identify patients at high risk of 30-day 
+readmission to reduce costs and improve patient outcomes.
+This pipeline processes 100k+ admission records daily to 
+surface actionable insights for clinical operations teams.
+
+## Architecture
+[Raw CSV] → [PySpark ingestion] → [Transform + feature eng]
+→ [Data quality checks] → [Parquet output] → [SQL reports]
+
+## What this pipeline produces
+- Department readmission rate ranking
+- Top diagnoses by length of stay
+- Patient risk tier segmentation
+- Daily quality check report
+
+## Key technical decisions
+- Parquet output: 4x smaller than CSV, columnar for fast reads
+- Window functions for readmission calculation (no self-join)
+- Idempotent writes: overwrite mode prevents duplicate data
+
+## How to run
+pip install -r requirements.txt
+python main.py --input data/raw/ --output data/processed/
+
+## Skills demonstrated
+PySpark | SQL | Data quality | Window functions | ETL design</div>
+<div class="tip">The "Key technical decisions" section is what separates junior and senior portfolios. Always explain WHY you made a choice, not just what you did.</div>`
+    }
+  ]
+},
+{
+  id:"proj2", label:"Project 2 — AWS", title:"Project 2 — Automobile pipeline on AWS",
+  sub:"End-to-end AWS pipeline for vehicle sales and telematics data. S3 → Glue → Athena → QuickSight. This is your cloud project — the one that proves you can build on AWS. Build time: 1–2 weeks.",
+  cards:[
+    {
+      title:"Project overview & free AWS tier", badge:"Setup", bc:"b-blue",
+      body:`
+<div class="lbl">Business problem for README</div>
+<div class="para">"A used car marketplace needs to track vehicle listing performance, identify price anomalies, and generate weekly regional sales reports. This pipeline ingests raw listing data daily, processes it on AWS, and serves insights via SQL queries and a dashboard."</div>
+<div class="lbl">Free dataset</div>
+<div class="para">Search Kaggle: "Used cars dataset" (craigslist or cars.com scraped data). 400k+ rows. Perfect size for demonstrating AWS services without cost.</div>
+<div class="lbl">AWS free tier — what you can use for free</div>
+<div class="para">• S3: 5GB free storage — more than enough<br>• Glue: first million DPU-seconds free per month<br>• Athena: first 1TB of queries free — your project will use MBs<br>• Lambda: 1M free requests/month<br>• QuickSight: 1 user free for 30 days (use for screenshots)</div>
+<div class="stack-row">
+  <span class="stack-pill">AWS S3</span>
+  <span class="stack-pill">AWS Glue</span>
+  <span class="stack-pill">AWS Athena</span>
+  <span class="stack-pill">PySpark (Glue)</span>
+  <span class="stack-pill">Terraform (optional)</span>
+  <span class="stack-pill">boto3</span>
+</div>
+<div class="tip">Set a $5 billing alert on AWS before starting. It's nearly impossible to exceed free tier on this project, but the alert gives you peace of mind.</div>`
+    },
+    {
+      title:"Step-by-step AWS setup", badge:"AWS Steps", bc:"b-amber",
+      body:`
+<div class="lbl">Do these in order — each step enables the next</div>
+<div class="arch">
+  <div class="arch-step">1. Create S3 buckets</div>
+  <div class="arch-step">2. Upload raw CSV</div>
+  <div class="arch-step">3. Create Glue Crawler</div>
+  <div class="arch-step">4. Create Glue ETL job</div>
+  <div class="arch-step">5. Query with Athena</div>
+  <div class="arch-step">6. Screenshot results</div>
+</div>
+<div class="lbl">S3 bucket structure to create</div>
+<div class="folder">
+<span class="dir">s3://your-name-de-project/</span>
+├── <span class="dir">raw/</span>
+│   └── <span class="dir">vehicles/year=2024/month=01/</span>
+│       └── <span class="file">listings.csv</span>
+├── <span class="dir">processed/</span>
+│   └── <span class="dir">vehicles/</span>
+│       └── <span class="file">part-00000.parquet</span>
+├── <span class="dir">scripts/</span>
+│   └── <span class="file">glue_transform.py</span>
+└── <span class="dir">athena-results/</span>   ← Athena writes query output here
+</div>
+<div class="info">Partition by year/month in S3. This makes Athena queries faster and cheaper — it skips partitions that don't match your WHERE clause.</div>`
+    },
+    {
+      title:"AWS Glue PySpark script", badge:"Code", bc:"b-purple",
+      body:`
+<div class="lbl">glue_transform.py — upload this to S3/scripts/ and point Glue job to it</div>
+<div class="code">import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+from pyspark.sql.functions import *
+from pyspark.sql.window import Window
+
+args = getResolvedOptions(sys.argv, ['JOB_NAME'])
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args['JOB_NAME'], args)
+
+INPUT_PATH = "s3://your-name-de-project/raw/vehicles/"
+OUTPUT_PATH = "s3://your-name-de-project/processed/vehicles/"
+
+df = spark.read.option("header","true").csv(INPUT_PATH)
+
+df_clean = df \
+    .dropDuplicates(["listing_id"]) \
+    .filter(col("price").cast("float").isNotNull()) \
+    .withColumn("price", col("price").cast("float")) \
+    .withColumn("year", col("year").cast("int")) \
+    .withColumn("age_years", lit(2024) - col("year")) \
+    .withColumn("price_per_mile",
+        when(col("odometer") > 0,
+             round(col("price")/col("odometer"),4))
+        .otherwise(None))
+
+w = Window.partitionBy("manufacturer","condition")
+df_enriched = df_clean.withColumn("avg_price_segment",
+    avg("price").over(w)) \
+    .withColumn("price_vs_avg",
+        round(col("price") - col("avg_price_segment"),2)) \
+    .withColumn("is_underpriced",
+        when(col("price_vs_avg") < -2000, True).otherwise(False))
+
+df_enriched.write.mode("overwrite") \
+    .partitionBy("manufacturer") \
+    .parquet(OUTPUT_PATH)
+
+job.commit()</div>`
+    },
+    {
+      title:"Athena SQL queries to screenshot for portfolio", badge:"SQL", bc:"b-green",
+      body:`
+<div class="lbl">These queries + screenshots = strong portfolio evidence</div>
+<div class="code">-- Q1: Average price by manufacturer and condition
+SELECT manufacturer, condition,
+  COUNT(*) AS listings,
+  ROUND(AVG(price),0) AS avg_price,
+  ROUND(MIN(price),0) AS min_price,
+  ROUND(MAX(price),0) AS max_price
+FROM processed_vehicles
+GROUP BY manufacturer, condition
+ORDER BY avg_price DESC
+LIMIT 20;
+
+-- Q2: Top 5 underpriced listings per manufacturer
+WITH ranked AS (
+  SELECT listing_id, manufacturer, price, avg_price_segment,
+    price_vs_avg,
+    DENSE_RANK() OVER (
+      PARTITION BY manufacturer
+      ORDER BY price_vs_avg ASC
+    ) AS deal_rank
+  FROM processed_vehicles
+  WHERE is_underpriced = true
+)
+SELECT * FROM ranked WHERE deal_rank <= 5;</div>
+<div class="lbl">What to screenshot and add to README</div>
+<div class="para">• Athena query result showing scan size (e.g. "Data scanned: 4.2 MB") — proves partitioning worked<br>• Glue job run showing duration and DPUs used<br>• S3 folder structure showing partitioned Parquet files</div>
+<div class="tip">Screenshots of AWS console are as valuable as code in a portfolio. They prove you actually ran it, not just wrote it.</div>`
+    }
+  ]
+},
+{
+  id:"proj3", label:"Project 3 — Streaming", title:"Project 3 — Real-time vehicle anomaly detection",
+  sub:"Simulate IoT sensor data from vehicles, process it with Spark Structured Streaming, detect anomalies, and write alerts. Run locally with Kafka (Docker) or use AWS Kinesis. Build time: 1–2 weeks.",
+  cards:[
+    {
+      title:"Project overview & local streaming setup", badge:"Setup", bc:"b-blue",
+      body:`
+<div class="lbl">Business problem for README</div>
+<div class="para">"A fleet management company monitors 10,000 vehicles. Sensor data (engine temp, RPM, battery voltage) streams continuously. This pipeline detects anomalies in real-time and triggers alerts when readings exceed safe thresholds — preventing breakdowns and reducing roadside assistance costs."</div>
+<div class="lbl">Run Kafka locally with Docker (free, no AWS needed)</div>
+<div class="code">docker-compose.yml:
+
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+  kafka:
+    image: confluentinc/cp-kafka:7.0.0
+    depends_on: [zookeeper]
+    ports: ["9092:9092"]
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"</div>
+<div class="code">docker-compose up -d  # starts Kafka in background</div>
+<div class="stack-row">
+  <span class="stack-pill">PySpark Structured Streaming</span>
+  <span class="stack-pill">Apache Kafka (Docker)</span>
+  <span class="stack-pill">Python producer script</span>
+  <span class="stack-pill">boto3 (optional SNS alerts)</span>
+</div>`
+    },
+    {
+      title:"Data producer — simulate vehicle sensors", badge:"Code", bc:"b-purple",
+      body:`
+<div class="lbl">producer.py — generates realistic sensor data</div>
+<div class="code">import json, time, random
+from kafka import KafkaProducer
+from datetime import datetime
+
+producer = KafkaProducer(
+    bootstrap_servers='localhost:9092',
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+VEHICLES = [f"VH{str(i).zfill(4)}" for i in range(1, 101)]
+
+def generate_reading(vehicle_id):
+    is_anomaly = random.random() < 0.05  # 5% anomaly rate
+    return {
+        "vehicle_id": vehicle_id,
+        "timestamp": datetime.utcnow().isoformat(),
+        "engine_temp": round(random.gauss(105 if is_anomaly else 88, 5), 1),
+        "rpm":         round(random.gauss(5200 if is_anomaly else 2800, 300)),
+        "battery_v":   round(random.gauss(11.5 if is_anomaly else 13.8, 0.3), 2),
+        "speed_kmh":   round(random.uniform(0, 120))
+    }
+
+print("Streaming sensor data to Kafka...")
+while True:
+    for vid in random.sample(VEHICLES, 10):
+        producer.send("vehicle-sensors", generate_reading(vid))
+    producer.flush()
+    time.sleep(1)  # 10 events/second</div>`
+    },
+    {
+      title:"Spark Structured Streaming consumer", badge:"Code", bc:"b-purple",
+      body:`
+<div class="lbl">consumer.py — reads from Kafka, detects anomalies</div>
+<div class="code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+from pyspark.sql.window import Window
+
+spark = SparkSession.builder \
+    .appName("VehicleAnomalyDetector") \
+    .config("spark.jars.packages",
+            "org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0") \
+    .getOrCreate()
+
+schema = StructType([
+    StructField("vehicle_id", StringType()),
+    StructField("timestamp", StringType()),
+    StructField("engine_temp", FloatType()),
+    StructField("rpm", IntegerType()),
+    StructField("battery_v", FloatType()),
+    StructField("speed_kmh", IntegerType())
+])
+
+raw = spark.readStream.format("kafka") \
+    .option("kafka.bootstrap.servers","localhost:9092") \
+    .option("subscribe","vehicle-sensors") \
+    .load()
+
+df = raw.select(
+    from_json(col("value").cast("string"), schema).alias("data")
+).select("data.*") \
+ .withColumn("event_time", to_timestamp("timestamp"))
+
+windowed = df \
+    .withWatermark("event_time", "1 minute") \
+    .groupBy(
+        window("event_time", "2 minutes", "30 seconds"),
+        "vehicle_id"
+    ).agg(
+        avg("engine_temp").alias("avg_temp"),
+        max("rpm").alias("max_rpm"),
+        min("battery_v").alias("min_battery"),
+        count("*").alias("readings")
+    )
+
+alerts = windowed.filter(
+    (col("avg_temp") > 100) |
+    (col("max_rpm") > 5000) |
+    (col("min_battery") < 12.0)
+).withColumn("alert_reason",
+    when(col("avg_temp") > 100, "HIGH_TEMP")
+    .when(col("max_rpm") > 5000, "HIGH_RPM")
+    .otherwise("LOW_BATTERY")
+)
+
+query = alerts.writeStream \
+    .outputMode("update") \
+    .format("console") \
+    .option("truncate", False) \
+    .start()
+
+query.awaitTermination()</div>
+<div class="insight">Windowing + watermarking in a real running project = one of the strongest things you can show in a DE interview. Very few candidates actually build this.</div>`
+    },
+    {
+      title:"How to demo this project in an interview", badge:"Interview Use", bc:"b-amber",
+      body:`
+<div class="lbl">What to show (screenshots / screen recording)</div>
+<div class="para">1. Terminal running producer.py showing events being sent<br>2. Spark console showing windowed results updating every 30 seconds<br>3. A highlighted alert row (red-colored in console) showing anomaly detection<br>4. The architecture diagram from your README</div>
+<div class="lbl">How to talk about it</div>
+<div class="para">"I built a streaming pipeline that simulates IoT sensor data from 100 vehicles. The producer generates ~10 events/second with a 5% anomaly injection rate. The consumer uses Spark Structured Streaming with 2-minute tumbling windows and 1-minute watermarking to handle late events. Anomalies trigger alerts based on temperature, RPM, and battery thresholds."</div>
+<div class="lbl">Questions they'll ask — prepare these answers</div>
+<div class="para">• "Why Kafka instead of Kinesis?" → Kafka is open source, runs locally. For production on AWS I'd use Kinesis — same concept, managed service.<br>• "What happens if Spark crashes?" → Checkpointing. I store checkpoint data to disk so the stream resumes from last processed offset.<br>• "How would you scale this to 100k vehicles?" → Increase Kafka partitions, add more Spark executors, use EMR on AWS.</div>`
+    }
+  ]
+},
+{
+  id:"github", label:"GitHub & Linkedin", title:"GitHub profile + LinkedIn setup",
+  sub:"Your code means nothing if nobody sees it. This section covers exactly how to present your portfolio to get noticed by recruiters and hiring managers.",
+  cards:[
+    {
+      title:"GitHub profile README — what to include", badge:"GitHub", bc:"b-blue",
+      body:`
+<div class="lbl">Create a repo named exactly your GitHub username — it becomes your profile page</div>
+<div class="code"># Hi, I'm [Your Name] — Data Engineer
+
+Transitioning from Customer Experience to Data Engineering.
+I build data pipelines that turn raw data into business decisions.
+
+## What I'm working with
+- Languages: Python, SQL, PySpark
+- Cloud: AWS (S3, Glue, Athena, Kinesis, EMR)
+- Tools: Apache Kafka, Airflow, Docker, Git
+
+## Portfolio projects
+
+| Project | What it does | Tech |
+|---------|-------------|------|
+| [Healthcare Batch Pipeline](link) | Readmission analysis for 100k patients | PySpark, SQL, Parquet |
+| [Auto Sales AWS Pipeline](link) | End-to-end ETL on AWS | S3, Glue, Athena |
+| [Vehicle Anomaly Streaming](link) | Real-time IoT anomaly detection | Kafka, Spark Streaming |
+
+## Background
+5 years in Customer Experience — I understand the business
+problems that data engineering solves, not just the code.
+
+Currently preparing for AWS Data Engineer Associate certification.</div>
+<div class="tip">The "Background" section is your CX-to-DE story in 2 sentences. It makes you memorable. Don't skip it.</div>`
+    },
+    {
+      title:"LinkedIn post template — announce each project", badge:"LinkedIn", bc:"b-green",
+      body:`
+<div class="lbl">Post this when you finish each project — it gets recruiter attention</div>
+<div class="code">Just finished building [Project Name] — a data pipeline that 
+[one sentence on what it does].
+
+Here's what I built:
+→ [Technology 1]: [why you used it / what it does]
+→ [Technology 2]: [why you used it / what it does]
+→ [Technology 3]: [why you used it / what it does]
+
+The most interesting challenge: [one specific technical problem 
+you solved — e.g., "handling late-arriving sensor events using 
+watermarking in Spark Structured Streaming"]
+
+Coming from a Customer Experience background, I know firsthand 
+why this kind of data matters — [connect to business impact].
+
+GitHub link in comments.
+
+#DataEngineering #PySpark #AWS #SQL #OpenToWork</div>
+<div class="insight">Posts that explain one specific technical decision get 5–10x more recruiter engagement than "I finished a project!" posts. Be specific about what you learned.</div>`
+    },
+    {
+      title:"Architecture diagram — how to make one for free", badge:"Diagrams", bc:"b-amber",
+      body:`
+<div class="lbl">Every project README needs an architecture diagram</div>
+<div class="para">Use draw.io (free, no account needed at diagrams.net). Use AWS official icons (downloadable free from AWS). Export as PNG and put in your README.</div>
+<div class="lbl">What to show in the diagram</div>
+<div class="para">• Data source (CSV file, API, IoT device)<br>• Every AWS service with its official icon<br>• Direction of data flow with arrows<br>• What format the data is in at each stage (CSV → Parquet)<br>• Final consumer (dashboard, analyst, ML model)</div>
+<div class="lbl">Add diagram to README like this</div>
+<div class="code">## Architecture
+
+![Pipeline Architecture](docs/architecture.png)
+
+**Data flow:**
+Raw CSV → S3 (raw) → Glue ETL (PySpark) → 
+S3 (processed/Parquet) → Athena (SQL) → QuickSight</div>
+<div class="info">A clear architecture diagram in a README signals seniority immediately. It shows you think in systems, not just in code.</div>`
+    },
+    {
+      title:"Checklist before applying for jobs", badge:"Checklist", bc:"b-red",
+      body:`
+<div class="lbl">Portfolio is ready when all of these are true</div>
+<ul class="checklist">
+  <li>3 repos pinned on GitHub profile</li>
+  <li>Each repo has a README with: problem statement, architecture diagram, tech decisions, how to run</li>
+  <li>Code is in functions/modules — not one giant notebook</li>
+  <li>No hardcoded credentials, no test data files committed</li>
+  <li>Commit history spans multiple weeks (not one day)</li>
+  <li>GitHub profile README explains your background</li>
+  <li>LinkedIn has at least one post about a project with a GitHub link</li>
+  <li>LinkedIn headline says "Data Engineer" not "Aspiring Data Engineer" — own the title</li>
+  <li>Resume lists the 3 projects under a "Projects" section with tech stack and 1-line outcome</li>
+  <li>You can explain every line of code in an interview without looking at notes</li>
+</ul>
+<div class="insight">The last point matters most. Build slowly enough that you understand everything. In interviews, "I followed a tutorial" will be obvious immediately if you can't explain why you made each decision.</div>`
+    }
+  ]
+}
+];
+
+function buildTabs(){
+  const t=document.getElementById("tabs");
+  data.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(i===0?" active":"");
+    b.textContent=s.label;
+    b.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+      document.getElementById("s-"+s.id).classList.add("active");
+    };
+    t.appendChild(b);
+  });
+}
+
+function buildSecs(){
+  const c=document.getElementById("secs");
+  data.forEach((s,i)=>{
+    const sec=document.createElement("div");
+    sec.className="section"+(i===0?" active":"");
+    sec.id="s-"+s.id;
+    sec.innerHTML=`<div class="sec-title">${s.title}</div><div class="sec-sub">${s.sub}</div><div class="cards">${s.cards.map(buildCard).join("")}</div>`;
+    c.appendChild(sec);
+  });
+}
+
+function buildCard(p){
+  return `<div class="card">
+    <div class="card-head" onclick="toggle(this)">
+      <span class="badge ${p.bc}">${p.badge}</span>
+      <span class="card-title">${p.title}</span>
+      <span class="chev">▼</span>
+    </div>
+    <div class="card-body">${p.body}</div>
+  </div>`;
+}
+
+function toggle(h){
+  const b=h.nextElementSibling,c=h.querySelector(".chev");
+  b.classList.toggle("open");c.classList.toggle("open");
+}
+
+buildTabs();buildSecs();
+</script>

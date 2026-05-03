@@ -1,0 +1,341 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:120px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{color:var(--color-text-info);background:var(--color-background-info)}
+</style>
+
+<h3>Bucket 2 — Performance</h3>
+<div class="sub">5 questions. These are the most asked advanced PySpark topics. Every question here has one core idea — learn that idea and the code follows naturally.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q1</span>
+  <span class="qt">Skewed data — what it is, how to detect it, how to fix it</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — understand this before the code</div>
+  <div class="p">Spark splits data into partitions and runs each partition on a separate task. Skew means one partition has much more data than others — say 80% of rows have <b>country = US</b>. That one task runs for hours while all others finish in minutes. The whole job waits for that one slow task.</div>
+
+  <div class="lbl">What skewed data looks like</div>
+  <table>
+    <tr><th>Partition</th><th>Rows</th><th>Time</th></tr>
+    <tr><td>country = US</td><td>8,000,000</td><td>45 mins</td></tr>
+    <tr><td>country = UK</td><td>200,000</td><td>2 mins</td></tr>
+    <tr><td>country = IN</td><td>150,000</td><td>1 min</td></tr>
+    <tr class="hl"><td colspan="3">→ Whole job waits 45 mins because of ONE partition</td></tr>
+  </table>
+
+  <div class="lbl">Step 1 — detect skew first</div>
+<pre>
+# Check how many rows are in each partition
+from pyspark.sql.functions import spark_partition_id
+
+df.groupBy(spark_partition_id().alias("partition")) \
+  .count() \
+  .orderBy("count", ascending=False) \
+  .show()
+
+# Check which key value is causing skew
+df.groupBy("country") \
+  .count() \
+  .orderBy("count", ascending=False) \
+  .show(10)</pre>
+
+  <div class="lbl">Fix 1 — Broadcast join (use when one table is small)</div>
+  <div class="p">If one of your tables is small (under 50MB) just send it to every executor. No shuffle needed at all. This is the simplest and best fix.</div>
+<pre>
+from pyspark.sql.functions import broadcast
+
+# Small lookup table — send to all executors
+result = df_large.join(broadcast(df_small), "country")
+
+# Or set threshold — Spark auto-broadcasts below this size
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50mb")</pre>
+
+  <div class="lbl">Fix 2 — Salting (use when both tables are large)</div>
+  <div class="p">Add a random number (the "salt") to the skewed key. Now US_0, US_1, US_2 ... US_9 spread across 10 partitions instead of 1. The small table needs all 10 versions so you explode it.</div>
+<pre>
+from pyspark.sql.functions import rand, concat, lit, array, explode
+
+SALT = 10  # split hot key into 10 buckets
+
+# Step 1: add random salt to the large (skewed) table
+df_large = df_large \
+    .withColumn("salt",
+        (rand() * SALT).cast("int").cast("string")) \
+    .withColumn("salted_key",
+        concat(col("country"), lit("_"), col("salt")))
+
+# Step 2: explode small table so every salt version exists
+df_small = df_small \
+    .withColumn("salts",
+        array([lit(str(i)) for i in range(SALT)])) \
+    .withColumn("salt", explode("salts")) \
+    .withColumn("salted_key",
+        concat(col("country"), lit("_"), col("salt"))) \
+    .drop("salts", "salt")
+
+# Step 3: join on salted key — data now spreads evenly
+result = df_large.join(df_small, "salted_key") \
+                 .drop("salted_key", "salt")</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Skew means one partition has far more data than others — like 80% of rows being country=US. That one task takes hours while others finish in minutes. I detect it by checking partition sizes. Fix: broadcast join if one table is small — simplest option. If both tables are large I use salting — add a random number to the join key so the hot key spreads across multiple partitions."</div></div>
+  <div class="tip">Salting trade-off: the small table grows by SALT factor and the code gets more complex. Always try broadcast join first — salting is the last resort.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q2</span>
+  <span class="qt">Broadcast join vs Sort-Merge join — what's the difference</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — what "shuffle" means</div>
+  <div class="p">A shuffle is when Spark moves data across the network between executors to line up matching keys for a join. It is the most expensive operation in Spark. The goal is to avoid or minimise shuffles.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Broadcast join</div>
+      <div class="box-r">Small table sent to EVERY executor. Join happens locally — no network shuffle. Fastest join type. Use when one table is under ~50MB.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Sort-Merge join</div>
+      <div class="box-r">Default for large-large joins. Both tables sorted and shuffled across network so matching keys end up on same executor. Expensive but handles any size.</div>
+    </div>
+  </div>
+
+  <div class="lbl">How a broadcast join works step by step</div>
+  <div class="flow">
+    <div class="fb">Small table (50MB)</div><div class="fa">→</div>
+    <div class="fb">Driver collects it</div><div class="fa">→</div>
+    <div class="fb">Sends copy to every executor</div><div class="fa">→</div>
+    <div class="fb">Each executor joins locally</div><div class="fa">→</div>
+    <div class="fb">No shuffle needed</div>
+  </div>
+
+<pre>
+from pyspark.sql.functions import broadcast
+
+# Explicit broadcast hint — always works
+result = df_large.join(broadcast(df_small), "dept_id")
+
+# Auto threshold — Spark broadcasts tables below this size
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", "50mb")
+
+# ALWAYS verify which join type Spark actually used
+result.explain()
+# Look for: BroadcastHashJoin  ← broadcast worked
+# vs:       SortMergeJoin      ← shuffle happened</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Broadcast join sends the small table to every executor so the join happens locally with no shuffle — it's the fastest join type. Sort-merge join is the default for large tables — both sides get shuffled across the network so matching keys land on the same executor. I always check explain() to confirm which join Spark actually chose."</div></div>
+  <div class="ok">Always mention explain() — it shows you verify rather than assume. That one habit signals senior-level thinking to interviewers.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">Cache vs Persist — the difference and when to use each</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — why caching exists</div>
+  <div class="p">PySpark is lazy — every time you call an action (count, show, write) on a DataFrame it recomputes the whole lineage from scratch. If you use the same DataFrame 3 times that computation runs 3 times. Cache stores the result so it only computes once.</div>
+
+  <div class="lbl">cache() vs persist() — what is the actual difference</div>
+  <div class="mrow"><span class="mk">cache()</span><span class="mv">Shorthand for persist with MEMORY_AND_DISK level. Quick to write. Good default choice.</span></div>
+  <div class="mrow"><span class="mk">persist(level)</span><span class="mv">Same as cache but you choose the storage level. Use when you need control over where data is stored.</span></div>
+
+  <div class="lbl">Storage levels — which to pick</div>
+  <div class="mrow"><span class="mk">MEMORY_ONLY</span><span class="mv">Fastest. Stored in RAM only. If not enough RAM — data is recomputed (not spilled). Use for small DataFrames that fit in memory.</span></div>
+  <div class="mrow"><span class="mk">MEMORY_AND_DISK</span><span class="mv">Default via cache(). Stores in RAM, spills to disk if RAM is full. Safer choice for production.</span></div>
+  <div class="mrow"><span class="mk">DISK_ONLY</span><span class="mv">Stored on disk only. Slow but useful for very large DataFrames where you want to avoid recomputation but can't fit in RAM.</span></div>
+
+<pre>
+from pyspark import StorageLevel
+
+# cache() — shorthand, MEMORY_AND_DISK
+df.cache()
+
+# persist() — choose your level
+df.persist(StorageLevel.MEMORY_ONLY)
+df.persist(StorageLevel.MEMORY_AND_DISK)   # same as cache()
+df.persist(StorageLevel.DISK_ONLY)
+
+# ---- Real usage pattern ----
+# Step 1: cache the DataFrame
+df_active = df.filter(col("status") == "active").cache()
+
+# Step 2: trigger caching with an action
+# cache() is LAZY — nothing is stored until an action runs
+count = df_active.count()           # this triggers the cache
+
+# Step 3: reuse — Spark reads from cache, not recomputes
+agg1 = df_active.groupBy("dept").count()
+agg2 = df_active.agg(avg("salary"))
+
+# Step 4: ALWAYS unpersist when done — free memory
+df_active.unpersist()</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"cache() is shorthand for persist with MEMORY_AND_DISK level. persist() gives control to choose the storage level. I use cache when a DataFrame is used multiple times in the same job — it prevents Spark recomputing from scratch each time. Important: cache is lazy so I always call .count() right after to force it into memory. And I always unpersist when done to free up memory."</div></div>
+  <div class="tip">The most common mistake: people cache() but never unpersist(). The cached data stays in memory for the rest of the job eating RAM. Always unpersist when you're done with that DataFrame.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">Partitioning vs Bucketing — the difference</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The one-line difference</div>
+  <div class="p"><b>Partitioning</b> = organise files into folders by column value. Speeds up reads by skipping folders. <b>Bucketing</b> = distribute rows into fixed buckets by hash. Speeds up joins and aggregations by eliminating shuffle.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Partitioning</div>
+      <div class="box-r">Creates folder structure in S3.<br>s3://bucket/year=2024/month=01/<br><br>Spark skips folders that don't match your filter — called partition pruning.<br><br>Use for: date, region, status — low cardinality columns.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Bucketing</div>
+      <div class="box-r">Hash distributes rows into N fixed buckets.<br>All rows with same key go to same bucket.<br><br>When joining two bucketed tables on the same key — no shuffle needed.<br><br>Use for: user_id, order_id — high cardinality join keys.</div>
+    </div>
+  </div>
+
+<pre>
+# --- PARTITIONING ---
+# Write — creates folder structure
+df.write \
+  .partitionBy("year", "month") \
+  .parquet("s3://bucket/sales/")
+# Result: s3://bucket/sales/year=2024/month=01/file.parquet
+#         s3://bucket/sales/year=2024/month=02/file.parquet
+
+# Read — Spark skips non-matching folders (partition pruning)
+spark.read.parquet("s3://bucket/sales/") \
+     .filter(col("year") == 2024)
+# Spark reads ONLY year=2024 folder — ignores everything else
+
+
+# --- BUCKETING ---
+# Write — hash distributes rows into 16 buckets by customer_id
+df.write \
+  .bucketBy(16, "customer_id") \
+  .sortBy("customer_id") \
+  .saveAsTable("orders_bucketed")
+
+# Join two bucketed tables — NO shuffle required
+orders  = spark.read.table("orders_bucketed")
+customers = spark.read.table("customers_bucketed")
+result = orders.join(customers, "customer_id")
+# Both tables pre-bucketed on customer_id = matching rows
+# are already on the same executor</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Partitioning creates a folder structure by column value — great for filtering because Spark skips non-matching folders, which is called partition pruning. Bucketing pre-distributes rows into fixed hash buckets — when two tables are bucketed on the same join key there is no shuffle at join time. Partitioning is for read filtering, bucketing is for join optimisation."</div></div>
+  <div class="tip">Partitioning column rule: low cardinality only — date, region, status. If you partition by user_id you get millions of tiny folders — that is worse than no partitioning at all.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Q5</span>
+  <span class="qt">Efficient joins for large data — which strategy when</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The decision tree — ask these questions in order</div>
+  <div class="mrow"><span class="mk">Is one table small?</span><span class="mv">Yes → broadcast join. Fastest. No shuffle. Done.</span></div>
+  <div class="mrow"><span class="mk">Is data skewed?</span><span class="mv">Yes → salting (Q1). Distribute hot keys across partitions.</span></div>
+  <div class="mrow"><span class="mk">Repeated joins?</span><span class="mv">Yes → bucketing. Pre-bucket both tables once, all future joins on that key are shuffle-free.</span></div>
+  <div class="mrow"><span class="mk">None of above?</span><span class="mv">Sort-Merge join (Spark default). Make sure both tables are well-partitioned to minimise shuffle size.</span></div>
+
+<pre>
+# Strategy 1: broadcast (small table)
+result = large_df.join(broadcast(small_df), "key")
+
+# Strategy 2: salting (skewed large-large join) — see Q1
+
+# Strategy 3: bucketing (repeated joins on same key)
+orders.write.bucketBy(32,"customer_id").saveAsTable("orders_b")
+customers.write.bucketBy(32,"customer_id").saveAsTable("cust_b")
+# All future joins on customer_id = no shuffle
+
+# Strategy 4: repartition before join (one-time optimisation)
+# If you know both tables will be joined on user_id,
+# repartition both on user_id first to co-locate matching rows
+df_a = df_a.repartition(200, "user_id")
+df_b = df_b.repartition(200, "user_id")
+result = df_a.join(df_b, "user_id")
+
+# Always verify — check explain()
+result.explain()
+# BroadcastHashJoin = best
+# SortMergeJoin     = acceptable for large-large
+# CartesianProduct  = never — means join condition is missing</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"My first question is always — is one table small enough to broadcast? If yes, broadcast join, no shuffle needed. If both tables are large and data is skewed I use salting. If the same join key is used repeatedly across the job I use bucketing so shuffle only happens once at write time. I always check explain() to confirm what Spark actually chose."</div></div>
+  <div class="win">CartesianProduct in explain() means you wrote a join without a condition — every row joins every other row. On a million-row table that is a trillion rows. Always check explain() before running a join on large data.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 2 complete — 5 of 5 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:10px">Quick recap — one line each:<br><br>
+  Q1 Skewed data → broadcast first, salting if both tables large<br>
+  Q2 Broadcast join → small table to all executors, no shuffle<br>
+  Q3 Cache vs persist → cache = MEMORY_AND_DISK shorthand, always unpersist<br>
+  Q4 Partitioning vs bucketing → folders for filtering, buckets for joins<br>
+  Q5 Efficient joins → broadcast → salting → bucketing → sort-merge</div>
+  <div style="font-size:12px;color:var(--color-text-success)">Before Bucket 3 — say Q1 and Q3 out loud from memory. These two come up most often. Tell me when ready for Bucket 3 — Incremental Processing.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

@@ -1,0 +1,322 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.progress{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap}
+.step-btn{padding:6px 14px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.step-btn.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.step-btn.done{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success)}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.7}
+.section{display:none}.section.active{display:block}
+.sec-title{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.2rem;line-height:1.6}
+.lbl{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 5px}
+.para{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+.code{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.7;margin-bottom:10px;position:relative}
+.copy-btn{position:absolute;top:7px;right:8px;font-size:11px;padding:3px 9px;border-radius:6px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer}
+.copy-btn:hover{background:var(--color-background-secondary)}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.insight{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.info{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.err{background:var(--color-background-danger);border-left:3px solid var(--color-border-danger);padding:8px 12px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:12px;color:var(--color-text-danger);line-height:1.6;margin:8px 0}
+.check-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.check-row:last-child{border-bottom:none}
+.check-icon{font-size:14px;min-width:20px;margin-top:1px}
+.check-text{color:var(--color-text-secondary);line-height:1.6}
+.check-text b{color:var(--color-text-primary);font-weight:500}
+.nav-row{display:flex;gap:8px;margin-top:1.5rem}
+.nav-btn{padding:7px 18px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:13px;cursor:pointer}
+.nav-btn.primary{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.nav-btn:hover{background:var(--color-background-secondary)}
+.nav-btn.primary:hover{opacity:.85}
+.file-tree{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;font-family:var(--font-mono);font-size:12px;line-height:1.9;margin:8px 0}
+.ft-dir{color:var(--color-text-info)}
+.ft-file{color:var(--color-text-primary)}
+.ft-comment{color:var(--color-text-tertiary)}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Step-by-step PySpark setup guide for Windows</h2>
+<div class="progress" id="progress"></div>
+<div id="sections"></div>
+</div>
+
+<script>
+const steps = [
+  {
+    id:"verify", label:"Step 1 — Verify",
+    title:"Verify your existing setup",
+    sub:"Since you have Python, Java, and VS Code already — let's confirm versions are compatible before installing anything new.",
+    content:`
+<div class="lbl">Open Command Prompt (Win + R → type cmd → Enter) and run these</div>
+<div class="code" id="c1">python --version<div class="copy-btn" onclick="cp(this,'python --version')">copy</div></div>
+<div class="para">Need: Python 3.8 or higher. If you see 3.8, 3.9, 3.10, 3.11 — you're good.</div>
+<div class="code" id="c2">java -version<div class="copy-btn" onclick="cp(this,'java -version')">copy</div></div>
+<div class="para">Need: Java 8 or Java 11. PySpark does NOT work well with Java 17+ on Windows.</div>
+<div class="lbl">If Java version is 17 or higher — fix this first</div>
+<div class="tip">Download Java 11 from adoptium.net (search "Eclipse Temurin Java 11 Windows"). Install it, then set JAVA_HOME to point to Java 11 — instructions in Step 2.</div>
+<div class="lbl">Check if PySpark is already installed</div>
+<div class="code">pip show pyspark<div class="copy-btn" onclick="cp(this,'pip show pyspark')">copy</div></div>
+<div class="para">If you see version info — skip to Step 3. If "not found" — continue to Step 2.</div>`
+  },
+  {
+    id:"install", label:"Step 2 — Install",
+    title:"Install PySpark and set environment variables",
+    sub:"Two things to do: install PySpark via pip, then set JAVA_HOME so PySpark can find Java.",
+    content:`
+<div class="lbl">1. Install PySpark</div>
+<div class="code">pip install pyspark==3.4.1<div class="copy-btn" onclick="cp(this,'pip install pyspark==3.4.1')">copy</div></div>
+<div class="para">Version 3.4.1 is stable on Windows. Also install these — you'll need them for the project:</div>
+<div class="code">pip install pandas matplotlib jupyter findspark<div class="copy-btn" onclick="cp(this,'pip install pandas matplotlib jupyter findspark')">copy</div></div>
+
+<div class="lbl">2. Set JAVA_HOME environment variable</div>
+<div class="para">Press Win + S → search "Environment Variables" → click "Edit the system environment variables" → click "Environment Variables" button.</div>
+<div class="para">Under "System variables" → click New:</div>
+<div class="code">Variable name:  JAVA_HOME
+Variable value: C:\Program Files\Java\jdk-11  (your Java 11 path)</div>
+<div class="tip">Find your exact Java path by running: <code>where java</code> in cmd. Use the folder above the bin\ folder as JAVA_HOME.</div>
+
+<div class="lbl">3. Also set PYSPARK_PYTHON (avoids common Windows error)</div>
+<div class="code">Variable name:  PYSPARK_PYTHON
+Variable value: python</div>
+<div class="para">Click OK on all dialogs. Close and reopen Command Prompt for changes to take effect.</div>
+
+<div class="lbl">4. Windows also needs winutils.exe (common gotcha)</div>
+<div class="para">PySpark on Windows needs a small Hadoop helper file. Without it you'll get a winutils error.</div>
+<div class="info">Go to: github.com/cdarlint/winutils → find folder hadoop-3.2.0 → download winutils.exe → save it to C:\hadoop\bin\winutils.exe</div>
+<div class="para">Then add a new environment variable:</div>
+<div class="code">Variable name:  HADOOP_HOME
+Variable value: C:\hadoop</div>`
+  },
+  {
+    id:"test", label:"Step 3 — Test",
+    title:"Test PySpark works on your machine",
+    sub:"Run a quick test before touching the project. If this works, your environment is ready.",
+    content:`
+<div class="lbl">Open VS Code, create a new file test_spark.py, paste this</div>
+<div class="code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, avg, count
+
+spark = SparkSession.builder \
+    .appName("TestSpark") \
+    .master("local[*]") \
+    .getOrCreate()
+
+spark.sparkContext.setLogLevel("ERROR")
+
+data = [
+    ("Alice", "Cardiology", 55000, 3),
+    ("Bob",   "Neurology",  72000, 1),
+    ("Carol", "Cardiology", 68000, 5),
+    ("David", "Neurology",  45000, 2),
+    ("Eve",   "Cardiology", 91000, 4),
+]
+cols = ["name", "department", "salary", "readmissions"]
+
+df = spark.createDataFrame(data, cols)
+
+print("=== Schema ===")
+df.printSchema()
+
+print("=== Department Summary ===")
+df.groupBy("department").agg(
+    count("*").alias("employees"),
+    avg("salary").alias("avg_salary"),
+    avg("readmissions").alias("avg_readmissions")
+).show()
+
+print("Above avg salary employees:")
+avg_sal = df.agg(avg("salary")).collect()[0][0]
+df.filter(col("salary") > avg_sal).select("name","salary").show()
+
+spark.stop()
+print("SUCCESS — PySpark is working!")</div>
+<div class="lbl">Run it</div>
+<div class="code">python test_spark.py<div class="copy-btn" onclick="cp(this,'python test_spark.py')">copy</div></div>
+<div class="insight">If you see "SUCCESS — PySpark is working!" at the end — your environment is fully ready. You'll also see some Java log lines — that's normal, ignore them.</div>
+<div class="lbl">Common errors and fixes</div>
+<div class="err">"Java gateway process exited" → JAVA_HOME is wrong or pointing to Java 17. Fix Java version first.</div>
+<div class="err">"winutils.exe not found" → HADOOP_HOME not set or winutils.exe in wrong folder. Check Step 2 again.</div>
+<div class="err">"No module named pyspark" → pip install didn't work. Try: pip install pyspark==3.4.1 --user</div>`
+  },
+  {
+    id:"dataset", label:"Step 4 — Dataset",
+    title:"Download the dataset from Kaggle",
+    sub:"Get the healthcare data that the project will process. Free, no payment needed — just a Kaggle account.",
+    content:`
+<div class="lbl">Create a free Kaggle account (if you don't have one)</div>
+<div class="para">Go to kaggle.com → Sign up free → verify email.</div>
+<div class="lbl">Search and download</div>
+<div class="para">Search on Kaggle: <b>"hospital readmission"</b> — download one of these (pick whichever has most rows):</div>
+<div class="check-row"><span class="check-icon">1</span><div class="check-text"><b>Diabetes 130-US Hospitals</b> — ~100k rows, has patient info, diagnoses, readmission column. Best option.</div></div>
+<div class="check-row"><span class="check-icon">2</span><div class="check-text"><b>Hospital Readmissions Reduction</b> — smaller but cleaner. Good if option 1 overwhelms you.</div></div>
+<div class="lbl">After downloading — set up your project folder</div>
+<div class="file-tree">
+<span class="ft-dir">C:\projects\de-healthcare-batch-pipeline\</span>
+├── <span class="ft-dir">data\</span>
+│   ├── <span class="ft-dir">raw\</span>
+│   │   └── <span class="ft-file">diabetic_data.csv</span>  <span class="ft-comment">← put downloaded CSV here</span>
+│   └── <span class="ft-dir">processed\</span>          <span class="ft-comment">← pipeline writes output here</span>
+├── <span class="ft-dir">src\</span>
+│   ├── <span class="ft-file">ingest.py</span>
+│   ├── <span class="ft-file">transform.py</span>
+│   └── <span class="ft-file">quality.py</span>
+├── <span class="ft-dir">sql\</span>
+│   └── <span class="ft-file">analysis.sql</span>
+├── <span class="ft-file">main.py</span>
+├── <span class="ft-file">requirements.txt</span>
+└── <span class="ft-file">README.md</span>
+</div>
+<div class="lbl">Create this folder structure now (run in cmd)</div>
+<div class="code">mkdir C:\projects\de-healthcare-batch-pipeline
+cd C:\projects\de-healthcare-batch-pipeline
+mkdir data\raw data\processed src sql
+type nul > main.py
+type nul > requirements.txt
+type nul > README.md<div class="copy-btn" onclick="cp(this,'mkdir C:\\projects\\de-healthcare-batch-pipeline\ncd C:\\projects\\de-healthcare-batch-pipeline\nmkdir data\\raw data\\processed src sql')">copy</div></div>`
+  },
+  {
+    id:"first", label:"Step 5 — First file",
+    title:"Write your first real project file — ingest.py",
+    sub:"This reads the CSV, prints the schema, checks for nulls, and saves a clean version. Your first real DE code for the project.",
+    content:`
+<div class="lbl">Create src\ingest.py and paste this</div>
+<div class="code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, count, when, isnan
+
+def create_spark():
+    return SparkSession.builder \
+        .appName("HealthcarePipeline") \
+        .master("local[*]") \
+        .config("spark.sql.shuffle.partitions", "4") \
+        .getOrCreate()
+
+def load_raw(spark, path):
+    df = spark.read \
+        .option("header", "true") \
+        .option("inferSchema", "true") \
+        .csv(path)
+    print(f"Loaded {df.count():,} rows, {len(df.columns)} columns")
+    return df
+
+def profile_data(df):
+    print("\n=== Schema ===")
+    df.printSchema()
+    print("\n=== Null counts per column ===")
+    null_counts = df.select([
+        count(when(col(c).isNull() | (col(c) == "?"), c))
+        .alias(c) for c in df.columns
+    ])
+    null_counts.show(vertical=True)
+    return df
+
+def basic_clean(df):
+    import re
+    # Replace '?' (common in medical datasets) with None
+    for c in df.columns:
+        df = df.withColumn(c,
+            when(col(c) == "?", None).otherwise(col(c)))
+    # Clean column names (remove spaces)
+    new_names = [re.sub(r'\s+','_', c.lower()) for c in df.columns]
+    df = df.toDF(*new_names)
+    print(f"\nCleaned dataset: {df.count():,} rows")
+    return df
+
+if __name__ == "__main__":
+    spark = create_spark()
+    spark.sparkContext.setLogLevel("ERROR")
+    
+    RAW_PATH = "data/raw/diabetic_data.csv"
+    
+    df = load_raw(spark, RAW_PATH)
+    df = profile_data(df)
+    df = basic_clean(df)
+    
+    df.write.mode("overwrite").parquet("data/processed/cleaned/")
+    print("\nSaved cleaned data to data/processed/cleaned/")
+    print("Day 1 complete!")
+    
+    spark.stop()</div>
+<div class="lbl">Run it from your project folder</div>
+<div class="code">cd C:\projects\de-healthcare-batch-pipeline
+python src\ingest.py<div class="copy-btn" onclick="cp(this,'cd C:\\projects\\de-healthcare-batch-pipeline\npython src\\ingest.py')">copy</div></div>
+<div class="insight">If this runs and you see "Day 1 complete!" — you have a working DE pipeline skeleton. Commit this to GitHub right now. That's your first real commit.</div>
+<div class="lbl">Initialize Git and push to GitHub</div>
+<div class="code">git init
+git add .
+git commit -m "initial: project structure and ingest.py"
+# Create repo on GitHub named de-healthcare-batch-pipeline
+# then:
+git remote add origin https://github.com/YOUR_USERNAME/de-healthcare-batch-pipeline.git
+git push -u origin main<div class="copy-btn" onclick="cp(this,'git init\ngit add .\ngit commit -m \"initial: project structure and ingest.py\"')">copy</div></div>
+<div class="tip">Add a .gitignore before committing — you don't want to push the data CSV or Parquet files. Next step covers this.</div>`
+  }
+];
+
+let current = 0;
+const done = new Set();
+
+function buildProgress(){
+  const p = document.getElementById("progress");
+  steps.forEach((s,i)=>{
+    const b = document.createElement("button");
+    b.className = "step-btn" + (i===0?" active":"");
+    b.id = "pb-"+i;
+    b.innerHTML = `<span class="dot"></span>${s.label}`;
+    b.onclick = ()=>goTo(i);
+    p.appendChild(b);
+  });
+}
+
+function buildSections(){
+  const c = document.getElementById("sections");
+  steps.forEach((s,i)=>{
+    const sec = document.createElement("div");
+    sec.className = "section" + (i===0?" active":"");
+    sec.id = "sec-"+i;
+    sec.innerHTML = `
+      <div class="sec-title">${s.title}</div>
+      <div class="sec-sub">${s.sub}</div>
+      ${s.content}
+      <div class="nav-row">
+        ${i>0?`<button class="nav-btn" onclick="goTo(${i-1})">← Back</button>`:''}
+        ${i<steps.length-1?`<button class="nav-btn primary" onclick="markDone(${i})">Done — next step →</button>`
+        :`<button class="nav-btn primary" onclick="finish()">I'm ready to build ↗</button>`}
+      </div>`;
+    c.appendChild(sec);
+  });
+}
+
+function goTo(i){
+  current = i;
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById("sec-"+i).classList.add("active");
+  document.querySelectorAll(".step-btn").forEach((b,j)=>{
+    b.classList.remove("active");
+    b.classList.toggle("done", done.has(j) && j!==i);
+    if(j===i) b.classList.add("active");
+  });
+}
+
+function markDone(i){
+  done.add(i);
+  goTo(i+1);
+}
+
+function finish(){
+  done.add(steps.length-1);
+  document.querySelectorAll(".step-btn").forEach(b=>b.classList.add("done"));
+  sendPrompt("I've completed the setup and run ingest.py — ready to build transform.py next");
+}
+
+function cp(btn, text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent="copied";
+    setTimeout(()=>btn.textContent="copy",1500);
+  });
+}
+
+buildProgress();
+buildSections();
+</script>

@@ -1,0 +1,387 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+</style>
+
+<h3>Bucket 3 — Incremental Processing</h3>
+<div class="sub">5 questions. The core idea of this entire bucket is one thing: how do you process only NEW data instead of reprocessing everything every time. Once you understand that, every question here becomes easy.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">What is incremental processing — and why does it matter</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — full load vs incremental</div>
+  <div class="p">Imagine you have 1 year of order data — 100 million rows. Every day 50,000 new orders arrive. You have two choices:</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Full load — bad</div>
+      <div class="box-r">Every day read all 100M rows, reprocess everything, write everything again.<br><br>Cost: high. Time: hours. Wasteful — 99.95% of data didn't change.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Incremental — good</div>
+      <div class="box-r">Every day read only the 50,000 NEW rows. Process and append them.<br><br>Cost: tiny. Time: minutes. Processes only what changed.</div>
+    </div>
+  </div>
+
+  <div class="lbl">The 3 approaches — know all three</div>
+  <div class="mrow"><span class="mk">1. Partition filter</span><span class="mv">Data is partitioned by date in S3. Read only today's folder. Simplest approach — no state needed.</span></div>
+  <div class="mrow"><span class="mk">2. Watermark / timestamp</span><span class="mv">Store the last processed timestamp. Next run reads only rows where updated_at > last timestamp. Works for any table with an updated_at column.</span></div>
+  <div class="mrow"><span class="mk">3. Glue Job Bookmarks</span><span class="mv">AWS manages the state for you. Glue tracks which S3 files were already processed. Enable in Glue config — no code changes needed.</span></div>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Incremental processing means reading only new or changed data instead of reprocessing everything. There are three approaches: partition filter for date-partitioned S3 data, watermark tracking using an updated_at column, and Glue Job Bookmarks where AWS manages the state automatically. I choose based on how the data is structured."</div></div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q2</span>
+  <span class="qt">How do you implement incremental processing — with code</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Approach 1 — partition filter (simplest)</div>
+  <div class="p">If your S3 data is partitioned by date, just read today's partition. No state to track. No watermark. Just filter by today's date.</div>
+<pre>
+from datetime import date, timedelta
+from pyspark.sql.functions import col
+
+# Read only today's partition
+today = date.today().strftime("%Y-%m-%d")
+df = spark.read.parquet("s3://bucket/orders/") \
+    .filter(col("dt") == today)
+
+# Or read last N days (useful for catching late data)
+n_days_ago = (date.today() - timedelta(3)).strftime("%Y-%m-%d")
+df = spark.read.parquet("s3://bucket/orders/") \
+    .filter(col("dt") >= n_days_ago)</pre>
+
+  <div class="lbl">Approach 2 — watermark with DynamoDB (production pattern)</div>
+  <div class="p">Store the last processed timestamp somewhere persistent (DynamoDB, S3, or a parameter store). On each run, read only rows after that timestamp. After a successful run, save the new timestamp.</div>
+<pre>
+import boto3
+from pyspark.sql.functions import col, max as max_
+
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table("pipeline_watermarks")
+
+# --- Read last watermark ---
+def get_watermark(job_name):
+    resp = table.get_item(Key={"job_name": job_name})
+    return resp.get("Item", {}).get("last_ts", "1970-01-01")
+
+# --- Save new watermark ---
+def save_watermark(job_name, last_ts):
+    table.put_item(Item={
+        "job_name": job_name,
+        "last_ts":  str(last_ts)
+    })
+
+# --- Use in pipeline ---
+last_ts = get_watermark("orders_pipeline")
+print(f"Processing records after: {last_ts}")
+
+# Read only new/updated rows
+df = spark.read.parquet("s3://bucket/orders/") \
+    .filter(col("updated_at") > last_ts)
+
+# Process...
+df_processed = df.withColumn(...)
+
+# Write output
+df_processed.write.mode("append").parquet("s3://bucket/processed/")
+
+# Save new watermark — only after successful write
+new_ts = df.agg(max_("updated_at")).collect()[0][0]
+save_watermark("orders_pipeline", new_ts)</pre>
+
+  <div class="lbl">Approach 3 — Glue Job Bookmarks</div>
+  <div class="p">Glue keeps track of which S3 files it has already processed. Enable it in the Glue job config. No code changes needed at all.</div>
+<pre>
+# Enable in Glue job config (AWS Console or Terraform):
+# Job Bookmarks = ENABLED
+
+# Or pass as job argument:
+# --job-bookmark-option = job-bookmark-enable
+
+# In your Glue script — no changes needed
+# Glue automatically skips already-processed files
+datasource = glueContext.create_dynamic_frame.from_options(
+    connection_type="s3",
+    connection_options={"paths": ["s3://bucket/raw/orders/"]},
+    format="json"
+)
+# Glue only reads NEW files since last successful run</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"For date-partitioned S3 data I use a simple partition filter — read only today's folder. For tables with an updated_at column I use a watermark stored in DynamoDB — read rows after last timestamp, process, then save the new timestamp only after a successful write. For Glue batch jobs the simplest option is Job Bookmarks — Glue tracks which files were processed with no code changes needed."</div></div>
+  <div class="tip">Always save the watermark AFTER a successful write — not before. If you save it before and the write fails, those records are skipped forever.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">What happens if Glue Job Bookmarks are NOT enabled</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The simple answer</div>
+  <div class="p">Without Job Bookmarks, Glue has no memory of what it processed before. Every time the job runs it reads ALL files in the S3 path from the very beginning — not just the new ones.</div>
+
+  <div class="flow">
+    <div class="fb">Day 1 run</div><div class="fa">→</div>
+    <div class="fb">Reads 10 files</div><div class="fa">→</div>
+    <div class="fb">Writes 10k rows</div>
+  </div>
+  <div class="flow">
+    <div class="fb">Day 2 run</div><div class="fa">→</div>
+    <div class="fb">Reads ALL 11 files again</div><div class="fa">→</div>
+    <div class="fb">Writes 11k rows (duplicates!)</div>
+  </div>
+  <div class="flow">
+    <div class="fb">Day 3 run</div><div class="fa">→</div>
+    <div class="fb">Reads ALL 12 files again</div><div class="fa">→</div>
+    <div class="fb">More duplicates</div>
+  </div>
+
+  <div class="lbl">The result</div>
+  <div class="p">Your output table gets more and more duplicate data every day. The job also gets slower every run because it's reading more and more files. Eventually what was a 5-minute job becomes a 2-hour job.</div>
+
+  <div class="lbl">How to fix if you already have duplicates</div>
+<pre>
+# Option 1: deduplicate output after enabling bookmarks
+from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number
+
+w = Window.partitionBy("order_id").orderBy(col("updated_at").desc())
+df_deduped = df.withColumn("rn", row_number().over(w)) \
+               .filter(col("rn") == 1) \
+               .drop("rn")
+
+# Option 2: Delta Lake MERGE — upsert handles duplicates cleanly
+from delta.tables import DeltaTable
+target = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+target.alias("t").merge(
+    df_deduped.alias("s"),
+    "t.order_id = s.order_id"
+).whenMatchedUpdateAll() \
+ .whenNotMatchedInsertAll() \
+ .execute()</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Without Job Bookmarks Glue has no memory — every run reads all files from the beginning, creating duplicates in the output and getting slower every day. The fix is to enable bookmarks going forward, and deduplicate existing data using ROW_NUMBER or Delta Lake MERGE."</div></div>
+  <div class="ok">This is the answer to a very specific question from your list. It's a short answer — problem is duplicates and growing cost, fix is enable bookmarks plus deduplicate.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">How do you handle late arriving data</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What late arriving data means</div>
+  <div class="p">An event happens at 9pm but due to network delays, app crashes, or slow APIs — it arrives in your pipeline at 11pm or even the next day. Your pipeline already processed the 9pm window and moved on. What do you do with this late record?</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">In streaming pipelines</div>
+      <div class="box-r">Use watermarking. Tell Spark to keep a window open for X minutes/hours waiting for late data before closing it.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">In batch pipelines</div>
+      <div class="box-r">Reprocess the last N days every run using updated_at column. Overwrite those partitions so late records get included.</div>
+    </div>
+  </div>
+
+  <div class="lbl">Streaming — watermarking in Spark Structured Streaming</div>
+<pre>
+# Watermark tells Spark: "wait up to 30 minutes for late events"
+# After 30 min past the window end — close it, ignore later arrivals
+
+df_stream = spark.readStream.format("kinesis")...
+
+windowed = df_stream \
+    .withWatermark("event_time", "30 minutes") \
+    .groupBy(
+        window("event_time", "1 hour"),  # 1-hour window
+        "user_id"
+    ).count()
+
+# Spark keeps each window open for 1hr + 30min before closing
+# Events arriving up to 30 min late are included correctly</pre>
+
+  <div class="lbl">Batch — reprocess last N days (most practical)</div>
+<pre>
+from datetime import date, timedelta
+from pyspark.sql.functions import col
+
+# Reprocess last 3 days to catch any late arrivals
+reprocess_from = (date.today() - timedelta(3)).strftime("%Y-%m-%d")
+
+df = spark.read.parquet("s3://bucket/events/") \
+    .filter(col("event_date") >= reprocess_from)
+
+# Process the data
+df_processed = df.withColumn(...)
+
+# Write with OVERWRITE on partition — this is idempotent
+# Running it twice gives the same result
+df_processed.write \
+    .mode("overwrite") \
+    .partitionBy("event_date") \
+    .parquet("s3://bucket/processed/")</pre>
+
+  <div class="lbl">SQL pipeline — using updated_at column</div>
+<pre>
+-- Instead of filtering by event_date, filter by when record was updated
+-- This catches records that arrived late and were inserted late
+
+SELECT *
+FROM orders
+WHERE updated_at >= CURRENT_DATE - 3   -- last 3 days of changes
+ORDER BY updated_at DESC;</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"In streaming I use watermarking — tell Spark to wait 30 minutes for late events before closing a window. In batch I reprocess the last 3 days using an updated_at column and write with partition overwrite — so late records get included and the result is the same whether I run it once or ten times. That overwrite pattern also makes the job idempotent."</div></div>
+  <div class="tip">The word idempotent is important to use here. It means running the job twice gives the same result. Overwrite mode on partitions achieves this — interviewers look for this word specifically.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Q5</span>
+  <span class="qt">Reading only the latest partition from S3 or Glue Catalog</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Why this matters</div>
+  <div class="p">If your S3 bucket has 2 years of daily partitions — 730 folders — and you only need today's data, you don't want Spark scanning all 730 folders. You want it to read only the latest one.</div>
+
+  <div class="lbl">Method 1 — dynamically find the latest partition</div>
+<pre>
+from pyspark.sql.functions import col, max as max_
+
+# Read all data, find latest partition value
+all_df  = spark.read.parquet("s3://bucket/events/")
+latest  = all_df.agg(max_("dt")).collect()[0][0]
+print(f"Latest partition: {latest}")
+
+# Now read only that partition — Spark skips all other folders
+df = all_df.filter(col("dt") == latest)</pre>
+
+  <div class="lbl">Method 2 — use Glue Catalog (most efficient)</div>
+  <div class="p">Glue Catalog stores partition metadata — it knows which partitions exist without scanning S3. This is the fastest approach.</div>
+<pre>
+# Glue Catalog knows partitions without scanning S3
+df = spark.read.table("glue_db.events")
+latest = df.agg(max_("dt")).collect()[0][0]
+df_latest = df.filter(col("dt") == latest)</pre>
+
+  <div class="lbl">Method 3 — boto3 list S3 folders directly</div>
+<pre>
+import boto3
+
+s3 = boto3.client("s3")
+response = s3.list_objects_v2(
+    Bucket="my-bucket",
+    Prefix="events/",
+    Delimiter="/"   # list top-level folders only
+)
+
+# Get all partition folders, sort, take last one
+partitions = [p["Prefix"] for p in response["CommonPrefixes"]]
+latest_prefix = sorted(partitions)[-1]
+print(f"Latest: {latest_prefix}")  # events/dt=2024-01-15/
+
+df = spark.read.parquet(f"s3://my-bucket/{latest_prefix}")</pre>
+
+  <div class="lbl">Regex — extract date from file path (from your question list)</div>
+<pre>
+from pyspark.sql.functions import input_file_name, regexp_extract
+
+df = spark.read.parquet("s3://bucket/events/")
+
+# Add the file path as a column
+df = df.withColumn("file_path", input_file_name())
+
+# Extract date parts using regex
+# Path: s3://bucket/events/year=2024/month=01/day=15/file.parquet
+df = df \
+    .withColumn("year",
+        regexp_extract("file_path", r"year=(\d{4})", 1)) \
+    .withColumn("month",
+        regexp_extract("file_path", r"month=(\d{2})", 1)) \
+    .withColumn("day",
+        regexp_extract("file_path", r"day=(\d{2})", 1))
+
+# Path: s3://bucket/logs/2024-01-15_events.json
+df = df.withColumn("date_str",
+    regexp_extract("file_path", r"(\d{4}-\d{2}-\d{2})", 1))</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I find the latest partition value first then filter on it — Spark skips all other folders, which is partition pruning. Using Glue Catalog is the most efficient because it has partition metadata indexed already so it doesn't need to scan S3 at all. For extracting dates from file paths I use input_file_name() with regexp_extract."</div></div>
+  <div class="win">Partition pruning = Spark reads only matching folders and skips everything else. This is the term interviewers want to hear when you talk about partition-based filtering.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 3 complete — 5 of 5 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:8px">
+  Q1 — Full load vs incremental — partition filter, watermark, or Job Bookmarks<br>
+  Q2 — Three approaches with code — partition, DynamoDB watermark, Glue Bookmarks<br>
+  Q3 — No Job Bookmarks — reruns everything, creates duplicates, job slows down<br>
+  Q4 — Late data — watermark in streaming, reprocess last N days in batch with overwrite<br>
+  Q5 — Latest partition — find max partition, filter, Glue Catalog is fastest
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">Key word to use: <b>idempotent</b> — running the job twice gives the same result. Use it when talking about Q4. Tell me when ready for Bucket 4 — Data Quality.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

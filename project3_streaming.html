@@ -1,0 +1,716 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:120px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{background:var(--color-background-success);color:var(--color-text-success)}
+</style>
+
+<h3>Project 3 — Real-Time Vehicle Anomaly Detection</h3>
+<div class="sub">Streaming pipeline using Kafka + Spark Structured Streaming. Simulates IoT sensor data from 100 vehicles, detects engine anomalies in real-time, and writes alerts. Run entirely on your personal laptop using Docker.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Concept 1</span>
+  <span class="qt">What is streaming — batch vs streaming explained simply</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The simplest way to understand the difference</div>
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Batch (Projects 1 and 2)</div>
+      <div class="box-r">Data arrives, you wait until a lot has collected, then process it all at once. Like waiting to do laundry until the basket is full.<br><br>Delay: minutes to hours.<br>Use: daily reports, ETL jobs.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Streaming (Project 3)</div>
+      <div class="box-r">Data arrives continuously, you process each event as it comes in. Like washing one item of clothing the moment it gets dirty.<br><br>Delay: seconds.<br>Use: fraud detection, IoT alerts, dashboards.</div>
+    </div>
+  </div>
+
+  <div class="lbl">Real example from your CX background</div>
+  <div class="p">In CX you might get a daily report showing customer complaints from yesterday — that is batch. Streaming is getting an alert the moment a customer complaint comes in so you can act on it within seconds. Same data, completely different timing.</div>
+
+  <div class="lbl">The three components of any streaming pipeline</div>
+  <div class="mrow"><span class="mk">Producer</span><span class="mv">Generates events and sends them to the stream. In this project: a Python script simulating vehicle sensors sending readings every second.</span></div>
+  <div class="mrow"><span class="mk">Message broker</span><span class="mv">Holds the events in order and lets consumers read them. In this project: Kafka running in Docker. On AWS this would be Kinesis.</span></div>
+  <div class="mrow"><span class="mk">Consumer</span><span class="mv">Reads events from the broker and processes them. In this project: Spark Structured Streaming reading from Kafka, detecting anomalies.</span></div>
+
+  <div class="flow">
+    <div class="fb">Vehicle sensors</div><div class="fa">→</div>
+    <div class="fb">Python producer</div><div class="fa">→</div>
+    <div class="fb">Kafka (Docker)</div><div class="fa">→</div>
+    <div class="fb">Spark Streaming consumer</div><div class="fa">→</div>
+    <div class="fb">Anomaly alerts printed</div>
+  </div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Concept 2</span>
+  <span class="qt">What is Kafka — and what is Docker</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Kafka in plain English</div>
+  <div class="p">Kafka is a message queue. Producers write messages to a <b>topic</b> (like a named channel). Consumers read from that topic. Kafka holds messages in order and multiple consumers can read the same messages independently.</div>
+
+  <div class="lbl">Key Kafka terms you need to know</div>
+  <div class="mrow"><span class="mk">Topic</span><span class="mv">A named channel. Like a WhatsApp group — producers send to it, consumers read from it. In this project: "vehicle-sensors" topic.</span></div>
+  <div class="mrow"><span class="mk">Partition</span><span class="mv">Topics are split into partitions for parallelism. More partitions = more throughput. We use 3 partitions.</span></div>
+  <div class="mrow"><span class="mk">Offset</span><span class="mv">Position of a message in a partition. Like a page number. Consumers track their offset so they know what they have already read.</span></div>
+  <div class="mrow"><span class="mk">Consumer group</span><span class="mv">Multiple consumers sharing the work. Each partition is read by one consumer in the group.</span></div>
+
+  <div class="lbl">Docker in plain English</div>
+  <div class="p">Docker runs applications in isolated containers — like a lightweight virtual machine. Instead of installing Kafka and its dependencies on your laptop (complicated), you run a Docker container that already has everything set up. One command and Kafka is running.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Without Docker</div>
+      <div class="box-r">Install Java, install Zookeeper, configure Zookeeper, install Kafka, configure Kafka, set environment variables... 2 hours of setup, often breaks.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">With Docker</div>
+      <div class="box-r">docker-compose up<br><br>One command. Kafka running in 30 seconds. Stop it when done — nothing installed on your machine permanently.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Concept 3</span>
+  <span class="qt">What is windowing and watermarking — the two key streaming concepts</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Windowing — group events by time</div>
+  <div class="p">In batch you group by a column value. In streaming you group by time windows — collect all events in the last 2 minutes and aggregate them. This is a window.</div>
+
+  <div class="mrow"><span class="mk">Tumbling window</span><span class="mv">Fixed non-overlapping windows. 9:00-9:02, 9:02-9:04, 9:04-9:06. Each event belongs to exactly one window. Used in this project.</span></div>
+  <div class="mrow"><span class="mk">Sliding window</span><span class="mv">Overlapping windows. Every 30 seconds, look at last 2 minutes. More granular but more compute.</span></div>
+
+  <div class="lbl">Watermarking — handle late arriving data</div>
+  <div class="p">A sensor reading from 9:01 might arrive at 9:05 due to network delay. Without watermarking Spark has already closed the 9:00-9:02 window and the late event is lost. Watermarking tells Spark: keep the window open for X minutes to wait for late events.</div>
+
+<pre>
+# Without watermark — late events lost
+df.groupBy(window("event_time", "2 minutes"))
+
+# With watermark — wait up to 1 minute for late events
+df.withWatermark("event_time", "1 minute") \
+  .groupBy(window("event_time", "2 minutes"))</pre>
+
+  <div class="ok">In interviews: "I use withWatermark to handle late-arriving sensor data — tells Spark to hold each window open for an extra minute before closing it. Without it, late events from slow sensors would be silently dropped."</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 1</span>
+  <span class="qt">Install Docker on personal laptop</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Download Docker Desktop for Windows</div>
+  <div class="mrow"><span class="mk">1. Download</span><span class="mv">Go to: https://www.docker.com/products/docker-desktop/ → Download for Windows</span></div>
+  <div class="mrow"><span class="mk">2. Install</span><span class="mv">Run the installer → accept defaults → restart laptop when prompted</span></div>
+  <div class="mrow"><span class="mk">3. Start</span><span class="mv">Open Docker Desktop from Start menu → wait for whale icon to stop animating → Docker is ready</span></div>
+  <div class="mrow"><span class="mk">4. WSL 2</span><span class="mv">If prompted to install WSL 2 — click Yes and install it. Docker needs it on Windows.</span></div>
+
+  <div class="lbl">Verify Docker is working</div>
+<pre>
+docker --version
+# Docker version 24.x.x
+
+docker run hello-world
+# Should print "Hello from Docker!" — confirms Docker works</pre>
+
+  <div class="lbl">Install Python Kafka library</div>
+<pre>
+pip install kafka-python</pre>
+
+  <div class="win">Success check: docker run hello-world prints the hello message. Docker is ready.</div>
+  <div class="tip">Docker Desktop needs to be running in the background whenever you work on Project 3. It starts automatically on login — you will see the whale icon in your system tray.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 2</span>
+  <span class="qt">Create project folder and start Kafka with Docker</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Create project folder</div>
+<pre>
+mkdir C:\projects\de-vehicle-streaming
+cd C:\projects\de-vehicle-streaming
+mkdir src</pre>
+
+  <div class="lbl">Create docker-compose.yml — this starts Kafka with one command</div>
+<pre>
+# Create file: C:\projects\de-vehicle-streaming\docker-compose.yml
+# Paste exactly this content:</pre>
+<pre>
+version: '3.8'
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"</pre>
+
+  <div class="lbl">Start Kafka</div>
+<pre>
+# In Command Prompt inside project folder:
+cd C:\projects\de-vehicle-streaming
+docker-compose up -d
+
+# -d means "detached" — runs in background
+
+# Check both containers are running
+docker ps
+# Should show zookeeper and kafka both as "Up"</pre>
+
+  <div class="lbl">Create the Kafka topic</div>
+<pre>
+# Create a topic called "vehicle-sensors" with 3 partitions
+docker exec kafka kafka-topics \
+  --create \
+  --topic vehicle-sensors \
+  --bootstrap-server localhost:9092 \
+  --partitions 3 \
+  --replication-factor 1
+
+# Verify topic was created
+docker exec kafka kafka-topics \
+  --list \
+  --bootstrap-server localhost:9092
+# Should show: vehicle-sensors</pre>
+
+  <div class="win">Success check: docker ps shows both zookeeper and kafka as Up. Topic list shows vehicle-sensors. Kafka is running on your laptop.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 3</span>
+  <span class="qt">Write the producer — simulate vehicle sensor data</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What the producer does</div>
+  <div class="p">Simulates 100 vehicles each sending sensor readings every second. 5% of readings are intentionally anomalous — high engine temperature or high RPM. The consumer will detect these.</div>
+
+  <div class="lbl">Create src\producer.py</div>
+<pre>
+import json
+import time
+import random
+from datetime import datetime
+from kafka import KafkaProducer
+
+# ── Connect to Kafka ─────────────────────────────────────────────
+producer = KafkaProducer(
+    bootstrap_servers="localhost:9092",
+    value_serializer=lambda v: json.dumps(v).encode("utf-8"),
+    key_serializer=lambda k: k.encode("utf-8")
+)
+
+# ── 100 simulated vehicles ───────────────────────────────────────
+VEHICLES = [f"VH{str(i).zfill(4)}" for i in range(1, 101)]
+
+def generate_reading(vehicle_id):
+    """Generate one sensor reading for a vehicle.
+    5% chance of anomaly — high temp or high RPM."""
+
+    is_anomaly = random.random() < 0.05   # 5% anomaly rate
+
+    if is_anomaly:
+        anomaly_type = random.choice(["high_temp", "high_rpm", "low_battery"])
+        if anomaly_type == "high_temp":
+            engine_temp = round(random.uniform(102, 115), 1)
+            rpm         = round(random.gauss(2800, 300))
+            battery_v   = round(random.uniform(12.5, 14.0), 2)
+        elif anomaly_type == "high_rpm":
+            engine_temp = round(random.gauss(90, 5), 1)
+            rpm         = round(random.uniform(5200, 6500))
+            battery_v   = round(random.uniform(12.5, 14.0), 2)
+        else:  # low_battery
+            engine_temp = round(random.gauss(88, 5), 1)
+            rpm         = round(random.gauss(2800, 300))
+            battery_v   = round(random.uniform(10.5, 11.8), 2)
+    else:
+        # Normal reading
+        engine_temp = round(random.gauss(88, 4), 1)
+        rpm         = round(random.gauss(2800, 400))
+        battery_v   = round(random.uniform(13.2, 14.4), 2)
+
+    return {
+        "vehicle_id":   vehicle_id,
+        "event_time":   datetime.utcnow().isoformat(),
+        "engine_temp":  engine_temp,
+        "rpm":          max(500, rpm),     # min 500 RPM
+        "battery_v":    battery_v,
+        "speed_kmh":    round(random.uniform(0, 120)),
+        "fuel_pct":     round(random.uniform(5, 100)),
+        "is_anomaly":   is_anomaly         # ground truth for testing
+    }
+
+# ── Send events continuously ─────────────────────────────────────
+print("=" * 50)
+print("  VEHICLE SENSOR PRODUCER STARTED")
+print(f"  Vehicles: {len(VEHICLES)}")
+print(f"  Anomaly rate: 5%")
+print(f"  Topic: vehicle-sensors")
+print("=" * 50)
+print("Sending... (Ctrl+C to stop)\n")
+
+event_count = 0
+
+try:
+    while True:
+        # Send readings for 10 random vehicles each second
+        batch = random.sample(VEHICLES, 10)
+        for vehicle_id in batch:
+            reading = generate_reading(vehicle_id)
+            producer.send(
+                topic="vehicle-sensors",
+                key=vehicle_id,       # partition key — same vehicle → same partition
+                value=reading
+            )
+            event_count += 1
+
+        producer.flush()
+
+        # Print summary every 10 seconds
+        if event_count % 100 == 0:
+            print(f"  Sent {event_count:,} events so far...")
+
+        time.sleep(1)   # 10 events per second
+
+except KeyboardInterrupt:
+    print(f"\n✓ Producer stopped. Total events sent: {event_count:,}")
+    producer.close()</pre>
+
+  <div class="lbl">Test the producer — run it briefly</div>
+<pre>
+python src/producer.py
+# You should see: "Sent 100 events so far..." after ~10 seconds
+# Press Ctrl+C to stop — we will run it properly in Step 5</pre>
+
+  <div class="win">Success check: producer runs without errors and prints event counts. Ctrl+C stops it cleanly.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Step 4</span>
+  <span class="qt">Write the consumer — Spark Structured Streaming reads from Kafka</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Install the Kafka-Spark connector</div>
+<pre>
+pip install pyspark==3.4.1</pre>
+
+  <div class="lbl">Create src\consumer.py</div>
+<pre>
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import (
+    from_json, col, avg, max as max_,
+    count, window, current_timestamp,
+    when, round as round_
+)
+from pyspark.sql.types import (
+    StructType, StructField,
+    StringType, DoubleType,
+    IntegerType, BooleanType
+)
+
+# ── Create Spark session with Kafka connector ────────────────────
+spark = SparkSession.builder \
+    .appName("VehicleAnomalyDetector") \
+    .master("local[*]") \
+    .config("spark.sql.shuffle.partitions", "4") \
+    .config("spark.jars.packages",
+            "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
+    .getOrCreate()
+
+spark.sparkContext.setLogLevel("ERROR")
+
+# ── Schema for the JSON payload ──────────────────────────────────
+schema = StructType([
+    StructField("vehicle_id",  StringType(),  True),
+    StructField("event_time",  StringType(),  True),
+    StructField("engine_temp", DoubleType(),  True),
+    StructField("rpm",         IntegerType(), True),
+    StructField("battery_v",   DoubleType(),  True),
+    StructField("speed_kmh",   DoubleType(),  True),
+    StructField("fuel_pct",    DoubleType(),  True),
+    StructField("is_anomaly",  BooleanType(), True)
+])
+
+print("=" * 55)
+print("  VEHICLE ANOMALY DETECTOR — SPARK STREAMING")
+print("=" * 55)
+print("Connecting to Kafka topic: vehicle-sensors...")
+print("Waiting for events... (Ctrl+C to stop)\n")
+
+# ── Read stream from Kafka ───────────────────────────────────────
+raw_stream = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "vehicle-sensors") \
+    .option("startingOffsets", "latest") \
+    .load()
+
+# ── Parse JSON payload ───────────────────────────────────────────
+# Kafka delivers raw bytes — cast to string, parse JSON
+df_parsed = raw_stream \
+    .withColumn("data",
+        from_json(col("value").cast("string"), schema)) \
+    .select("data.*") \
+    .withColumn("event_ts",
+        col("event_time").cast("timestamp"))
+
+# ── Anomaly detection — 2 minute tumbling window ─────────────────
+# For each vehicle in each 2-minute window:
+# Calculate avg temp, max RPM, min battery
+# Flag if any reading exceeds safe thresholds
+
+windowed = df_parsed \
+    .withWatermark("event_ts", "1 minute") \
+    .groupBy(
+        window(col("event_ts"), "2 minutes"),   # 2-min tumbling window
+        col("vehicle_id")
+    ).agg(
+        round_(avg("engine_temp"), 1).alias("avg_temp"),
+        max_("engine_temp").alias("max_temp"),
+        max_("rpm").alias("max_rpm"),
+        round_(avg("battery_v"), 2).alias("avg_battery"),
+        count("*").alias("readings")
+    )
+
+# ── Add alert reason ─────────────────────────────────────────────
+alerts = windowed.withColumn("alert",
+    when(col("max_temp") > 100,    "HIGH_TEMP")
+    .when(col("max_rpm")  > 5000,  "HIGH_RPM")
+    .when(col("avg_battery") < 12, "LOW_BATTERY")
+    .otherwise(None)
+).filter(col("alert").isNotNull())   # only show anomalies
+
+# ── Stream 1: Print ALL windowed results to console ──────────────
+query_all = windowed.writeStream \
+    .outputMode("update") \
+    .format("console") \
+    .option("truncate", False) \
+    .option("numRows", 5) \
+    .trigger(processingTime="10 seconds") \
+    .start()
+
+# ── Stream 2: Print ONLY alerts to console ───────────────────────
+query_alerts = alerts \
+    .select(
+        col("window.start").alias("window_start"),
+        col("vehicle_id"),
+        col("alert"),
+        col("avg_temp"),
+        col("max_rpm"),
+        col("avg_battery"),
+        col("readings")
+    ) \
+    .writeStream \
+    .outputMode("update") \
+    .format("console") \
+    .option("truncate", False) \
+    .queryName("ANOMALY_ALERTS") \
+    .trigger(processingTime="10 seconds") \
+    .start()
+
+# ── Wait for streams ─────────────────────────────────────────────
+print("Streams started. Results appear every 10 seconds.")
+print("You need the producer running in a separate terminal.")
+print("Ctrl+C to stop.\n")
+
+spark.streams.awaitAnyTermination()</pre>
+
+  <div class="ok">The consumer has two output streams. Stream 1 prints all windowed aggregations so you can see data flowing. Stream 2 prints only vehicles with anomalies — these are your alerts. In production Stream 2 would write to DynamoDB or trigger an SNS notification.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bg">Step 5</span>
+  <span class="qt">Run the full pipeline — producer and consumer together</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">You need TWO terminal windows open at the same time</div>
+
+  <div class="lbl">Terminal 1 — start the consumer first</div>
+<pre>
+cd C:\projects\de-vehicle-streaming
+
+# First run downloads the Kafka-Spark connector (~100MB)
+# This takes 2-3 minutes on first run only
+python src/consumer.py
+
+# You will see Spark starting up, then:
+# "Streams started. Results appear every 10 seconds."</pre>
+
+  <div class="lbl">Terminal 2 — start the producer in a new window</div>
+<pre>
+cd C:\projects\de-vehicle-streaming
+python src/producer.py
+
+# You should see:
+# "Sent 100 events so far..."
+# "Sent 200 events so far..."</pre>
+
+  <div class="lbl">What you should see in Terminal 1 (consumer) every 10 seconds</div>
+<pre>
+-------------------------------------------
+Batch: 1
+-------------------------------------------
++------------------------------------------+----------+--------+--------+-------+-----------+--------+
+|window                                    |vehicle_id|avg_temp|max_temp|max_rpm|avg_battery|readings|
++------------------------------------------+----------+--------+--------+-------+-----------+--------+
+|{2024-01-15 10:00:00, 2024-01-15 10:02:00}|VH0023    |88.2    |89.1    |3120   |13.8       |8       |
+|{2024-01-15 10:00:00, 2024-01-15 10:02:00}|VH0051    |91.4    |107.3   |2950   |13.5       |6       |
++------------------------------------------+----------+--------+--------+-------+-----------+--------+
+
+ANOMALY_ALERTS
++---------------------+----------+---------+--------+-------+-----------+--------+
+|window_start         |vehicle_id|alert    |avg_temp|max_rpm|avg_battery|readings|
++---------------------+----------+---------+--------+-------+-----------+--------+
+|2024-01-15 10:00:00  |VH0051    |HIGH_TEMP|91.4    |2950   |13.5       |6       |
++---------------------+----------+---------+--------+-------+-----------+--------+</pre>
+
+  <div class="lbl">Stop both when you have seen alerts</div>
+<pre>
+# Press Ctrl+C in both terminals to stop
+# Then stop Kafka
+docker-compose down</pre>
+
+  <div class="win">Success check: you see anomaly alerts appearing in the ANOMALY_ALERTS section with vehicle IDs and alert reasons. That is your real-time pipeline working end to end.</div>
+  <div class="tip">First run is slow because Spark downloads the Kafka connector JAR. Every run after that is fast. If you see connection errors — make sure docker ps shows Kafka as "Up" before starting the consumer.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bg">Step 6</span>
+  <span class="qt">Push to GitHub with README</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Create .gitignore</div>
+<pre>
+__pycache__/
+*.pyc
+.env
+checkpoints/
+spark-warehouse/
+derby.log
+metastore_db/</pre>
+
+  <div class="lbl">Create requirements.txt</div>
+<pre>
+pyspark==3.4.1
+kafka-python==2.0.2</pre>
+
+  <div class="lbl">Create README.md</div>
+<pre>
+# Vehicle Anomaly Detection — Real-Time Streaming Pipeline
+
+Real-time IoT streaming pipeline that simulates sensor data from
+100 vehicles, detects engine anomalies using Spark Structured
+Streaming, and surfaces alerts within seconds of occurrence.
+
+## Business Problem
+A fleet company monitors 100 vehicles in real-time. Engine failures
+cost £5,000+ per breakdown. Detecting anomalies 10 minutes early
+allows proactive maintenance and prevents roadside incidents.
+This pipeline processes 10 sensor events/second and surfaces
+alerts within a 2-minute window.
+
+## Architecture
+Vehicle sensors → Python producer → Kafka (Docker)
+→ Spark Structured Streaming consumer
+→ 2-minute tumbling windows
+→ Anomaly alerts (HIGH_TEMP / HIGH_RPM / LOW_BATTERY)
+
+In production: Kafka → AWS Kinesis, Local → AWS EMR
+
+## What This Pipeline Detects
+| Alert | Condition | Meaning |
+|---|---|---|
+| HIGH_TEMP | Engine temp > 100°C in window | Overheating risk |
+| HIGH_RPM | RPM > 5000 in window | Engine strain |
+| LOW_BATTERY | Avg battery < 12V | Charging failure |
+
+## Key Technical Decisions
+
+**Kafka as message broker**
+Kafka decouples producers from consumers — vehicles keep sending
+data even if the consumer crashes and resumes. On AWS this would
+be replaced by Kinesis Data Streams.
+
+**2-minute tumbling window with 1-minute watermark**
+Single readings can spike briefly. Aggregating over 2 minutes
+reduces false positives. Watermark handles sensor data that
+arrives up to 1 minute late due to network delays.
+
+**vehicle_id as partition key**
+Routing all readings from the same vehicle to the same partition
+ensures readings arrive in order per vehicle — important for
+sequential anomaly detection.
+
+**Checkpoint location (production note)**
+In production I would add:
+.option("checkpointLocation", "s3://bucket/checkpoints/vehicles/")
+This lets the streaming job resume from exactly where it left off
+if it crashes — no data loss, no duplicate processing.
+
+## How to Run
+
+**Requirements**
+- Docker Desktop running
+- Python 3.8+
+- pip install -r requirements.txt
+
+**Start Kafka**
+docker-compose up -d
+
+**Terminal 1 — start consumer**
+python src/consumer.py
+
+**Terminal 2 — start producer**
+python src/producer.py
+
+Watch Terminal 1 for anomaly alerts every 10 seconds.
+
+**Stop everything**
+Ctrl+C in both terminals, then: docker-compose down
+
+## Skills Demonstrated
+Spark Structured Streaming | Kafka | Docker | Windowing
+Watermarking | Real-time anomaly detection | IoT pipeline design</pre>
+
+  <div class="lbl">Push to GitHub</div>
+<pre>
+cd C:\projects\de-vehicle-streaming
+git init
+git add .
+git commit -m "initial: real-time vehicle anomaly detection pipeline"
+
+# Create repo on GitHub: de-vehicle-streaming
+git remote add origin https://github.com/YOUR_USERNAME/de-vehicle-streaming.git
+git branch -M main
+git push -u origin main</pre>
+
+  <div class="win">Success check: repo is live on GitHub with docker-compose.yml, src/producer.py, src/consumer.py, and README.md.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Interview</span>
+  <span class="qt">How to talk about Project 3 in an interview</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">When they ask "tell me about a streaming project you built"</div>
+  <div class="p">Walk through these 4 points in order. Takes about 90 seconds. Covers the what, the why, the technical decisions, and the production awareness.</div>
+
+  <div class="mrow"><span class="mk">1. The problem</span><span class="mv">"I built a real-time pipeline to detect vehicle engine anomalies. Fleet companies lose thousands per breakdown — detecting issues 10 minutes early through sensor data prevents that."</span></div>
+  <div class="mrow"><span class="mk">2. The architecture</span><span class="mv">"A Python producer simulates 100 vehicles sending 10 sensor readings per second to a Kafka topic. Spark Structured Streaming reads from that topic, applies 2-minute tumbling windows with watermarking for late data, and surfaces alerts for high temperature, high RPM, or low battery."</span></div>
+  <div class="mrow"><span class="mk">3. Key decisions</span><span class="mv">"I used vehicle_id as the Kafka partition key so all readings from the same vehicle go to the same partition in order. I used a 1-minute watermark because sensor data sometimes arrives late due to network delays — without it those readings would be silently dropped."</span></div>
+  <div class="mrow"><span class="mk">4. Production awareness</span><span class="mv">"Locally I ran Kafka in Docker. In production on AWS this would be Kinesis instead of Kafka, EMR instead of local Spark, and I would add a checkpoint location so the job recovers from crashes without reprocessing or losing data."</span></div>
+
+  <div class="ok">That 90-second answer covers: IoT data, Kafka, Spark Streaming, windowing, watermarking, partition keys, checkpointing, and AWS equivalent services. It sounds like production experience because it IS production thinking — even if the environment was local.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Project 3 — all 6 steps</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.8;margin-bottom:8px">
+  Concept 1 — Batch vs streaming — the mental model<br>
+  Concept 2 — Kafka topics and Docker explained simply<br>
+  Concept 3 — Windowing and watermarking<br>
+  Step 1 — Install Docker<br>
+  Step 2 — Start Kafka with docker-compose<br>
+  Step 3 — Write producer — simulate 100 vehicles<br>
+  Step 4 — Write consumer — Spark Streaming anomaly detection<br>
+  Step 5 — Run both together — see live alerts<br>
+  Step 6 — Push to GitHub with README
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">Daily plan once you start: Step 1 (20 min). Steps 2+3 (30 min). Step 4 (45 min). Step 5+6 (30 min). Project 3 done in 4 days.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

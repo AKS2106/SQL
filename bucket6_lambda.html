@@ -1,0 +1,490 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{background:var(--color-background-success);color:var(--color-text-success)}
+</style>
+
+<h3>Bucket 6 — Lambda</h3>
+<div class="sub">5 questions. Lambda is AWS's serverless compute — runs code without managing servers. In data pipelines Lambda handles triggers, lightweight transforms, orchestration kicks, and alerts. These questions test whether you understand Lambda's limits and how to work around them.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">What is Lambda cold start — and how do you fix it</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea — what happens when Lambda runs</div>
+  <div class="p">Every Lambda function runs inside a container. When the function hasn't been called recently, AWS needs to create a new container from scratch — download your code, start the runtime, initialise everything. That startup time is the cold start — typically 1 to 3 seconds.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Cold start (new container)</div>
+      <div class="box-r">Container created from scratch.<br>Code downloaded and started.<br>All imports initialised.<br>Takes 1–3 seconds before your code runs.<br><br>Happens after inactivity or when scaling up.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">Warm start (reused container)</div>
+      <div class="box-r">Container already running from previous call.<br>AWS reuses it.<br>Only your handler() runs.<br>Takes milliseconds.<br><br>Happens on subsequent calls within minutes.</div>
+    </div>
+  </div>
+
+  <div class="lbl">Why it matters in data pipelines</div>
+  <div class="p">If Lambda triggers a Glue job when a file lands on S3 — a 2-second cold start is fine. If Lambda is responding to a real-time API call — 2 seconds is terrible. Know your latency requirement before choosing a fix.</div>
+
+  <div class="lbl">Fix 1 — move heavy work outside the handler</div>
+  <div class="p">Code outside the handler runs once at container start. Code inside the handler runs on every invocation. Move expensive initialisations outside so they only happen once.</div>
+
+<pre>
+import boto3
+import json
+
+# OUTSIDE handler — runs once at cold start, reused on warm calls
+s3_client  = boto3.client("s3")          # connection initialised once
+glue_client = boto3.client("glue")       # reused across invocations
+TABLE_NAME = "pipeline_watermarks"       # constant loaded once
+
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table(TABLE_NAME)       # table object created once
+
+def lambda_handler(event, context):
+    # INSIDE handler — runs on every invocation
+    # s3_client and glue_client are already ready — no re-init cost
+
+    bucket = event["Records"][0]["s3"]["bucket"]["name"]
+    key    = event["Records"][0]["s3"]["object"]["key"]
+
+    print(f"New file: s3://{bucket}/{key}")
+
+    # Trigger Glue job for the new file
+    glue_client.start_job_run(
+        JobName="orders_pipeline",
+        Arguments={"--input_path": f"s3://{bucket}/{key}"}
+    )
+    return {"status": "triggered"}</pre>
+
+  <div class="lbl">Fix 2 — Provisioned Concurrency (for latency-critical functions)</div>
+  <div class="p">AWS keeps containers warm and ready at all times. You pay for the reserved capacity even when not used. Only use for functions where cold start latency is unacceptable.</div>
+
+<pre>
+# Configure in AWS Console or Terraform
+# Lambda → Function → Configuration → Concurrency
+# Set Provisioned Concurrency = 5  (keeps 5 containers warm)
+
+# Terraform:
+resource "aws_lambda_provisioned_concurrency_config" "warm" {
+  function_name                  = aws_lambda_function.pipeline_trigger.arn
+  qualifier                      = aws_lambda_alias.live.name
+  provisioned_concurrent_executions = 5
+}</pre>
+
+  <div class="lbl">Fix 3 — scheduled warm-up ping (free option)</div>
+<pre>
+# CloudWatch EventBridge rule — pings Lambda every 5 minutes
+# Keeps container warm without Provisioned Concurrency cost
+
+# The ping handler — detects warm-up calls and returns early
+def lambda_handler(event, context):
+    # Check if this is a warm-up ping
+    if event.get("source") == "warm-up":
+        print("Warm-up ping — returning early")
+        return {"status": "warm"}
+
+    # Real work below
+    ...</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Cold start is Lambda initialising a new container — takes 1 to 3 seconds. I handle it in three ways depending on the requirement. First, always move heavy imports and client initialisations outside the handler so they run once and are reused. Second, for latency-sensitive functions I use Provisioned Concurrency — keeps containers warm but costs more. Third, for less critical functions a free option is a scheduled CloudWatch ping every 5 minutes."</div></div>
+  <div class="tip">In data engineering, cold start rarely matters — triggering a Glue job can tolerate 2 seconds. But always mention you consider latency requirements before choosing a fix. That shows architectural thinking.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q2</span>
+  <span class="qt">Lambda timeout — how do you handle long-running tasks</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Lambda hard limits — know these numbers</div>
+  <div class="mrow"><span class="mk">Max timeout</span><span class="mv">15 minutes. That is the absolute maximum. Any task that could run longer cannot live in a single Lambda.</span></div>
+  <div class="mrow"><span class="mk">Max memory</span><span class="mv">10,240 MB (10GB). Memory also controls CPU — more memory = more CPU proportionally.</span></div>
+  <div class="mrow"><span class="mk">Max payload size</span><span class="mv">6MB synchronous, 256KB for SQS events. Large data must go through S3 — never pass it directly in the event.</span></div>
+
+  <div class="lbl">The wrong way — one big Lambda</div>
+  <div class="flow">
+    <div class="fb">Lambda starts</div><div class="fa">→</div>
+    <div class="fb">Processes 10GB file</div><div class="fa">→</div>
+    <div class="fb">Times out at 15 min</div><div class="fa">→</div>
+    <div class="fb">Work lost</div>
+  </div>
+
+  <div class="lbl">Fix 1 — trigger Glue or EMR instead</div>
+  <div class="p">Lambda should not do heavy data processing. Lambda detects the trigger, starts a Glue job, and returns immediately. Glue handles the actual work with no time limit.</div>
+
+<pre>
+import boto3
+
+glue = boto3.client("glue")
+
+def lambda_handler(event, context):
+    # Lambda's job: detect trigger, kick off Glue job, done
+    bucket = event["Records"][0]["s3"]["bucket"]["name"]
+    key    = event["Records"][0]["s3"]["object"]["key"]
+
+    response = glue.start_job_run(
+        JobName="orders_etl_pipeline",
+        Arguments={
+            "--input_path": f"s3://{bucket}/{key}",
+            "--job-bookmark-option": "job-bookmark-enable"
+        }
+    )
+    job_run_id = response["JobRunId"]
+    print(f"Glue job started: {job_run_id}")
+
+    # Lambda returns immediately — Glue runs for hours if needed
+    return {"status": "started", "job_run_id": job_run_id}</pre>
+
+  <div class="lbl">Fix 2 — chain Lambdas via SQS for multi-step work</div>
+  <div class="p">Break a long task into steps. Each Lambda does one step and puts a message on SQS. The next Lambda picks it up. No single Lambda runs longer than needed.</div>
+
+<pre>
+import boto3, json
+
+sqs = boto3.client("sqs")
+QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/123/pipeline-queue"
+
+# Lambda 1: validate file, put message for Lambda 2
+def lambda_validate(event, context):
+    file_key = event["key"]
+    # ... validate ...
+    sqs.send_message(
+        QueueUrl=QUEUE_URL,
+        MessageBody=json.dumps({
+            "step": "transform",
+            "file_key": file_key,
+            "validated": True
+        })
+    )
+    return {"status": "validated"}
+
+# Lambda 2: triggered by SQS, does transform, puts message for Lambda 3
+def lambda_transform(event, context):
+    for record in event["Records"]:
+        body = json.loads(record["body"])
+        file_key = body["file_key"]
+        # ... transform ...
+        sqs.send_message(
+            QueueUrl=QUEUE_URL,
+            MessageBody=json.dumps({"step": "load", "file_key": file_key})
+        )</pre>
+
+  <div class="lbl">Fix 3 — AWS Step Functions for complex orchestration</div>
+<pre>
+# Step Functions coordinates Lambda chain with:
+# - Retry logic (exponential backoff)
+# - Error handling per step
+# - Parallel execution
+# - Visual monitoring of each step
+
+# State machine definition (JSON):
+{
+  "StartAt": "ValidateFile",
+  "States": {
+    "ValidateFile": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:...:validate_function",
+      "Retry": [{"ErrorEquals":["States.ALL"],"MaxAttempts":3}],
+      "Next": "TransformData"
+    },
+    "TransformData": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:...:transform_function",
+      "Next": "LoadOutput"
+    },
+    "LoadOutput": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:...:load_function",
+      "End": true
+    }
+  }
+}</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Lambda has a 15-minute hard limit so I never put long-running data processing in Lambda. Lambda's role in my pipelines is to detect events and delegate — it spots a new S3 file and immediately triggers a Glue job, then returns. For multi-step workflows I chain Lambdas via SQS messages, or use Step Functions which adds retry logic, error handling, and visual monitoring of each step."</div></div>
+  <div class="win">The phrase "Lambda's role is to detect and delegate" is the key mindset. Lambda is a trigger and coordinator in data pipelines — not the engine that does the heavy lifting.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">Memory to CPU ratio in Lambda — and how to optimise</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The key fact — Lambda has no separate CPU setting</div>
+  <div class="p">In Lambda you only set memory. CPU is allocated proportionally to memory automatically — you cannot control CPU independently. More memory = more CPU = faster execution but higher cost per millisecond.</div>
+
+  <table>
+    <tr><th>Memory setting</th><th>vCPU allocation</th><th>Use case</th></tr>
+    <tr><td>128 MB</td><td>0.09 vCPU</td><td>Simple lookups, lightweight triggers</td></tr>
+    <tr><td>512 MB</td><td>0.36 vCPU</td><td>Small file processing, API calls</td></tr>
+    <tr><td>1,769 MB</td><td>1 full vCPU</td><td>First point of getting a full CPU core</td></tr>
+    <tr><td>3,008 MB</td><td>2 vCPU</td><td>Data transforms, parallel processing</td></tr>
+    <tr class="hl"><td>10,240 MB</td><td>6 vCPU</td><td>Maximum — heavy compute tasks</td></tr>
+  </table>
+
+  <div class="lbl">The counter-intuitive truth — more memory can be cheaper</div>
+  <div class="p">Lambda charges per GB-second — memory × duration. If doubling memory halves execution time, the total cost stays the same but your function is faster. If it more than halves time, you actually pay less.</div>
+
+<pre>
+# Example: 512MB takes 10 seconds = 5.12 GB-seconds cost
+# Example: 1024MB takes 4 seconds = 4.1 GB-seconds cost — CHEAPER and FASTER
+
+# How to find the optimal memory setting
+# Use AWS Lambda Power Tuning tool (open source Step Functions state machine)
+# It runs your function at multiple memory settings and plots cost vs speed
+
+# In code — check remaining time to detect if nearing timeout
+def lambda_handler(event, context):
+    # context.get_remaining_time_in_millis() tells you how much time is left
+    remaining_ms = context.get_remaining_time_in_millis()
+    print(f"Remaining time: {remaining_ms}ms")
+
+    if remaining_ms < 30_000:   # less than 30 seconds left
+        # Save progress, send SQS message to continue in next Lambda
+        save_checkpoint(current_position)
+        trigger_continuation(current_position)
+        return {"status": "checkpointed"}</pre>
+
+  <div class="lbl">Lambda optimisation checklist</div>
+  <div class="mrow"><span class="mk">Move init outside</span><span class="mv">boto3 clients, DB connections, constants — outside handler. Runs once, reused on warm calls.</span></div>
+  <div class="mrow"><span class="mk">Right-size memory</span><span class="mv">Test at 256MB, 512MB, 1024MB. More memory = more CPU. Find the sweet spot for cost vs speed.</span></div>
+  <div class="mrow"><span class="mk">Minimise package size</span><span class="mv">Smaller deployment package = faster cold start. Use Lambda Layers for large dependencies like pandas.</span></div>
+  <div class="mrow"><span class="mk">Use environment variables</span><span class="mv">Config like bucket names, table names — env vars not hardcoded. No code change needed to update config.</span></div>
+  <div class="mrow"><span class="mk">Avoid large payloads</span><span class="mv">Never pass large data in the event. Pass S3 paths instead. Lambda reads from S3 when needed.</span></div>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Lambda has no separate CPU setting — memory controls CPU proportionally. At 1,769MB you get one full vCPU. More memory can actually be cheaper because faster execution reduces billable duration. I always move initialisations outside the handler, right-size memory by testing at a few settings, and use Lambda Layers for large dependencies to keep package size small and cold starts fast."</div></div>
+  <div class="tip">Mentioning 1,769MB as the first full vCPU point is a specific detail that shows real Lambda knowledge. Most people just say "more memory = more CPU" without knowing the threshold.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bp">Q4</span>
+  <span class="qt">Common Lambda patterns in data pipelines — S3 trigger, scheduler, alerting</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">How Lambda fits into a data pipeline — 3 roles</div>
+  <div class="mrow"><span class="mk">Event trigger</span><span class="mv">S3 file lands → Lambda fires → triggers Glue job. File-arrival driven pipelines.</span></div>
+  <div class="mrow"><span class="mk">Scheduler</span><span class="mv">CloudWatch EventBridge rule fires Lambda on cron schedule → Lambda triggers Glue or Step Functions.</span></div>
+  <div class="mrow"><span class="mk">Alert / notification</span><span class="mv">Pipeline fails → Lambda receives CloudWatch alarm → sends SNS, Slack, or email notification.</span></div>
+
+  <div class="lbl">Pattern 1 — S3 event trigger</div>
+<pre>
+# Lambda triggered when file lands in S3
+# Configure in Lambda: Add trigger → S3 → bucket → event type: PUT
+
+def lambda_handler(event, context):
+    for record in event["Records"]:
+        bucket   = record["s3"]["bucket"]["name"]
+        key      = record["s3"]["object"]["key"]
+        file_size = record["s3"]["object"]["size"]
+
+        print(f"New file: s3://{bucket}/{key} ({file_size} bytes)")
+
+        # Only trigger for expected file types
+        if not key.endswith(".json"):
+            print(f"Skipping non-JSON file: {key}")
+            continue
+
+        # Start Glue job for this file
+        boto3.client("glue").start_job_run(
+            JobName="raw_ingestion_pipeline",
+            Arguments={"--input_path": f"s3://{bucket}/{key}"}
+        )</pre>
+
+  <div class="lbl">Pattern 2 — scheduled pipeline trigger</div>
+<pre>
+# CloudWatch EventBridge cron → Lambda → Glue
+# Schedule: cron(0 2 * * ? *)  = every day at 2am UTC
+
+def lambda_handler(event, context):
+    from datetime import date
+    today = date.today().strftime("%Y-%m-%d")
+
+    boto3.client("glue").start_job_run(
+        JobName="daily_orders_pipeline",
+        Arguments={
+            "--run_date": today,
+            "--job-bookmark-option": "job-bookmark-enable"
+        }
+    )
+    print(f"Daily pipeline triggered for {today}")</pre>
+
+  <div class="lbl">Pattern 3 — pipeline failure alert</div>
+<pre>
+import boto3, json
+from datetime import datetime
+
+def lambda_handler(event, context):
+    # Triggered by CloudWatch alarm on Glue job failure
+    alarm_name  = event["detail"]["alarmName"]
+    alarm_state = event["detail"]["state"]["value"]
+
+    if alarm_state != "ALARM":
+        return  # only act on ALARM state
+
+    message = f"""
+Pipeline Alert - {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
+
+Alarm: {alarm_name}
+Status: FAILED
+
+Action required: Check Glue job logs in CloudWatch.
+    """
+
+    boto3.client("sns").publish(
+        TopicArn="arn:aws:sns:us-east-1:123456:pipeline-alerts",
+        Subject=f"ALERT: {alarm_name}",
+        Message=message
+    )</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Lambda plays three roles in my data pipelines. As an event trigger — when a file lands on S3 it fires Lambda which immediately starts the Glue job. As a scheduler — CloudWatch EventBridge fires Lambda on a cron schedule which kicks off the daily pipeline. As an alerter — CloudWatch alarms trigger Lambda when a job fails and Lambda sends SNS notifications to the team. Lambda never does the heavy processing — it coordinates and delegates."</div></div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q5</span>
+  <span class="qt">Lambda optimisation — full checklist for production</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The complete optimised Lambda structure</div>
+<pre>
+import boto3
+import json
+import os
+from datetime import datetime
+
+# ---- OUTSIDE HANDLER: runs once on cold start, reused on warm ----
+# boto3 clients — expensive to create, reuse them
+s3_client   = boto3.client("s3")
+glue_client = boto3.client("glue")
+sns_client  = boto3.client("sns")
+
+# Config from environment variables — not hardcoded
+JOB_NAME   = os.environ["GLUE_JOB_NAME"]     # "orders_pipeline"
+SNS_TOPIC  = os.environ["SNS_TOPIC_ARN"]      # "arn:aws:sns:..."
+BUCKET_OUT = os.environ["OUTPUT_BUCKET"]      # "my-processed-bucket"
+
+# ---- HANDLER: runs on every invocation ----
+def lambda_handler(event, context):
+    try:
+        # Check remaining time — defensive programming
+        remaining = context.get_remaining_time_in_millis()
+        print(f"Remaining time: {remaining}ms")
+
+        # Parse event
+        record = event["Records"][0]
+        bucket = record["s3"]["bucket"]["name"]
+        key    = record["s3"]["object"]["key"]
+
+        # Validate — skip unexpected files
+        if not key.startswith("raw/orders/"):
+            print(f"Skipping unexpected key: {key}")
+            return {"status": "skipped"}
+
+        # Trigger Glue — Lambda delegates, does not process
+        response = glue_client.start_job_run(
+            JobName=JOB_NAME,
+            Arguments={"--input_path": f"s3://{bucket}/{key}"}
+        )
+
+        print(f"Triggered {JOB_NAME}: {response['JobRunId']}")
+        return {
+            "status":     "triggered",
+            "job_run_id": response["JobRunId"]
+        }
+
+    except Exception as e:
+        # Alert on any failure
+        sns_client.publish(
+            TopicArn=SNS_TOPIC,
+            Subject="Lambda trigger failure",
+            Message=f"Error: {str(e)}\nEvent: {json.dumps(event)}"
+        )
+        raise   # re-raise so Lambda marks invocation as failed</pre>
+
+  <div class="lbl">Optimisation summary — all in one place</div>
+  <div class="mrow"><span class="mk">Clients outside</span><span class="mv">boto3 clients initialised once — reused on every warm invocation. Single biggest performance gain.</span></div>
+  <div class="mrow"><span class="mk">Env variables</span><span class="mv">No hardcoded ARNs or bucket names. Change config without redeployment.</span></div>
+  <div class="mrow"><span class="mk">Remaining time check</span><span class="mv">context.get_remaining_time_in_millis() — detect if approaching timeout and checkpoint gracefully.</span></div>
+  <div class="mrow"><span class="mk">Input validation</span><span class="mv">Check key prefix before processing — skip unexpected files, avoid unnecessary Glue job triggers.</span></div>
+  <div class="mrow"><span class="mk">Try/except with alert</span><span class="mv">Any exception sends SNS alert AND re-raises so Lambda marks the invocation as failed for CloudWatch.</span></div>
+  <div class="mrow"><span class="mk">Lambda Layers</span><span class="mv">Large packages like pandas, numpy — put in a Layer shared across functions. Smaller deployment = faster cold start.</span></div>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"My production Lambda pattern: clients and config outside the handler so they initialise once and reuse on warm calls. Config from environment variables so I never hardcode ARNs or bucket names. Input validation to skip unexpected events. Try/except that both alerts via SNS and re-raises so CloudWatch sees the failure. And I check remaining time so I can checkpoint gracefully if approaching the timeout."</div></div>
+  <div class="ok">Re-raising after SNS alert is a subtle but important detail. If you only send the SNS message and return normally, CloudWatch sees the invocation as successful and no alarm fires. Always re-raise so both alert channels fire.</div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 6 complete — 5 of 5 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:8px">
+  Q1 — Cold start: init outside handler, Provisioned Concurrency, scheduled ping<br>
+  Q2 — Timeout: Lambda detects and delegates to Glue — never does heavy processing itself<br>
+  Q3 — Memory = CPU: 1,769MB = first full vCPU, more memory can be cheaper<br>
+  Q4 — Pipeline roles: S3 trigger, scheduler, alerter — always coordinate not compute<br>
+  Q5 — Full optimised pattern: clients outside, env vars, validation, try/except with re-raise
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">The one phrase for this bucket: <b>"Lambda detects and delegates."</b> Say it in every Lambda answer. It instantly shows you understand where Lambda fits in a data architecture. Tell me when ready for Bucket 7 — Delta Lake.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>

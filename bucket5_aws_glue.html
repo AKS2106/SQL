@@ -1,0 +1,410 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);padding:.75rem 0}
+h3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:14px}
+.q{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.qh{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer}
+.qh:hover{background:var(--color-background-secondary)}
+.qn{font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;white-space:nowrap}
+.bi{background:var(--color-background-info);color:var(--color-text-info)}
+.ba{background:var(--color-background-warning);color:var(--color-text-warning)}
+.br{background:var(--color-background-danger);color:var(--color-text-danger)}
+.bg{background:var(--color-background-success);color:var(--color-text-success)}
+.bp{background:#EEEDFE;color:#3C3489}
+.qt{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1}
+.arr{font-size:11px;color:var(--color-text-tertiary);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.qb{display:none;padding:0 14px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.qb.open{display:block}
+.lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 4px}
+.p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:8px}
+pre{background:var(--color-background-secondary);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:8px}
+.say{background:var(--color-background-success);border-radius:8px;padding:9px 12px;margin:8px 0}
+.say-l{font-size:10px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.say-t{font-size:13px;color:var(--color-text-success);line-height:1.7}
+.tip{background:var(--color-background-warning);border-left:3px solid var(--color-border-warning);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-warning);line-height:1.6;margin:8px 0}
+.ok{background:var(--color-background-info);border-left:3px solid var(--color-border-info);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-info);line-height:1.6;margin:8px 0}
+.win{background:var(--color-background-success);border-left:3px solid var(--color-border-success);padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;color:var(--color-text-success);line-height:1.6;margin:8px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--color-background-secondary);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.mk{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:130px;flex-shrink:0}
+.mv{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.box{background:var(--color-background-secondary);border-radius:8px;padding:9px 11px}
+.box-t{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.box-r{font-size:11px;color:var(--color-text-secondary);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0}
+.fb{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--color-text-primary)}
+.fa{font-size:11px;color:var(--color-text-tertiary)}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+th{background:var(--color-background-secondary);color:var(--color-text-secondary);font-weight:500;padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--color-border-secondary)}
+td{padding:6px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.hl td{background:var(--color-background-info);color:var(--color-text-info)}
+</style>
+
+<h3>Bucket 5 — AWS Glue</h3>
+<div class="sub">6 questions. Glue is AWS's managed ETL service built on top of Spark. These questions test whether you understand how Glue adds to Spark — and when to use Glue-specific features vs plain PySpark.</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q1</span>
+  <span class="qt">Glue DynamicFrame vs Spark DataFrame — what is the difference</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The core idea</div>
+  <div class="p">DynamicFrame is Glue's own data structure — a wrapper around DataFrame designed to handle messy real-world data where schemas are inconsistent. DataFrame is standard PySpark — faster and has the full API.</div>
+
+  <table>
+    <tr><th>Feature</th><th>DynamicFrame</th><th>DataFrame</th></tr>
+    <tr><td>Mixed types in column</td><td>Handles it — creates choice type</td><td>Fails or casts to string</td></tr>
+    <tr><td>Missing columns</td><td>Handles gracefully</td><td>Fails if schema mismatch</td></tr>
+    <tr><td>Performance</td><td>Slower</td><td>Faster</td></tr>
+    <tr><td>Window functions</td><td>Not available</td><td>Full support</td></tr>
+    <tr><td>Glue Catalog I/O</td><td>Native support</td><td>Via spark.read.table()</td></tr>
+    <tr class="hl"><td>When to use</td><td>Ingestion only</td><td>All transformations</td></tr>
+  </table>
+
+  <div class="lbl">The golden rule — convert early</div>
+  <div class="p">Use DynamicFrame only to read from Glue Catalog and write the final output. Convert to DataFrame immediately for everything in between.</div>
+
+<pre>
+from awsglue.dynamicframe import DynamicFrame
+from pyspark.sql.functions import col, year
+
+# Step 1: Read from Glue Catalog as DynamicFrame
+dyf = glueContext.create_dynamic_frame.from_catalog(
+    database="my_db",
+    table_name="raw_orders",
+    transformation_ctx="raw_orders"
+)
+
+# Step 2: Convert to DataFrame IMMEDIATELY
+# Do ALL transformations as DataFrame
+df = dyf.toDF()
+
+df_clean = df \
+    .filter(col("status") == "active") \
+    .withColumn("order_year", year("order_date")) \
+    .dropDuplicates(["order_id"])
+
+# Step 3: Convert back to DynamicFrame ONLY for output
+dyf_out = DynamicFrame.fromDF(df_clean, glueContext, "output")
+
+glueContext.write_dynamic_frame.from_options(
+    frame=dyf_out,
+    connection_type="s3",
+    connection_options={"path": "s3://bucket/processed/"},
+    format="parquet"
+)</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"DynamicFrame is Glue's wrapper — it handles messy schemas like mixed types in the same column. DataFrame is standard PySpark — faster and has the full API including window functions. My pattern is: DynamicFrame only for reading from Glue Catalog and writing output. I convert to DataFrame immediately for all transformations. DynamicFrame for the doors, DataFrame for everything inside."</div></div>
+  <div class="win">The phrase "DynamicFrame for the doors, DataFrame for everything inside" is a memorable way to explain this. Use it in interviews.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn bi">Q2</span>
+  <span class="qt">What is the Glue Catalog and how do you read from it in Spark</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What the Glue Catalog is</div>
+  <div class="p">The Glue Catalog is a central metadata store — it knows the schema, location, and partitions of every table in your data lake. Think of it as a library index — it tells Spark where the books are and what is in them without Spark having to scan every shelf.</div>
+
+  <div class="mrow"><span class="mk">Glue Crawler</span><span class="mv">Scans your S3 bucket, detects schema and partitions, and writes that metadata into the Glue Catalog automatically.</span></div>
+  <div class="mrow"><span class="mk">Glue Catalog</span><span class="mv">Stores table definitions — schema, S3 location, partition columns, file format. Used by Athena, Spark, Redshift Spectrum.</span></div>
+  <div class="mrow"><span class="mk">Partition pruning benefit</span><span class="mv">Spark reads partition metadata from Catalog instead of listing S3 folders. Much faster — no S3 scan needed.</span></div>
+
+<pre>
+# Method 1: Read via Glue DynamicFrame
+dyf = glueContext.create_dynamic_frame.from_catalog(
+    database="analytics_db",
+    table_name="orders",
+    push_down_predicate="dt >= '2024-01-01'"  # filter at read time
+)
+df = dyf.toDF()
+
+# Method 2: Read via Spark SQL (after configuring Glue as Hive metastore)
+df = spark.read.table("analytics_db.orders") \
+    .filter(col("dt") >= "2024-01-01")
+
+# Method 3: Read only recent partitions from Glue Catalog
+from pyspark.sql.functions import max as max_
+df_all    = spark.read.table("analytics_db.orders")
+latest_dt = df_all.agg(max_("dt")).collect()[0][0]
+df_latest = df_all.filter(col("dt") == latest_dt)
+
+# Method 4: Add new partition to Glue Catalog after writing
+import boto3
+glue = boto3.client("glue")
+glue.create_partition(
+    DatabaseName="analytics_db",
+    TableName="orders",
+    PartitionInput={
+        "Values": ["2024-01-15"],
+        "StorageDescriptor": {
+            "Location": "s3://bucket/orders/dt=2024-01-15/",
+            "InputFormat": "org.apache.hadoop.mapred.TextInputFormat"
+        }
+    }
+)</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"The Glue Catalog is a central metadata store that holds schema, S3 location, and partition info for all tables. Glue Crawlers populate it automatically by scanning S3. When I read from Glue Catalog instead of raw S3 paths, Spark uses partition metadata directly — no S3 scan needed — which makes partition pruning much faster. I read via create_dynamic_frame.from_catalog or spark.read.table depending on whether I need DynamicFrame or not."</div></div>
+  <div class="tip">push_down_predicate is a powerful Glue-specific option — it filters partitions at read time before data is loaded into Spark memory. Always use it when reading large partitioned tables.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q3</span>
+  <span class="qt">How do you handle schema evolution in Glue</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">What schema evolution means in Glue context</div>
+  <div class="p">Your source system adds a new column next week. Or changes a column type. Your Glue job needs to handle this without breaking — ideally without even needing a code change.</div>
+
+  <div class="lbl">3 levels of handling — mention all three</div>
+  <div class="mrow"><span class="mk">Level 1 — Crawler</span><span class="mv">Re-run the Glue Crawler. It detects new columns and updates the Glue Catalog automatically. Set crawler to "Add new columns only" mode to avoid overwriting existing schema.</span></div>
+  <div class="mrow"><span class="mk">Level 2 — mergeSchema</span><span class="mv">When reading Parquet with mergeSchema=true, Spark unifies schemas across files. Old files return NULL for new columns.</span></div>
+  <div class="mrow"><span class="mk">Level 3 — Delta Lake</span><span class="mv">Best for production. Delta enforces schema by default but can evolve it with mergeSchema=true. Full history of every schema change stored in transaction log.</span></div>
+
+<pre>
+# Level 1: Re-run crawler via boto3 (can trigger from Lambda or pipeline)
+import boto3
+glue = boto3.client("glue")
+glue.start_crawler(Name="orders_crawler")
+
+# Level 2: mergeSchema when reading Parquet
+df = spark.read \
+    .option("mergeSchema", "true") \
+    .parquet("s3://bucket/orders/")
+# New column in recent files → appears with NULL in older files
+
+# Add missing expected columns defensively
+expected_columns = ["order_id","user_id","amount","region","channel"]
+for c in expected_columns:
+    if c not in df.columns:
+        df = df.withColumn(c, lit(None).cast(StringType()))
+
+# Level 3: Delta Lake — safest evolution
+df.write.format("delta") \
+    .option("mergeSchema", "true") \
+    .mode("append") \
+    .save("s3://bucket/delta/orders/")
+
+# Check what schema changes happened
+spark.sql("""
+    DESCRIBE HISTORY delta.`s3://bucket/delta/orders/`
+""").select("version","timestamp","operation","operationParameters") \
+    .show(truncate=False)</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"I handle schema evolution at three levels. First, re-run the Glue Crawler to pick up new columns in the Catalog automatically. Second, use mergeSchema when reading Parquet so Spark unifies schemas across old and new files. Third, for production pipelines I use Delta Lake — it handles all schema changes safely with a full history of what changed and when. I also add missing columns defensively in code so downstream queries never break."</div></div>
+  <div class="ok">The defensive column check — adding missing columns with NULL default — is a production habit. It means your pipeline never breaks even if a new column hasn't arrived yet.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q4</span>
+  <span class="qt">How do you implement incremental processing in Glue — Job Bookmarks and partitioning</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Two Glue-specific tools for incremental processing</div>
+  <div class="grid2">
+    <div class="box">
+      <div class="box-t">Job Bookmarks</div>
+      <div class="box-r">Glue tracks which S3 files it already processed. On next run it only reads NEW files. Zero code changes — just enable in job config.</div>
+    </div>
+    <div class="box">
+      <div class="box-t">push_down_predicate</div>
+      <div class="box-r">Filter partitions at read time before loading into Spark. Combines with Glue Catalog for maximum efficiency.</div>
+    </div>
+  </div>
+
+<pre>
+# ---- Job Bookmarks ----
+# Enable in Glue job config:
+# --job-bookmark-option = job-bookmark-enable
+
+# In code — Glue skips already-processed files automatically
+datasource = glueContext.create_dynamic_frame.from_options(
+    connection_type="s3",
+    connection_options={
+        "paths": ["s3://bucket/raw/orders/"],
+        "recurse": True
+    },
+    format="json",
+    transformation_ctx="datasource"  # required for bookmarks
+)
+df = datasource.toDF()
+
+# ---- push_down_predicate — read only recent partitions ----
+from datetime import date, timedelta
+cutoff = (date.today() - timedelta(7)).strftime("%Y-%m-%d")
+
+dyf = glueContext.create_dynamic_frame.from_catalog(
+    database="analytics_db",
+    table_name="orders",
+    push_down_predicate=f"dt >= '{cutoff}'",  # server-side filter
+    transformation_ctx="orders_source"
+)
+df = dyf.toDF()
+
+# ---- Combine both approaches ----
+# Job Bookmarks: tracks NEW files
+# push_down_predicate: reads only RECENT partitions
+# Together: only new files within the last 7 days</pre>
+
+  <div class="lbl">What transformation_ctx does — important detail</div>
+  <div class="p">The transformation_ctx is a unique string name you give each step. Glue uses it to track bookmark state per step. Without it, bookmarks do not work correctly.</div>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"Glue has two built-in tools for incremental processing. Job Bookmarks track which S3 files were already processed — enable in config, no code changes. push_down_predicate filters partitions at read time via Glue Catalog metadata — much faster than loading everything then filtering. I always add transformation_ctx to each step because Glue uses it to track bookmark state. For maximum efficiency I combine both — bookmarks for new files and push_down_predicate for recent partitions only."</div></div>
+  <div class="tip">transformation_ctx is a small detail that interviewers use to test whether you have actually used Glue or just read about it. Mentioning it unprompted signals real hands-on knowledge.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn ba">Q5</span>
+  <span class="qt">Reading a Glue Catalog table and converting to Spark DataFrame</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">The full pattern — from Glue Catalog to processed output</div>
+  <div class="p">This is a very practical question. They want to see you know the complete Glue job structure — not just one line of code.</div>
+
+<pre>
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+from awsglue.dynamicframe import DynamicFrame
+from pyspark.sql.functions import col, year, avg, count
+
+# ---- Glue job boilerplate ----
+args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+sc   = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job  = Job(glueContext)
+job.init(args["JOB_NAME"], args)
+spark.sparkContext.setLogLevel("ERROR")
+
+# ---- Read from Glue Catalog as DynamicFrame ----
+dyf_orders = glueContext.create_dynamic_frame.from_catalog(
+    database    = "analytics_db",
+    table_name  = "raw_orders",
+    push_down_predicate = "dt >= '2024-01-01'",
+    transformation_ctx  = "raw_orders"
+)
+
+dyf_customers = glueContext.create_dynamic_frame.from_catalog(
+    database   = "analytics_db",
+    table_name = "customers",
+    transformation_ctx = "customers"
+)
+
+# ---- Convert to DataFrame for all transforms ----
+df_orders    = dyf_orders.toDF()
+df_customers = dyf_customers.toDF()
+
+# ---- Transform ----
+df_joined = df_orders.join(df_customers, "customer_id", "left")
+
+df_result = df_joined \
+    .filter(col("status") == "completed") \
+    .withColumn("order_year", year("order_date")) \
+    .groupBy("customer_id", "order_year") \
+    .agg(
+        count("order_id").alias("order_count"),
+        avg("amount").alias("avg_order_value")
+    )
+
+# ---- Write output ----
+dyf_result = DynamicFrame.fromDF(df_result, glueContext, "result")
+
+glueContext.write_dynamic_frame.from_options(
+    frame=dyf_result,
+    connection_type="s3",
+    connection_options={
+        "path": "s3://bucket/processed/customer_summary/",
+        "partitionKeys": ["order_year"]
+    },
+    format="parquet",
+    transformation_ctx="output"
+)
+
+# ---- Always commit the job ----
+job.commit()</pre>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"A Glue job always starts with the boilerplate — SparkContext, GlueContext, Job init. I read from Glue Catalog using create_dynamic_frame.from_catalog with push_down_predicate to filter partitions at read time. I convert to DataFrame immediately for all joins and transforms. Then convert back to DynamicFrame only for the output write. I always end with job.commit() — without it Glue does not update the bookmark state."</div></div>
+  <div class="win">job.commit() at the end is another small detail that separates someone who has written real Glue jobs from someone who has only read documentation. Without it, Job Bookmarks never advance — every run reprocesses the same files.</div>
+</div>
+</div>
+
+<div class="q">
+<div class="qh" onclick="t(this)">
+  <span class="qn br">Q6</span>
+  <span class="qt">Glue job writing thousands of small files — and other common Glue issues</span>
+  <span class="arr">▼</span>
+</div>
+<div class="qb">
+  <div class="lbl">Small files — the most common Glue performance issue</div>
+  <div class="p">Already covered in Bucket 1 Q6 but worth repeating in Glue context — Glue defaults to many small files because it uses many DPUs each writing independently.</div>
+
+<pre>
+# Fix: coalesce before writing
+df.coalesce(10) \
+  .write.mode("overwrite") \
+  .parquet("s3://bucket/output/")
+
+# Or use groupFiles in Glue DynamicFrame write
+glueContext.write_dynamic_frame.from_options(
+    frame=dyf_out,
+    connection_type="s3",
+    connection_options={
+        "path": "s3://bucket/output/",
+        "groupFiles": "inPartition",  # Glue groups small files
+        "groupSize":  "134217728"     # 128MB target per file
+    },
+    format="parquet"
+)</pre>
+
+  <div class="lbl">Other common Glue questions — quick answers</div>
+  <div class="mrow"><span class="mk">What are DPUs?</span><span class="mv">Data Processing Units — Glue's unit of compute. 1 DPU = 4 vCPUs + 16GB RAM. More DPUs = more parallelism but higher cost. Standard jobs minimum 2 DPUs.</span></div>
+  <div class="mrow"><span class="mk">Glue vs EMR</span><span class="mv">Glue is serverless — no cluster management. EMR gives full control over Spark config. Use Glue for standard ETL. Use EMR for complex tuning or ML workloads.</span></div>
+  <div class="mrow"><span class="mk">Glue Studio</span><span class="mv">Visual ETL interface — drag and drop transforms. Generates PySpark code. Good for simple pipelines. For complex logic always write code directly.</span></div>
+  <div class="mrow"><span class="mk">Worker types</span><span class="mv">Standard (2 DPU), G.1X (1 DPU optimised for memory), G.2X (2 DPU for memory-intensive). Use G.1X for most jobs, G.2X for large joins.</span></div>
+
+  <div class="say"><div class="say-l">Say this in interview</div><div class="say-t">"For small files in Glue I use coalesce before writing, or the groupFiles option in Glue's write_dynamic_frame which combines small files to a target size. Glue is serverless which is great for standard ETL — no cluster management. For workloads that need fine-grained Spark tuning I'd use EMR instead. DPUs control parallelism and cost — I right-size them based on data volume."</div></div>
+</div>
+</div>
+
+<div style="background:var(--color-background-success);border-radius:var(--border-radius-lg);padding:12px 14px;margin-top:16px">
+  <div style="font-size:11px;font-weight:500;color:var(--color-text-success);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Bucket 5 complete — 6 of 6 questions covered</div>
+  <div style="font-size:13px;color:var(--color-text-success);line-height:1.7;margin-bottom:8px">
+  Q1 — DynamicFrame vs DataFrame: DynamicFrame for the doors, DataFrame for everything inside<br>
+  Q2 — Glue Catalog: metadata store, partition pruning, push_down_predicate<br>
+  Q3 — Schema evolution: Crawler re-run → mergeSchema → Delta Lake<br>
+  Q4 — Incremental in Glue: Job Bookmarks + push_down_predicate + transformation_ctx<br>
+  Q5 — Full Glue job pattern: boilerplate → read → toDF() → transform → fromDF() → write → job.commit()<br>
+  Q6 — Small files: coalesce or groupFiles option
+  </div>
+  <div style="font-size:12px;color:var(--color-text-success)">Two details that prove real Glue experience: <b>transformation_ctx</b> on every step and <b>job.commit()</b> at the end. Say these unprompted and interviewers will notice. Tell me when ready for Bucket 6 — Lambda.</div>
+</div>
+
+<script>
+function t(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+</script>
