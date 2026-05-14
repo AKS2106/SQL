@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete DE Interview Prep — Everything in One Place</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#0d0d14;--bg2:#13131e;--bg3:#1a1a28;--bg4:#1e1e2e;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e4e4f0;--text2:#9494b0;--text3:#5a5a78;
+  --accent:#7c6dfa;--accent2:#a78bfa;--accent3:#c4b5fd;
+  --green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --blue:#60a5fa;--cyan:#22d3ee;--pink:#f472b6;
+  --sw:260px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+.app{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sw);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:200;transition:transform .3s}
+.sb-top{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
+.sb-brand{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent3);letter-spacing:.08em}
+.sb-tag{font-size:10px;color:var(--text3);margin-top:2px}
+.sb-search{padding:9px 12px;border-bottom:1px solid var(--border)}
+.sb-search input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;font-family:'Inter',sans-serif}
+.sb-search input:focus{border-color:var(--accent)}
+.sb-search input::placeholder{color:var(--text3)}
+.sb-sec{padding:10px 16px 3px;font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.sb-link{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.sb-link:hover,.sb-link.active{color:var(--accent3);background:rgba(124,109,250,.09);border-left-color:var(--accent)}
+.sb-badge{margin-left:auto;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:500}
+.bg-g{background:rgba(52,211,153,.15);color:var(--green)}
+.bg-a{background:rgba(251,191,36,.15);color:var(--amber)}
+.bg-p{background:rgba(124,109,250,.15);color:var(--accent2)}
+.bg-b{background:rgba(96,165,250,.15);color:var(--blue)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sw);flex:1;min-height:100vh}
+
+/* ── HERO ── */
+.hero{padding:52px 52px 38px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(124,109,250,.13),transparent 70%);pointer-events:none}
+.hero-eye{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.hero-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1.1;margin-bottom:10px;background:linear-gradient(135deg,var(--text),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:13px;color:var(--text2);max-width:580px;line-height:1.7;margin-bottom:22px}
+.hero-stats{display:flex;gap:26px;flex-wrap:wrap}
+.hs{display:flex;flex-direction:column}
+.hs-n{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--accent2)}
+.hs-l{font-size:11px;color:var(--text3)}
+
+/* ── VOICE BAR ── */
+.vbar{display:flex;align-items:center;gap:10px;padding:8px 52px;background:var(--bg3);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.vbl{font-size:11px;color:var(--text3)}
+.vbtn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg2);color:var(--text2);font-size:11px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.vbtn:hover,.vbtn.on{border-color:var(--accent);color:var(--accent3);background:rgba(124,109,250,.1)}
+.vspd select{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--text2);font-size:11px;outline:none;font-family:'Inter',sans-serif;cursor:pointer}
+
+/* ── CONTENT AREA ── */
+.content{padding:36px 52px}
+.section{margin-bottom:56px;scroll-margin-top:20px}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.sec-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.si-p{background:rgba(124,109,250,.2)}.si-g{background:rgba(52,211,153,.2)}
+.si-a{background:rgba(251,191,36,.2)}.si-b{background:rgba(96,165,250,.2)}
+.si-r{background:rgba(248,113,113,.2)}.si-c{background:rgba(34,211,238,.2)}
+.si-pk{background:rgba(244,114,182,.2)}
+.sec-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text)}
+.sec-desc{font-size:12px;color:var(--text3);margin-top:1px}
+
+/* ── EXPANDABLE CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card-head{display:flex;align-items:center;gap:10px;padding:13px 18px;cursor:pointer;user-select:none}
+.card-head:hover{background:rgba(255,255,255,.018)}
+.tag{font-size:10px;font-weight:600;padding:2px 9px;border-radius:7px;white-space:nowrap}
+.t-p{background:rgba(124,109,250,.15);color:var(--accent2)}
+.t-g{background:rgba(52,211,153,.12);color:var(--green)}
+.t-a{background:rgba(251,191,36,.12);color:var(--amber)}
+.t-r{background:rgba(248,113,113,.12);color:var(--red)}
+.t-b{background:rgba(96,165,250,.12);color:var(--blue)}
+.t-c{background:rgba(34,211,238,.12);color:var(--cyan)}
+.card-title{font-size:13px;font-weight:500;color:var(--text);flex:1;line-height:1.4}
+.card-acts{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.spk-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--text3);cursor:pointer;font-size:10px;transition:all .15s;white-space:nowrap}
+.spk-btn:hover,.spk-btn.on{border-color:var(--accent);color:var(--accent3);background:rgba(124,109,250,.1)}
+.arr{font-size:10px;color:var(--text3);transition:transform .2s}
+.arr.open{transform:rotate(180deg)}
+.card-body{display:none;padding:2px 18px 18px;border-top:1px solid var(--border)}
+.card-body.open{display:block}
+
+/* ── INNER CONTENT ── */
+.lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin:12px 0 5px}
+.p{font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:8px}
+.cw{position:relative;margin:8px 0}
+.code{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 15px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#c9d1d9;white-space:pre;overflow-x:auto;line-height:1.8;display:block}
+.cpbtn{position:absolute;top:8px;right:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:3px 10px;font-size:10px;color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;z-index:1}
+.cpbtn:hover{border-color:var(--accent);color:var(--accent3)}
+.cpbtn.ok{background:rgba(52,211,153,.12);border-color:var(--green);color:var(--green)}
+.say{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.18);border-radius:10px;padding:10px 13px;margin:8px 0}
+.say-l{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.say-t{font-size:12.5px;color:rgba(52,211,153,.88);line-height:1.7}
+.tip{background:rgba(251,191,36,.07);border-left:3px solid var(--amber);padding:7px 11px;border-radius:0 8px 8px 0;font-size:11.5px;color:rgba(251,191,36,.9);line-height:1.6;margin:7px 0}
+.info{background:rgba(96,165,250,.07);border-left:3px solid var(--blue);padding:7px 11px;border-radius:0 8px 8px 0;font-size:11.5px;color:rgba(96,165,250,.9);line-height:1.6;margin:7px 0}
+.win{background:rgba(52,211,153,.06);border-left:3px solid var(--green);padding:7px 11px;border-radius:0 8px 8px 0;font-size:11.5px;color:rgba(52,211,153,.9);line-height:1.6;margin:7px 0}
+.mrow{display:flex;gap:10px;align-items:flex-start;background:var(--bg3);border-radius:8px;padding:8px 10px;margin-bottom:5px}
+.mk{font-size:11px;font-weight:500;color:var(--text);min-width:120px;flex-shrink:0}
+.mv{font-size:12px;color:var(--text2);line-height:1.6}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+.bx{background:var(--bg3);border-radius:8px;padding:9px 11px}
+.bx-t{font-size:12px;font-weight:500;color:var(--text);margin-bottom:5px}
+.bx-b{font-size:11px;color:var(--text2);line-height:1.7}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:8px 0;padding:9px 12px;background:var(--bg3);border-radius:8px}
+.fb{background:var(--bg4);border:0.5px solid var(--border2);border-radius:6px;padding:3px 9px;font-size:11px;color:var(--text2)}
+.fa{font-size:10px;color:var(--text3)}
+.tbl{overflow-x:auto;margin:8px 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--bg3);color:var(--text2);font-weight:500;padding:8px 11px;text-align:left;border-bottom:1px solid var(--border2)}
+td{padding:7px 11px;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:hover td{background:rgba(255,255,255,.018)}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent3);background:rgba(124,109,250,.1);padding:1px 5px;border-radius:4px}
+
+/* ── BUCKET GRID ── */
+.bucket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px}
+.bucket{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:17px;transition:all .2s;cursor:pointer}
+.bucket:hover{border-color:var(--border2);transform:translateY(-2px)}
+.b-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;opacity:.12;line-height:1}
+.b-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--text);margin:4px 0}
+.b-phrase{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);margin-bottom:8px;line-height:1.4}
+.b-qs{font-size:11.5px;color:var(--text2);line-height:1.6}
+.b-cnt{display:inline-block;margin-top:8px;font-size:9px;font-weight:600;padding:2px 8px;border-radius:8px;background:rgba(124,109,250,.15);color:var(--accent2)}
+
+/* ── PHRASE CARDS ── */
+.phrase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.phrase-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px}
+.phrase-sec{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.phrase-text{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent3);line-height:1.5}
+
+/* ── PROJECT CARDS ── */
+.proj{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;transition:all .2s}
+.proj:hover{border-color:var(--border2)}
+.proj::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pj1::before{background:linear-gradient(90deg,var(--accent),var(--accent3))}
+.pj2::before{background:linear-gradient(90deg,var(--amber),#f97316)}
+.pj3::before{background:linear-gradient(90deg,var(--cyan),var(--green))}
+.pj4::before{background:linear-gradient(90deg,var(--pink),var(--red))}
+.proj-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.proj-num{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.proj-status{font-size:10px;font-weight:600;padding:3px 10px;border-radius:10px}
+.ps-done{background:rgba(52,211,153,.15);color:var(--green)}
+.ps-prog{background:rgba(251,191,36,.15);color:var(--amber)}
+.ps-ready{background:rgba(124,109,250,.15);color:var(--accent2)}
+.proj-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:7px}
+.proj-desc{font-size:12.5px;color:var(--text2);line-height:1.65;margin-bottom:13px}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.pill{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:500}
+.pp{background:rgba(124,109,250,.14);color:var(--accent3)}
+.pg{background:rgba(52,211,153,.12);color:var(--green)}
+.pa{background:rgba(251,191,36,.12);color:var(--amber)}
+.pb{background:rgba(96,165,250,.12);color:var(--blue)}
+.pr{background:rgba(248,113,113,.12);color:var(--red)}
+.pc{background:rgba(34,211,238,.12);color:var(--cyan)}
+
+/* ── SCENARIO GRID ── */
+.scen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.scen{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s}
+.scen:hover{border-color:var(--border2);transform:translateY(-2px)}
+.scen-num{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;opacity:.13;line-height:1}
+.scen-title{font-size:13px;font-weight:500;color:var(--text);margin:3px 0}
+.scen-desc{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* ── DAY PLAN ── */
+.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0}
+.day-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:9px 7px;text-align:center}
+.day-name{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.day-task{font-size:10.5px;color:var(--text2);line-height:1.5}
+.day-time{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent2);margin-top:3px}
+.day-rest{background:rgba(52,211,153,.04);border-color:rgba(52,211,153,.12)}
+.day-rest .day-name{color:var(--green)}
+
+/* ── PROGRESS ── */
+.prog-bar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:13px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:3px}
+
+/* ── CHECKLIST ── */
+.chk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:7px}
+.chk{padding:9px 13px;border-radius:10px;font-size:12px;font-weight:500}
+.chk-done{background:rgba(52,211,153,.08);color:var(--green);border:1px solid rgba(52,211,153,.2)}
+.chk-prog{background:rgba(251,191,36,.08);color:var(--amber);border:1px solid rgba(251,191,36,.2)}
+.chk-todo{background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid var(--green);border-radius:10px;padding:10px 16px;font-size:12px;color:var(--green);z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ── MOBILE ── */
+.mob-btn{display:none;position:fixed;top:12px;left:12px;z-index:300;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);cursor:pointer;font-size:15px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199}
+.overlay.show{display:block}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}.mob-btn{display:block}
+  .hero,.content{padding-left:22px;padding-right:22px}
+  .hero-title{font-size:26px}.vbar{padding:8px 22px}
+  .g2,.g3{grid-template-columns:1fr}.day-grid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<button class="mob-btn" onclick="toggleSb()">☰</button>
+<div class="overlay" id="ov" onclick="toggleSb()"></div>
+<div class="toast" id="toast">✓ Copied to clipboard</div>
+
+<div class="app">
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<nav class="sidebar" id="sb">
+  <div class="sb-top">
+    <div class="sb-brand">DE PREP — COMPLETE GUIDE</div>
+    <div class="sb-tag">PySpark · SQL · AWS · Projects · System Design</div>
+  </div>
+  <div class="sb-search"><input type="text" id="srch" placeholder="🔍 Search topics..." oninput="filterNav(this.value)"></div>
+  <div id="nav-body">
+    <div class="sb-sec">Start Here</div>
+    <div class="sb-link active" onclick="goTo('home')">Overview & Progress</div>
+    <div class="sb-link" onclick="goTo('roadmap')">6-Week Roadmap</div>
+    <div class="sb-link" onclick="goTo('daily')">Daily Study Plan</div>
+
+    <div class="sb-sec">SQL & PySpark</div>
+    <div class="sb-link" onclick="goTo('sql-patterns')">SQL Patterns <span class="sb-badge bg-b">5 types</span></div>
+    <div class="sb-link" onclick="goTo('date-patterns')">Date Query Patterns <span class="sb-badge bg-a">3 types</span></div>
+    <div class="sb-link" onclick="goTo('window-fns')">Window Functions <span class="sb-badge bg-p">8 types</span></div>
+    <div class="sb-link" onclick="goTo('pyspark-ops')">PySpark Core Ops</div>
+
+    <div class="sb-sec">AWS Interview Buckets</div>
+    <div class="sb-link" onclick="goTo('buckets-map')">8 Buckets Map ⭐</div>
+    <div class="sb-link" onclick="goTo('b1')">B1 — Reading Files</div>
+    <div class="sb-link" onclick="goTo('b2')">B2 — Performance</div>
+    <div class="sb-link" onclick="goTo('b3')">B3 — Incremental</div>
+    <div class="sb-link" onclick="goTo('b4')">B4 — Data Quality</div>
+    <div class="sb-link" onclick="goTo('b5')">B5 — AWS Glue</div>
+    <div class="sb-link" onclick="goTo('b6')">B6 — Lambda</div>
+    <div class="sb-link" onclick="goTo('b7')">B7 — Delta Lake</div>
+    <div class="sb-link" onclick="goTo('b8')">B8 — Reliability</div>
+    <div class="sb-link" onclick="goTo('key-phrases')">Key Phrases Cheatsheet <span class="sb-badge bg-g">⭐</span></div>
+
+    <div class="sb-sec">System Design</div>
+    <div class="sb-link" onclick="goTo('sd-foundations')">Foundations & 10 Terms</div>
+    <div class="sb-link" onclick="goTo('sd-healthcare')">Healthcare Case Study</div>
+    <div class="sb-link" onclick="goTo('sd-auto')">Automobile Case Study</div>
+    <div class="sb-link" onclick="goTo('sd-laptop')">Laptop/Electronics Case</div>
+    <div class="sb-link" onclick="goTo('sd-common')">Common Questions</div>
+
+    <div class="sb-sec">Portfolio Projects</div>
+    <div class="sb-link" onclick="goTo('projects')">3 Projects Overview <span class="sb-badge bg-g">built</span></div>
+    <div class="sb-link" onclick="goTo('proj1')">Project 1 — Healthcare Batch</div>
+    <div class="sb-link" onclick="goTo('proj2')">Project 2 — AWS Pipeline</div>
+    <div class="sb-link" onclick="goTo('proj3')">Project 3 — Streaming</div>
+
+    <div class="sb-sec">New Project — 12 Scenarios</div>
+    <div class="sb-link" onclick="goTo('p4-overview')">Project 4 Overview</div>
+    <div class="sb-link" onclick="goTo('p4-generator')">generate_data.py <span class="sb-badge bg-g">run this first</span></div>
+    <div class="sb-link" onclick="goTo('p4-s1s2')">S1+S2 — Load &amp; Multiple Files</div>
+    <div class="sb-link" onclick="goTo('p4-s3')">S3 — Incremental</div>
+    <div class="sb-link" onclick="goTo('p4-s4')">S4 — Joining Feeds</div>
+    <div class="sb-link" onclick="goTo('p4-s5s6')">S5+S6 — Valid/Invalid + Dedup</div>
+    <div class="sb-link" onclick="goTo('p4-s7s8')">S7+S8 — Parquet + Schema</div>
+    <div class="sb-link" onclick="goTo('p4-s9s10')">S9+S10 — Calculations + Output</div>
+    <div class="sb-link" onclick="goTo('p4-s11s12')">S11+S12 — Partition + Merge</div>
+
+    <div class="sb-sec">Interview</div>
+    <div class="sb-link" onclick="goTo('behavioral')">Behavioral Answers</div>
+    <div class="sb-link" onclick="goTo('answer-fw')">3-Sentence Framework</div>
+    <div class="sb-link" onclick="goTo('checklist')">Final Checklist</div>
+  </div>
+</nav>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main class="main">
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero" id="home">
+  <div class="hero-eye">Complete Data Engineering Interview Preparation</div>
+  <div class="hero-title">Everything You Need<br>To Crack Your DE Interview</div>
+  <div class="hero-sub">SQL patterns · PySpark · All 8 AWS buckets · System design with 3 sector case studies · 4 portfolio projects · 12 coding scenarios with working code · Behavioral answers. All in one file, works offline on any device.</div>
+  <div class="hero-stats">
+    <div class="hs"><span class="hs-n">8</span><span class="hs-l">AWS Buckets</span></div>
+    <div class="hs"><span class="hs-n">40+</span><span class="hs-l">Questions</span></div>
+    <div class="hs"><span class="hs-n">4</span><span class="hs-l">Projects</span></div>
+    <div class="hs"><span class="hs-n">12</span><span class="hs-l">Code Scenarios</span></div>
+    <div class="hs"><span class="hs-n">3</span><span class="hs-l">Case Studies</span></div>
+    <div class="hs"><span class="hs-n">6wk</span><span class="hs-l">To Ready</span></div>
+  </div>
+</div>
+
+<!-- VOICE BAR -->
+<div class="vbar">
+  <span class="vbl">🔊 Voice reader:</span>
+  <button class="vbtn" onclick="speakOpen()">▶ Read open card</button>
+  <button class="vbtn" onclick="stopSpeak()">⏹ Stop</button>
+  <div class="vspd">Speed: <select id="spd" onchange="spRate=parseFloat(this.value)"><option value="0.8">0.8x</option><option value="1" selected>1x</option><option value="1.2">1.2x</option><option value="1.5">1.5x</option></select></div>
+  <span style="font-size:11px;color:var(--text3)">Click 🔊 on any card · works offline · no internet needed</span>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════════════════
+     PROGRESS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="progress-sec" style="margin-bottom:32px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+      <span style="font-size:12px;font-weight:500;color:var(--text2)">Your preparation progress</span>
+      <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--green)">70% complete</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div>
+    <div class="chk-grid">
+      <div class="chk chk-done">✓ SQL patterns (all 5)</div>
+      <div class="chk chk-done">✓ Window functions</div>
+      <div class="chk chk-done">✓ All 8 AWS buckets</div>
+      <div class="chk chk-done">✓ System design foundations</div>
+      <div class="chk chk-done">✓ 3 sector case studies</div>
+      <div class="chk chk-done">✓ Project 1 built & on GitHub</div>
+      <div class="chk chk-done">✓ 12-scenario project guide</div>
+      <div class="chk chk-prog">~ Project 2 AWS in progress</div>
+      <div class="chk chk-todo">○ Project 3 streaming</div>
+      <div class="chk chk-todo">○ Mock interviews x5</div>
+      <div class="chk chk-todo">○ LeetCode SQL x20</div>
+      <div class="chk chk-todo">○ Apply to roles</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ROADMAP
+══════════════════════════════════════════════════════ -->
+<div class="section" id="roadmap">
+  <div class="sec-hdr"><div class="sec-icon si-p">🗺</div><div><div class="sec-title">6-Week Roadmap</div><div class="sec-desc">Your path from preparation to interview-ready</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:14px;background:var(--bg2);border:1px solid rgba(52,211,153,.3);border-radius:12px;padding:13px 16px"><div style="width:36px;height:36px;border-radius:50%;background:rgba(52,211,153,.2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green);font-weight:700;flex-shrink:0">✓</div><div><div style="font-size:10px;color:var(--green);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">Weeks 1–3 — Complete</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px">SQL · PySpark · 8 AWS buckets · System design · Project 1</div><div style="font-size:12px;color:var(--text2)">Full foundational knowledge. First portfolio project built and on GitHub.</div></div></div>
+    <div style="display:flex;gap:14px;background:var(--bg2);border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:13px 16px"><div style="width:36px;height:36px;border-radius:50%;background:rgba(251,191,36,.2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--amber);font-weight:700;flex-shrink:0">~</div><div><div style="font-size:10px;color:var(--amber);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">Week 4 — In Progress</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px">Project 2 — AWS S3 + Glue + Athena end-to-end pipeline</div><div style="font-size:12px;color:var(--text2)">First real AWS cloud job. Screenshots for portfolio evidence.</div></div></div>
+    <div style="display:flex;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 16px"><div style="width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text3);flex-shrink:0">5</div><div><div style="font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">Week 5</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px">Project 3 — Kafka + Docker + Spark Structured Streaming</div><div style="font-size:12px;color:var(--text2)">Real-time pipeline. Streaming concepts made tangible.</div></div></div>
+    <div style="display:flex;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 16px"><div style="width:36px;height:36px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text3);flex-shrink:0">6</div><div><div style="font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">Week 6</div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px">Mock interviews + LeetCode SQL + Apply</div><div style="font-size:12px;color:var(--text2)">5+ mock interviews. 20+ SQL problems solved fresh. Start applying.</div></div></div>
+  </div>
+</div>
+
+<!-- DAILY PLAN -->
+<div class="section" id="daily">
+  <div class="sec-hdr"><div class="sec-icon si-g">📅</div><div><div class="sec-title">Daily Study Plan</div><div class="sec-desc">90 minutes a day · consistent beats intense</div></div></div>
+  <div class="day-grid">
+    <div class="day-card"><div class="day-name">Mon</div><div class="day-task">Build project</div><div class="day-time">45m + bucket</div></div>
+    <div class="day-card"><div class="day-name">Tue</div><div class="day-task">Build + SQL</div><div class="day-time">45m + 45m</div></div>
+    <div class="day-card"><div class="day-name">Wed</div><div class="day-task">Build + review</div><div class="day-time">45m + 45m</div></div>
+    <div class="day-card"><div class="day-name">Thu</div><div class="day-task">Build + SQL</div><div class="day-time">45m + 45m</div></div>
+    <div class="day-card"><div class="day-name">Fri</div><div class="day-task">Build + aloud</div><div class="day-time">45m + 45m</div></div>
+    <div class="day-card"><div class="day-name">Sat</div><div class="day-task">Deep session</div><div class="day-time">2–3 hours</div></div>
+    <div class="day-card day-rest"><div class="day-name">Sun</div><div class="day-task">Complete rest</div><div class="day-time">No prep</div></div>
+  </div>
+  <div class="win" style="margin-top:10px">3 non-negotiable habits: (1) Open VS Code every day even 20 min. (2) Say one answer ALOUD every evening. (3) Commit to GitHub every day you write code.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SQL PATTERNS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="sql-patterns">
+  <div class="sec-hdr"><div class="sec-icon si-b">🔷</div><div><div class="sec-title">SQL Patterns</div><div class="sec-desc">Every question maps to one of 5 patterns — identify the pattern first, then apply the template</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">Pattern A</span><span class="card-title">Activity in a time window — "visited >3 times in 7 days", "purchased once in 30 days"</span><div class="card-acts"><button class="spk-btn" onclick="spk('pa',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="pa">
+    <div class="p">Keywords: "in last X days", "at least once in", "more than N times". Tool: WHERE date >= TODAY minus X, then GROUP BY + HAVING.</div>
+    <div class="cw"><code class="code">-- Users who visited more than 3 times in last 7 days
+SELECT user_id, COUNT(*) AS visits
+FROM visits
+WHERE visit_date >= CURRENT_DATE - 7   -- the window
+GROUP BY user_id
+HAVING COUNT(*) > 3;                   -- the threshold
+
+-- "At least once" = simpler, just DISTINCT
+SELECT DISTINCT user_id FROM orders
+WHERE order_date >= CURRENT_DATE - 30;</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">PySpark</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import current_date, datediff, count
+
+df.filter(datediff(current_date(), col("visit_date")) <= 7) \
+  .groupBy("user_id").agg(count("*").alias("visits")) \
+  .filter(col("visits") > 3)</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="tip">HAVING COUNT(*) > 3 means MORE than 3. HAVING COUNT(*) >= 3 means 3 OR MORE. Know the difference — interviews test this specifically.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-a">Pattern B</span><span class="card-title">Absence / inactivity — "not logged in 3 days", "no order in 6 months"</span><div class="card-acts"><button class="spk-btn" onclick="spk('pb',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="pb">
+    <div class="p">Mental model: ALL users MINUS users who were ACTIVE in the window. Tool: LEFT JOIN + IS NULL. In PySpark: left_anti join.</div>
+    <div class="cw"><code class="code">-- Users NOT logged in for last 3 days
+SELECT u.user_id
+FROM users u
+LEFT JOIN logins l
+  ON u.user_id = l.user_id
+  AND l.login_date >= CURRENT_DATE - 3
+WHERE l.user_id IS NULL;   -- NULL = no match = inactive</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">PySpark — left_anti join</div>
+    <div class="cw"><code class="code">recent = logins_df \
+    .filter(datediff(current_date(), col("login_date")) <= 3) \
+    .select("user_id").distinct()
+
+# left_anti = keep rows from LEFT with NO match on RIGHT
+users_df.join(recent, "user_id", "left_anti")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="win">LEFT JOIN + IS NULL equals left_anti join in PySpark. Same result, cleaner syntax. Know both.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-p">Pattern C</span><span class="card-title">Consecutive days — "logged in 3 consecutive days", "orders on consecutive days"</span><div class="card-acts"><button class="spk-btn" onclick="spk('pc',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="pc">
+    <div class="p">The trick: date minus ROW_NUMBER stays the SAME value for consecutive dates. When there is a gap, the value changes. Group by that value and count — if count >= N, you have a streak.</div>
+    <div class="cw"><code class="code">WITH daily AS (
+  -- Step 1: dedup to one row per user per day (CRITICAL)
+  SELECT user_id, CAST(login_date AS DATE) AS day
+  FROM logins GROUP BY user_id, CAST(login_date AS DATE)
+),
+with_streak AS (
+  -- Step 2: date minus row_number = same value for consecutive dates
+  SELECT user_id, day,
+    DATE_SUB(day,
+      ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY day)
+    ) AS streak_group
+  FROM daily
+)
+-- Step 3: count per streak group, keep >= N consecutive days
+SELECT DISTINCT user_id
+FROM with_streak
+GROUP BY user_id, streak_group
+HAVING COUNT(*) >= 3;</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">PySpark</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import row_number, date_sub, to_date
+from pyspark.sql.window import Window
+
+daily = df.withColumn("day", to_date("login_date")) \
+          .select("user_id","day").distinct()
+
+w = Window.partitionBy("user_id").orderBy("day")
+daily.withColumn("rn", row_number().over(w)) \
+     .withColumn("sg", date_sub("day", col("rn").cast("int"))) \
+     .groupBy("user_id","sg").agg(count("*").alias("days")) \
+     .filter(col("days") >= 3).select("user_id").distinct()</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="tip">Step 1 dedup is the most commonly forgotten step. If a user logs in twice on the same day, row numbers break. Always dedup to DATE level first.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-g">Pattern D</span><span class="card-title">Top N per group — "top 3 employees per dept", "2nd highest salary"</span><div class="card-acts"><button class="spk-btn" onclick="spk('pd',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="pd">
+    <div class="cw"><code class="code">-- 2nd highest salary per department
+WITH ranked AS (
+  SELECT name, dept, salary,
+    DENSE_RANK() OVER (
+      PARTITION BY dept
+      ORDER BY salary DESC
+    ) AS rnk
+  FROM employees
+)
+SELECT name, dept, salary FROM ranked WHERE rnk = 2;
+
+-- Top 3 per department
+SELECT * FROM ranked WHERE rnk <= 3;</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"I use DENSE_RANK partitioned by department, ordered by salary descending. DENSE_RANK handles ties correctly. I wrap it in a CTE because you cannot filter on a window function in the same SELECT — that is a common mistake."</div></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Pattern E</span><span class="card-title">Running calculations — running total, moving average, cumulative sum</span><div class="card-acts"><button class="spk-btn" onclick="spk('pe',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="pe">
+    <div class="cw"><code class="code">-- Running total
+SELECT date, sales,
+  SUM(sales) OVER (
+    ORDER BY date
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ) AS running_total
+FROM daily_sales;
+
+-- 7-day moving average
+SELECT date, revenue,
+  AVG(revenue) OVER (
+    ORDER BY date
+    ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+  ) AS moving_avg_7d
+FROM daily_revenue;</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">PySpark</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import sum as sum_, avg
+from pyspark.sql.window import Window
+
+# Running total
+w = Window.orderBy("date").rowsBetween(Window.unboundedPreceding, Window.currentRow)
+df.withColumn("running_total", sum_("sales").over(w))
+
+# 7-day moving average
+w7 = Window.orderBy("date").rowsBetween(-6, 0)
+df.withColumn("moving_avg_7d", avg("revenue").over(w7))</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="tip">Always specify ROWS BETWEEN explicitly in PySpark. The default RANGE BETWEEN can give unexpected results with duplicate values.</div>
+  </div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     DATE PATTERNS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="date-patterns">
+  <div class="sec-hdr"><div class="sec-icon si-a">📅</div><div><div class="sec-title">Date Query Patterns</div><div class="sec-desc">All date-based questions are one of these 3 patterns — label it first</div></div></div>
+  <div class="info">When you see a date question — ask: is it about ACTIVITY (Pattern A), ABSENCE (Pattern B), or CONSECUTIVE days (Pattern C)? That one label tells you exactly which template to use.</div>
+
+  <div class="card" style="margin-top:12px"><div class="card-head" onclick="tog(this)"><span class="tag t-g">Combined</span><span class="card-title">Users: visited >3 times AND purchased in 30d AND not contacted in 14d</span><div class="card-acts"><button class="spk-btn" onclick="spk('date-combo',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="date-combo">
+    <div class="p">Multiple conditions: break into separate CTEs, one per condition, then JOIN them together.</div>
+    <div class="cw"><code class="code">WITH frequent AS (
+  SELECT user_id FROM visits
+  WHERE visit_date >= CURRENT_DATE - 7
+  GROUP BY user_id HAVING COUNT(*) > 3        -- Pattern A
+),
+buyers AS (
+  SELECT DISTINCT user_id FROM orders
+  WHERE order_date >= CURRENT_DATE - 30       -- Pattern A
+),
+contacted AS (
+  SELECT DISTINCT user_id FROM contacts
+  WHERE contact_date >= CURRENT_DATE - 14     -- Pattern B (to EXCLUDE)
+)
+SELECT f.user_id
+FROM frequent f
+INNER JOIN buyers b ON f.user_id = b.user_id
+LEFT JOIN contacted c ON f.user_id = c.user_id
+WHERE c.user_id IS NULL;                      -- NOT in contacted</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">PySpark</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import current_date, datediff
+
+frequent  = visits.filter(datediff(current_date(),"visit_date")<=7) \
+                  .groupBy("user_id").count().filter(col("count")>3)
+buyers    = orders.filter(datediff(current_date(),"order_date")<=30) \
+                  .select("user_id").distinct()
+contacted = contacts.filter(datediff(current_date(),"contact_date")<=14) \
+                    .select("user_id").distinct()
+
+frequent.join(buyers,"user_id") \
+        .join(contacted,"user_id","left_anti")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+  </div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     WINDOW FUNCTIONS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="window-fns">
+  <div class="sec-hdr"><div class="sec-icon si-c">🪟</div><div><div class="sec-title">Window Functions</div><div class="sec-desc">GROUP BY collapses rows — window functions keep ALL rows and add a new column</div></div></div>
+  <div class="tip" style="margin-bottom:12px">Core: FUNCTION() OVER (PARTITION BY col ORDER BY col ROWS BETWEEN ...). PARTITION BY = restart per group. ORDER BY = define sequence.</div>
+
+  <div class="tbl"><table>
+    <tr><th>Function</th><th>What it does</th><th>When to use</th><th>PySpark</th></tr>
+    <tr><td><code>ROW_NUMBER()</code></td><td>Unique 1,2,3 — no ties</td><td>Deduplication — keep one row per key</td><td><code>row_number().over(w)</code></td></tr>
+    <tr><td><code>RANK()</code></td><td>Ties same, gaps after</td><td>Avoid — use DENSE_RANK instead</td><td><code>rank().over(w)</code></td></tr>
+    <tr><td><code>DENSE_RANK()</code></td><td>Ties same, NO gaps</td><td>Nth highest salary, Top N per group</td><td><code>dense_rank().over(w)</code></td></tr>
+    <tr><td><code>LAG(col,n)</code></td><td>Value from n rows before</td><td>Day-over-day change, previous row</td><td><code>lag("col",1).over(w)</code></td></tr>
+    <tr><td><code>LEAD(col,n)</code></td><td>Value from n rows after</td><td>Gap detection, next value</td><td><code>lead("col",1).over(w)</code></td></tr>
+    <tr><td><code>AVG() OVER</code></td><td>Group avg per row</td><td>Compare each row to dept average</td><td><code>avg("col").over(w)</code></td></tr>
+    <tr><td><code>SUM() OVER</code></td><td>Running/group sum</td><td>Cumulative totals</td><td><code>sum_("col").over(w)</code></td></tr>
+    <tr><td><code>NTILE(n)</code></td><td>Divide into N buckets</td><td>Quartiles (4), percentiles (100)</td><td><code>ntile(4).over(w)</code></td></tr>
+  </table></div>
+
+  <div class="card" style="margin-top:10px"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Employees earning more than their department average — the classic window function interview question</span><div class="card-acts"><button class="spk-btn" onclick="spk('wf-dept',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="wf-dept">
+    <div class="cw"><code class="code">WITH dept_avgs AS (
+  SELECT *,
+    AVG(salary) OVER (PARTITION BY dept) AS dept_avg
+  FROM employees
+)
+SELECT name, dept, salary,
+       ROUND(dept_avg, 0) AS dept_avg,
+       ROUND(salary - dept_avg, 0) AS above_by
+FROM dept_avgs
+WHERE salary > dept_avg
+ORDER BY above_by DESC;</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">PySpark</div>
+    <div class="cw"><code class="code">from pyspark.sql.window import Window
+from pyspark.sql.functions import avg
+
+w = Window.partitionBy("dept")
+df.withColumn("dept_avg", avg("salary").over(w)) \
+  .filter(col("salary") > col("dept_avg"))</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"GROUP BY would collapse all employees into one row per department. Window function calculates the dept average for each row without collapsing. This lets me compare each employee's salary to their department average in one query."</div></div>
+  </div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PYSPARK CORE
+══════════════════════════════════════════════════════ -->
+<div class="section" id="pyspark-ops">
+  <div class="sec-hdr"><div class="sec-icon si-b">⚡</div><div><div class="sec-title">PySpark Core Operations</div><div class="sec-desc">Operations you use in every pipeline — know these cold</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">Core</span><span class="card-title">collect()[0][0] — getting a single value out of a DataFrame</span><div class="card-acts"><button class="spk-btn" onclick="spk('collect',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="collect">
+    <div class="p">PySpark never gives a plain number directly. Everything stays as a DataFrame until you pull it out with collect(). Then index like a nested list.</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import avg, max, min
+
+# Step by step:
+df.agg(avg("salary"))          # still a DataFrame (a table)
+df.agg(avg("salary")).collect() # list → [Row(avg(salary)=66400.0)]
+df.agg(avg("salary")).collect()[0]  # Row(avg(salary)=66400.0)
+df.agg(avg("salary")).collect()[0][0]  # 66400.0 ← plain float
+
+# Multiple aggregates — access by name (safer)
+result = df.agg(
+    avg("salary").alias("avg_sal"),
+    max("salary").alias("max_sal")
+).collect()[0]
+print(result["avg_sal"])   # access by name not position</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="win">Use result["column_name"] not result[0] when getting multiple values. If you reorder aggregations, position indexing silently returns the wrong value.</div>
+  </div></div></div>
+</div>
+<!-- ══════════════════════════════════════════════════════
+     8 BUCKETS MAP
+══════════════════════════════════════════════════════ -->
+<div class="section" id="buckets-map">
+  <div class="sec-hdr"><div class="sec-icon si-p">🪣</div><div><div class="sec-title">The 8 Interview Buckets</div><div class="sec-desc">Every AWS/DE question maps to one of these — label it first, answer second</div></div></div>
+  <div class="info" style="margin-bottom:14px">When a question arrives — stop and label the bucket. "That is a Bucket 2 performance question." That one habit stops the blank-out under pressure.</div>
+  <div class="bucket-grid">
+    <div class="bucket" onclick="goTo('b1')"><div class="b-num">1</div><div class="b-title">Reading Files</div><div class="b-phrase">"Define schema, never infer"</div><div class="b-qs">Parquet/CSV/JSON, corrupt files, read modes, schema changes, small files</div><span class="b-cnt">6 questions</span></div>
+    <div class="bucket" onclick="goTo('b2')"><div class="b-num">2</div><div class="b-title">Performance</div><div class="b-phrase">"Broadcast first, salt if both large"</div><div class="b-qs">Skewed data, salting, broadcast join, cache vs persist, partitioning, bucketing</div><span class="b-cnt">5 questions</span></div>
+    <div class="bucket" onclick="goTo('b3')"><div class="b-num">3</div><div class="b-title">Incremental</div><div class="b-phrase">"Idempotent — run twice, same result"</div><div class="b-qs">Incremental files, late data, Glue bookmarks, latest partition, watermarks</div><span class="b-cnt">5 questions</span></div>
+    <div class="bucket" onclick="goTo('b4')"><div class="b-num">4</div><div class="b-title">Data Quality</div><div class="b-phrase">"fail_reason column — tag every bad row"</div><div class="b-qs">4 quality layers, valid/corrupt split, duplicates, S3 logs analysis, alerting</div><span class="b-cnt">5 questions</span></div>
+    <div class="bucket" onclick="goTo('b5')"><div class="b-num">5</div><div class="b-title">AWS Glue</div><div class="b-phrase">"Doors=DynamicFrame, inside=DataFrame"</div><div class="b-qs">DynamicFrame vs DataFrame, Glue Catalog, schema evolution, bookmarks, job.commit()</div><span class="b-cnt">6 questions</span></div>
+    <div class="bucket" onclick="goTo('b6')"><div class="b-num">6</div><div class="b-title">Lambda</div><div class="b-phrase">"Lambda detects and delegates"</div><div class="b-qs">Cold start, timeout, memory=CPU, S3 trigger, scheduler, 15-min limit</div><span class="b-cnt">5 questions</span></div>
+    <div class="bucket" onclick="goTo('b7')"><div class="b-num">7</div><div class="b-title">Delta Lake</div><div class="b-phrase">"Parquet plus _delta_log folder"</div><div class="b-qs">Delta vs Parquet, MERGE upsert, time travel, schema evolution, OPTIMIZE+ZORDER</div><span class="b-cnt">6 questions</span></div>
+    <div class="bucket" onclick="goTo('b8')"><div class="b-num">8</div><div class="b-title">Reliability</div><div class="b-phrase">"Idempotent, quarantine, restore, prevent"</div><div class="b-qs">Job failures, alerting, Kinesis, CI/CD, end-to-end design, recovery playbook</div><span class="b-cnt">6 questions</span></div>
+  </div>
+</div>
+
+<!-- B1 -->
+<div class="section" id="b1">
+  <div class="sec-hdr"><div class="sec-icon si-b">1️⃣</div><div><div class="sec-title">Bucket 1 — Reading Files</div><div class="sec-desc">Parquet vs CSV vs JSON · corrupt files · schema changes · small files</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">How do you handle a corrupt file in S3?</span><div class="card-acts"><button class="spk-btn" onclick="spk('b1q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b1q1">
+    <div class="cw"><code class="code">from pyspark.sql.functions import col, input_file_name, current_timestamp
+
+df = spark.read \
+    .option("mode", "PERMISSIVE") \
+    .option("columnNameOfCorruptRecord", "_corrupt_record") \
+    .schema(schema).json("s3://bucket/raw/")
+
+valid_df = df.filter(col("_corrupt_record").isNull()).drop("_corrupt_record")
+bad_df   = df.filter(col("_corrupt_record").isNotNull()) \
+             .withColumn("source_file", input_file_name()) \
+             .withColumn("flagged_at", current_timestamp())
+
+valid_df.write.mode("append").parquet("s3://bucket/processed/")
+bad_df.write.mode("append").json("s3://bucket/quarantine/")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"PERMISSIVE captures bad rows in _corrupt_record. I split into valid and bad DataFrames — valid to processed, bad to quarantine with source file and timestamp. I alert if bad rate exceeds 5%."</div></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Small files — Glue writing thousands of tiny files, how to fix</span><div class="card-acts"><button class="spk-btn" onclick="spk('b1q2',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b1q2">
+    <div class="cw"><code class="code"># coalesce — reduce partitions, no full shuffle (cheaper)
+df.coalesce(8).write.parquet("s3://bucket/output/")
+
+# repartition — full shuffle, even distribution
+df.repartition(8).write.parquet("s3://bucket/output/")
+
+# Delta OPTIMIZE — compacts files automatically
+spark.sql("OPTIMIZE delta.`s3://bucket/delta/orders/`")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Small files happen because Spark keeps too many partitions after filtering. I use coalesce before writing — no full shuffle so cheaper. Target 128–256MB per file. For Delta I run OPTIMIZE periodically."</div></div>
+  </div></div></div>
+</div>
+
+<!-- B2 -->
+<div class="section" id="b2">
+  <div class="sec-hdr"><div class="sec-icon si-r">2️⃣</div><div><div class="sec-title">Bucket 2 — Performance</div><div class="sec-desc">Skew · broadcast join · salting · cache vs persist · partitioning</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Skewed data — detect it and fix it with salting or broadcast join</span><div class="card-acts"><button class="spk-btn" onclick="spk('b2q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b2q1">
+    <div class="cw"><code class="code">from pyspark.sql.functions import broadcast, rand, concat, lit, array, explode
+
+# Fix 1: broadcast (small table under 50MB)
+result = df_large.join(broadcast(df_small), "country")
+
+# Fix 2: salting (both tables large)
+SALT = 10
+df_large = df_large \
+    .withColumn("salt", (rand()*SALT).cast("int").cast("string")) \
+    .withColumn("key", concat(col("country"),lit("_"),col("salt")))
+df_small = df_small \
+    .withColumn("salts", array([lit(str(i)) for i in range(SALT)])) \
+    .withColumn("salt", explode("salts")) \
+    .withColumn("key", concat(col("country"),lit("_"),col("salt"))) \
+    .drop("salts","salt")
+result = df_large.join(df_small,"key").drop("key","salt")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Skew means one partition has far more data — like 80% of rows being country=US. I detect it by checking partition sizes. Broadcast join if one table is small. Salting if both are large — adds a random suffix to spread the hot key across partitions."</div></div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-a">Important</span><span class="card-title">Cache vs Persist — and the lazy evaluation trap</span><div class="card-acts"><button class="spk-btn" onclick="spk('b2q2',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b2q2">
+    <div class="cw"><code class="code">from pyspark import StorageLevel
+
+df.cache()  # = persist(MEMORY_AND_DISK)
+df.persist(StorageLevel.MEMORY_ONLY)
+df.persist(StorageLevel.MEMORY_AND_DISK)
+
+# PATTERN: cache, trigger, use, unpersist
+df_active = df.filter(col("status")=="active").cache()
+count = df_active.count()         # TRIGGERS caching (lazy!)
+agg   = df_active.groupBy("dept").count()
+df_active.unpersist()             # FREE memory when done</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"cache() is shorthand for persist with MEMORY_AND_DISK. Cache is LAZY — nothing happens until an action triggers it. I always call .count() right after to force it into memory. I always unpersist when done — uncleaned caches eat RAM for the rest of the job."</div></div>
+  </div></div></div>
+</div>
+
+<!-- B3 -->
+<div class="section" id="b3">
+  <div class="sec-hdr"><div class="sec-icon si-a">3️⃣</div><div><div class="sec-title">Bucket 3 — Incremental Processing</div><div class="sec-desc">Process only NEW data · watermarks · Glue bookmarks · late data</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">3 approaches to incremental processing — partition filter, watermark, Glue bookmarks</span><div class="card-acts"><button class="spk-btn" onclick="spk('b3q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b3q1">
+    <div class="cw"><code class="code">from datetime import date, timedelta
+import json, boto3
+
+# Approach 1: partition filter (simplest)
+today = date.today().strftime("%Y-%m-%d")
+df = spark.read.parquet("s3://bucket/events/") \
+    .filter(col("dt") == today)
+
+# Approach 2: DynamoDB watermark
+def get_watermark(job):
+    r = dynamodb.Table("watermarks").get_item(Key={"job_name":job})
+    return r.get("Item",{}).get("last_ts","1970-01-01")
+def save_watermark(job, ts):
+    dynamodb.Table("watermarks").put_item(Item={"job_name":job,"last_ts":str(ts)})
+
+last_ts = get_watermark("orders_pipeline")
+df = spark.read.parquet("s3://bucket/orders/").filter(col("updated_at") > last_ts)
+# ... process ... write ...
+new_ts = df.agg(max_("updated_at")).collect()[0][0]
+save_watermark("orders_pipeline", new_ts)  # AFTER successful write
+
+# Approach 3: Glue Job Bookmarks
+# Enable in Glue config: --job-bookmark-option = job-bookmark-enable
+# Add transformation_ctx="step_name" to every step
+# End with: job.commit()</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Three approaches: partition filter for date-partitioned S3, watermark in DynamoDB for tables with updated_at, or Glue Job Bookmarks where AWS manages state. I always save the watermark AFTER a successful write — not before. If I save before and the write fails, those records are skipped forever."</div></div>
+  </div></div></div>
+</div>
+
+<!-- B4 -->
+<div class="section" id="b4">
+  <div class="sec-hdr"><div class="sec-icon si-g">4️⃣</div><div><div class="sec-title">Bucket 4 — Data Quality</div><div class="sec-desc">4 quality layers · quarantine pattern · fail_reason · alerting</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Separate valid and invalid records — the quarantine pattern with fail_reason</span><div class="card-acts"><button class="spk-btn" onclick="spk('b4q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b4q1">
+    <div class="cw"><code class="code">from pyspark.sql.functions import when, lit, col, current_timestamp, input_file_name
+
+# Tag each bad row with WHY it failed
+rules = {
+    "null_patient_id":  col("patient_id").isNull() | (col("patient_id")==""),
+    "null_encounter":   col("encounter_id").isNull(),
+    "future_date":      col("admission_date") > current_date(),
+    "negative_bill":    col("bill_amount").cast("double") < 0,
+}
+fail_condition = lit(None).cast("string")
+for name, condition in rules.items():
+    fail_condition = when(condition, lit(name)).otherwise(fail_condition)
+
+df = df.withColumn("fail_reason", fail_condition)
+
+# Split
+valid_df = df.filter(col("fail_reason").isNull()).drop("fail_reason")
+bad_df   = df.filter(col("fail_reason").isNotNull()) \
+             .withColumn("source_file", input_file_name()) \
+             .withColumn("flagged_at", current_timestamp())
+
+# Show bad breakdown
+bad_df.groupBy("fail_reason").count().show()
+
+# Write each zone
+valid_df.write.mode("append").parquet("s3://processed/")
+bad_df.write.mode("append").json("s3://quarantine/")
+
+# Alert if bad rate too high
+if bad_df.count() / df.count() > 0.05:
+    print("ALERT: Bad rate > 5%")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"I use the quarantine pattern. Each bad row is tagged with a fail_reason column explaining exactly why it failed. Valid records continue. Bad records go to quarantine with source file and timestamp. The fail_reason tells whoever investigates exactly what went wrong."</div></div>
+  </div></div></div>
+</div>
+
+<!-- B5 -->
+<div class="section" id="b5">
+  <div class="sec-hdr"><div class="sec-icon si-p">5️⃣</div><div><div class="sec-title">Bucket 5 — AWS Glue</div><div class="sec-desc">DynamicFrame vs DataFrame · Glue Catalog · schema evolution · bookmarks</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Full Glue job pattern — DynamicFrame for doors, DataFrame for everything inside</span><div class="card-acts"><button class="spk-btn" onclick="spk('b5q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b5q1">
+    <div class="cw"><code class="code">from awsglue.dynamicframe import DynamicFrame
+
+# Read from Glue Catalog as DynamicFrame
+dyf = glueContext.create_dynamic_frame.from_catalog(
+    database="my_db",
+    table_name="raw_orders",
+    push_down_predicate="dt >= '2024-01-01'",  # filter at read time
+    transformation_ctx="raw_orders"             # REQUIRED for bookmarks
+)
+
+# Convert IMMEDIATELY to DataFrame for all transforms
+df = dyf.toDF()
+df = df.filter(col("status")=="active").withColumn("year", year("order_date"))
+
+# Convert back ONLY for output
+dyf_out = DynamicFrame.fromDF(df, glueContext, "output")
+glueContext.write_dynamic_frame.from_options(
+    frame=dyf_out,
+    connection_type="s3",
+    connection_options={"path":"s3://bucket/processed/"},
+    format="parquet",
+    transformation_ctx="output"
+)
+
+job.commit()  # CRITICAL — without this bookmarks never advance</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"DynamicFrame for the doors, DataFrame for everything inside. I add transformation_ctx to every step — required for bookmarks to work. I always end with job.commit() — without it bookmarks never advance and every run reprocesses all files."</div></div>
+  </div></div></div>
+</div>
+
+<!-- B6 -->
+<div class="section" id="b6">
+  <div class="sec-hdr"><div class="sec-icon si-a">6️⃣</div><div><div class="sec-title">Bucket 6 — Lambda</div><div class="sec-desc">Cold start · timeout · memory=CPU · Lambda detects and delegates</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-a">Core Pattern</span><span class="card-title">Production Lambda — cold start fix, timeout handling, optimised structure</span><div class="card-acts"><button class="spk-btn" onclick="spk('b6q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b6q1">
+    <div class="cw"><code class="code">import boto3, os
+
+# OUTSIDE handler — initialised ONCE, reused on warm calls
+s3_client    = boto3.client("s3")
+glue_client  = boto3.client("glue")
+sns_client   = boto3.client("sns")
+JOB_NAME     = os.environ["GLUE_JOB_NAME"]  # env vars not hardcoded
+SNS_TOPIC    = os.environ["SNS_TOPIC_ARN"]
+
+def lambda_handler(event, context):
+    try:
+        bucket = event["Records"][0]["s3"]["bucket"]["name"]
+        key    = event["Records"][0]["s3"]["object"]["key"]
+        if not key.startswith("raw/orders/"):
+            return {"status": "skipped"}
+        response = glue_client.start_job_run(
+            JobName=JOB_NAME,
+            Arguments={"--input_path": f"s3://{bucket}/{key}"}
+        )
+        return {"status":"triggered","job_run_id":response["JobRunId"]}
+    except Exception as e:
+        sns_client.publish(TopicArn=SNS_TOPIC,
+            Subject="Lambda failure", Message=str(e))
+        raise  # re-raise so CloudWatch also sees the failure</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Lambda has a 15-minute hard limit so I never do heavy processing there. Lambda detects events and delegates — it spots a new S3 file and triggers Glue. Clients initialised outside the handler run once and reuse on warm calls. I always re-raise after sending the SNS alert so CloudWatch also sees the failure."</div></div>
+    <div class="tip">1,769 MB is the Lambda memory setting that gives one full vCPU. More RAM = more CPU in Lambda — there is no separate CPU setting. Mentioning this number shows real Lambda knowledge.</div>
+  </div></div></div>
+</div>
+
+<!-- B7 -->
+<div class="section" id="b7">
+  <div class="sec-hdr"><div class="sec-icon si-c">7️⃣</div><div><div class="sec-title">Bucket 7 — Delta Lake</div><div class="sec-desc">Parquet + _delta_log · MERGE · time travel · schema evolution · OPTIMIZE</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Delta Lake vs Parquet — and the MERGE upsert pattern</span><div class="card-acts"><button class="spk-btn" onclick="spk('b7q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b7q1">
+    <div class="cw"><code class="code">from delta.tables import DeltaTable
+
+# Write Delta
+df.write.format("delta").mode("overwrite").save("s3://bucket/delta/orders/")
+
+# MERGE — upsert: update if exists, insert if new (atomic)
+target = DeltaTable.forPath(spark, "s3://bucket/delta/orders/")
+target.alias("t").merge(
+    updates_df.alias("s"),
+    "t.order_id = s.order_id"
+).whenMatchedUpdateAll() \
+ .whenNotMatchedInsertAll() \
+ .execute()
+
+# Time travel — query past version
+df_old = spark.read.format("delta") \
+    .option("timestampAsOf","2024-01-14") \
+    .load("s3://bucket/delta/orders/")
+
+# Rollback after bad job
+DeltaTable.forPath(spark,"s3://bucket/delta/orders/").restoreToVersion(12)</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Delta Lake is Parquet files plus a _delta_log folder. That transaction log gives ACID, MERGE for upserts, time travel, and schema evolution. Plain Parquet for simple append-only pipelines. Delta when I need updates, corrections, or full history."</div></div>
+  </div></div></div>
+</div>
+
+<!-- B8 -->
+<div class="section" id="b8">
+  <div class="sec-hdr"><div class="sec-icon si-r">8️⃣</div><div><div class="sec-title">Bucket 8 — Pipeline Reliability</div><div class="sec-desc">Idempotency · quarantine · recovery · Kinesis · CI/CD · alerting</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Top Asked</span><span class="card-title">Job fails halfway through — and end-to-end pipeline design</span><div class="card-acts"><button class="spk-btn" onclick="spk('b8q1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="b8q1">
+    <div class="p">Key word: idempotent — running the pipeline twice gives the same result as running it once.</div>
+    <div class="cw"><code class="code"># Idempotent write — overwrite same partition on rerun
+df.write.mode("overwrite").partitionBy("event_date") \
+    .parquet("s3://bucket/processed/")
+
+# 5-layer pipeline design template
+# 1. Ingestion:  S3 file drop → Lambda trigger → Glue job
+# 2. Storage:    raw/ (CSV) → processed/ (Parquet) → serving/ (Redshift/Athena)
+# 3. Processing: Glue ETL batch | Spark Streaming real-time
+# 4. Serving:    Athena ad-hoc | Redshift dashboards | DynamoDB app queries
+# 5. Monitoring: CloudWatch → SNS → team alert within minutes
+
+# Recovery playbook
+# 1. Detect: CloudWatch alarm → SNS alert
+# 2. Assess: check Glue logs — infra failure or data issue?
+# 3. Fix:    retry (idempotent) OR restoreToVersion (Delta)
+# 4. Verify: row count source == destination
+# 5. Prevent: add to unit tests + data quality checks</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Idempotency is the key — partition overwrite mode means rerunning never creates duplicates. I have two alerting layers: code alerts for business logic failures like bad rate over 5%, and CloudWatch alarms for infrastructure failures. After any failure I fix it AND add it to unit tests so it cannot happen silently again."</div></div>
+  </div></div></div>
+</div>
+
+<!-- KEY PHRASES -->
+<div class="section" id="key-phrases">
+  <div class="sec-hdr"><div class="sec-icon si-g">⭐</div><div><div class="sec-title">Key Phrases Cheatsheet</div><div class="sec-desc">One phrase per bucket — say these in EVERY answer for that bucket</div></div></div>
+  <div class="phrase-grid">
+    <div class="phrase-card"><div class="phrase-sec">Bucket 1 — Files</div><div class="phrase-text">"Define schema, never infer"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 2 — Performance</div><div class="phrase-text">"Broadcast first, salt if both large"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 3 — Incremental</div><div class="phrase-text">"Idempotent — run twice, same result"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 4 — Data Quality</div><div class="phrase-text">"fail_reason column — tag every bad row"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 5 — Glue</div><div class="phrase-text">"Doors = DynamicFrame, inside = DataFrame"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 6 — Lambda</div><div class="phrase-text">"Lambda detects and delegates"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 7 — Delta Lake</div><div class="phrase-text">"Parquet plus _delta_log folder"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Bucket 8 — Reliability</div><div class="phrase-text">"Idempotent, quarantine, restore, prevent"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">System Design</div><div class="phrase-text">"Clarify SLA — batch or streaming?"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Window Functions</div><div class="phrase-text">"PARTITION BY restarts per group"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Consecutive days</div><div class="phrase-text">"date minus row_number = streak group"</div></div>
+    <div class="phrase-card"><div class="phrase-sec">Career change</div><div class="phrase-text">"CX showed me why — DE lets me build"</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SYSTEM DESIGN
+══════════════════════════════════════════════════════ -->
+<div class="section" id="sd-foundations">
+  <div class="sec-hdr"><div class="sec-icon si-p">🏗</div><div><div class="sec-title">System Design Foundations</div><div class="sec-desc">The 5-step framework and 10 core terms — every SD question uses these</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Must Know</span><span class="card-title">The 5-step framework — say this structure every single time</span><div class="card-acts"><button class="spk-btn" onclick="spk('sd-fw',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="sd-fw">
+    <div class="mrow"><span class="mk">1. Clarify</span><span class="mv">Ask BEFORE drawing. Batch or streaming? Volume? Who consumes? SLA for freshness?</span></div>
+    <div class="mrow"><span class="mk">2. Estimate scale</span><span class="mv">Do the math aloud. "500k vehicles × 1 event/30sec = 17,000 events/sec". Determines tools.</span></div>
+    <div class="mrow"><span class="mk">3. Design 5 layers</span><span class="mv">Ingestion → Storage → Processing → Serving → Monitoring. Walk through each.</span></div>
+    <div class="mrow"><span class="mk">4. Trade-offs</span><span class="mv">Why this over that? Cost vs latency? What changes at 10x scale?</span></div>
+    <div class="mrow"><span class="mk">5. Failure handling</span><span class="mv">Job fails halfway? Corrupt file? Late data? Always address these.</span></div>
+    <div class="say"><div class="say-l">Open every system design answer</div><div class="say-t">"Before I design anything — is this batch or real-time? What is the data volume per day? Who are the downstream consumers? And what is the SLA for data freshness?"</div></div>
+    <div class="tip">Never start drawing without asking at least 2 clarifying questions. Interviewers deliberately leave requirements vague. Jumping straight to an answer is a red flag.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">10 Terms</span><span class="card-title">Data lake, warehouse, lakehouse, ETL vs ELT, SLA, idempotency, OLAP, Lambda Architecture</span><div class="card-acts"><button class="spk-btn" onclick="spk('sd-terms',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="sd-terms">
+    <div class="mrow"><span class="mk">Data Lake</span><span class="mv">S3, raw original format, never delete. Your insurance policy — always reprocessable.</span></div>
+    <div class="mrow"><span class="mk">Data Warehouse</span><span class="mv">Redshift/Snowflake. Structured, query-optimised, pre-aggregated. Fast for dashboards.</span></div>
+    <div class="mrow"><span class="mk">Data Lakehouse</span><span class="mv">S3 storage + warehouse features via Delta Lake or Iceberg. Best of both worlds.</span></div>
+    <div class="mrow"><span class="mk">ETL vs ELT</span><span class="mv">ETL: transform before loading (old). ELT: load raw then transform in warehouse (modern).</span></div>
+    <div class="mrow"><span class="mk">SLA</span><span class="mv">"Dashboard must show data within 1 hour." Drives batch vs streaming choice.</span></div>
+    <div class="mrow"><span class="mk">Idempotency</span><span class="mv">Running twice = same result. Partition overwrite or Delta MERGE achieves this.</span></div>
+    <div class="mrow"><span class="mk">Lineage</span><span class="mv">Where data came from and what transformed it. Used for debugging and compliance.</span></div>
+    <div class="mrow"><span class="mk">OLAP vs OLTP</span><span class="mv">OLTP: operational (MySQL). OLAP: analytical (Redshift, Athena). DE works with OLAP.</span></div>
+    <div class="mrow"><span class="mk">Lambda Architecture</span><span class="mv">Batch layer (history) + Speed layer (real-time) + merged at serving. Most production systems.</span></div>
+    <div class="mrow"><span class="mk">Partition pruning</span><span class="mv">Athena skips S3 folders that don't match WHERE clause. Requires dt= folder format.</span></div>
+  </div></div></div>
+</div>
+
+<!-- SD HEALTHCARE -->
+<div class="section" id="sd-healthcare">
+  <div class="sec-hdr"><div class="sec-icon si-r">🏥</div><div><div class="sec-title">Healthcare Case Study — Patient Readmission Platform</div><div class="sec-desc">50 hospitals · 5,000 admissions/day · real-time discharge alerts · HIPAA compliant</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">Architecture</span><span class="card-title">Full pipeline design with HIPAA compliance layers</span><div class="card-acts"><button class="spk-btn" onclick="spk('sd-hc',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="sd-hc">
+    <div class="lbl">Real-time path (discharge alerts within 15 min)</div>
+    <div class="flow"><div class="fb">EHR discharge event</div><div class="fa">→</div><div class="fb">Kinesis Streams</div><div class="fa">→</div><div class="fb">Spark Streaming</div><div class="fa">→</div><div class="fb">DynamoDB alert</div><div class="fa">→</div><div class="fb">SNS clinical team</div></div>
+    <div class="lbl">Batch path (daily analytics)</div>
+    <div class="flow"><div class="fb">EHR daily export</div><div class="fa">→</div><div class="fb">S3 raw (KMS)</div><div class="fa">→</div><div class="fb">Glue ETL</div><div class="fa">→</div><div class="fb">Delta processed</div><div class="fa">→</div><div class="fb">Athena / Redshift</div></div>
+    <div class="lbl">HIPAA compliance — always mention these</div>
+    <div class="mrow"><span class="mk">Encryption</span><span class="mv">S3 SSE-KMS at rest. HTTPS/TLS in transit. VPC endpoints — no public internet access.</span></div>
+    <div class="mrow"><span class="mk">Access control</span><span class="mv">IAM roles, least privilege. No direct S3 access — only through Glue and Athena.</span></div>
+    <div class="mrow"><span class="mk">Audit logging</span><span class="mv">CloudTrail records every API call. Who accessed what patient data and when.</span></div>
+    <div class="mrow"><span class="mk">Data masking</span><span class="mv">Patient IDs hashed before analytics layer. Real IDs only in raw zone.</span></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"In healthcare I always mention HIPAA upfront. I use SCD Type 2 with Delta MERGE to keep full patient history — essential when a doctor asks what a patient's ward was on a specific date. Patient IDs are hashed before the analytics layer so no real identifiers reach dashboards."</div></div>
+  </div></div></div>
+</div>
+
+<!-- SD AUTO -->
+<div class="section" id="sd-auto">
+  <div class="sec-hdr"><div class="sec-icon si-a">🚗</div><div><div class="sec-title">Automobile Case Study — Connected Vehicle Platform</div><div class="sec-desc">500,000 vehicles · 17,000 events/sec · predictive maintenance · recall detection</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">Architecture + Scale Math</span><span class="card-title">IoT at scale — do the scale estimation out loud</span><div class="card-acts"><button class="spk-btn" onclick="spk('sd-auto-arch',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="sd-auto-arch">
+    <div class="cw"><code class="code"># Scale estimation — say this out loud in the interview
+500,000 vehicles × 1 event per 30 seconds
+= ~16,667 events per second
+= ~700 GB raw data per day
+
+→ Need Kinesis: 17 shards (1MB/s each, with headroom)
+→ Partition key = vehicle_id (ordered reads per vehicle)
+→ Lambda cannot handle this — need Spark Streaming on EMR</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="flow"><div class="fb">Vehicles → IoT Core</div><div class="fa">→</div><div class="fb">Kinesis (17 shards)</div><div class="fa">→</div><div class="fb">Spark Streaming (EMR)</div><div class="fa">→</div><div class="fb">DynamoDB driver alert</div></div>
+    <div class="flow"><div class="fb">Kinesis Firehose</div><div class="fa">→</div><div class="fb">S3 raw</div><div class="fa">→</div><div class="fb">Glue daily batch</div><div class="fa">→</div><div class="fb">Maintenance score</div></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"500k vehicles every 30 seconds is 17,000 events per second — that immediately tells me I need distributed streaming. I use vehicle_id as the Kinesis partition key so all readings from the same vehicle go to the same shard in order. For predictive maintenance I use 7-day rolling window functions to detect rising temperature trends before failure."</div></div>
+  </div></div></div>
+</div>
+
+<!-- SD LAPTOP -->
+<div class="section" id="sd-laptop">
+  <div class="sec-hdr"><div class="sec-icon si-b">💻</div><div><div class="sec-title">Laptop/Electronics Case Study — E-commerce Platform</div><div class="sec-desc">50,000 orders/day · real-time inventory · customer funnel · dynamic pricing</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">Architecture</span><span class="card-title">3 data streams — clickstream, orders CDC, competitor prices</span><div class="card-acts"><button class="spk-btn" onclick="spk('sd-lt',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="sd-lt">
+    <div class="flow"><div class="fb">Website clicks (58/sec)</div><div class="fa">→</div><div class="fb">Kinesis</div><div class="fa">→</div><div class="fb">Spark Streaming session</div><div class="fa">→</div><div class="fb">Cart abandonment alert</div></div>
+    <div class="flow"><div class="fb">Orders DB</div><div class="fa">→</div><div class="fb">AWS DMS CDC</div><div class="fa">→</div><div class="fb">S3 every 5 min</div><div class="fa">→</div><div class="fb">Delta MERGE inventory</div></div>
+    <div class="flow"><div class="fb">Competitor prices (hourly)</div><div class="fa">→</div><div class="fb">Lambda scraper</div><div class="fa">→</div><div class="fb">S3</div><div class="fa">→</div><div class="fb">Pricing recommendations</div></div>
+    <div class="say"><div class="say-l">Connect to your CX background</div><div class="say-t">"This is the same funnel analysis I used to do manually in my CX role — now I build the pipeline that generates it automatically. Sessionisation groups events by 30-minute inactivity window so we see complete customer journeys. When I identify where customers drop off, the CX team can act on it — I know exactly how they use that data."</div></div>
+  </div></div></div>
+</div>
+
+<!-- SD COMMON Qs -->
+<div class="section" id="sd-common">
+  <div class="sec-hdr"><div class="sec-icon si-g">❓</div><div><div class="sec-title">Common System Design Questions</div><div class="sec-desc">These come up in almost every DE system design interview</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Very Common</span><span class="card-title">How would you migrate from on-premise to AWS?</span><div class="card-acts"><button class="spk-btn" onclick="spk('sd-migrate',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="sd-migrate">
+    <div class="mrow"><span class="mk">Phase 1 Replicate</span><span class="mv">AWS DMS copies on-prem data to S3. Both systems run in parallel.</span></div>
+    <div class="mrow"><span class="mk">Phase 2 Process on AWS</span><span class="mv">Move ETL to Glue while still comparing outputs to on-prem results.</span></div>
+    <div class="mrow"><span class="mk">Phase 3 Serve on AWS</span><span class="mv">Move dashboards to Athena/Redshift. Validate outputs match exactly.</span></div>
+    <div class="mrow"><span class="mk">Phase 4 Cut over</span><span class="mv">Stop on-prem jobs. Keep available 30 days as rollback.</span></div>
+    <div class="say"><div class="say-l">Say this</div><div class="say-t">"Phased migration — never big bang. Replicate to S3, move processing to Glue while both run in parallel, cut over only when outputs match exactly. Keep on-prem available 30 days. The key is never having both systems down at the same time."</div></div>
+  </div></div></div>
+</div>
+<!-- ══════════════════════════════════════════════════════
+     PORTFOLIO PROJECTS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="projects">
+  <div class="sec-hdr"><div class="sec-icon si-c">🗂</div><div><div class="sec-title">3 Core Portfolio Projects</div><div class="sec-desc">Real built projects — your proof of DE skills on GitHub</div></div></div>
+
+  <div class="proj pj1">
+    <div class="proj-hdr"><div><div class="proj-num">Project 1</div><div class="proj-title">Healthcare Readmission Batch Pipeline</div></div><span class="proj-status ps-done">✓ Complete</span></div>
+    <div class="proj-desc">101,766 patient records → ingest.py → quality.py (6 checks) → transform.py (readmission flags, risk tiers, window functions) → partitioned Parquet output.</div>
+    <div class="pills"><span class="pill pp">PySpark 3.4</span><span class="pill pb">Parquet</span><span class="pill pg">Data Quality</span><span class="pill pa">Window Functions</span><span class="pill pc">GitHub</span></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"I built a batch pipeline processing 100k patient records to identify readmission patterns using window functions. In my CX role I used this data manually — this pipeline automates the preparation into a reproducible daily job."</div></div>
+  </div>
+
+  <div class="proj pj2">
+    <div class="proj-hdr"><div><div class="proj-num">Project 2</div><div class="proj-title">Automobile Sales AWS Pipeline</div></div><span class="proj-status ps-prog">In Progress</span></div>
+    <div class="proj-desc">426,880 vehicle listings → S3 → Glue Crawler → Glue ETL (PySpark) → partitioned Parquet → Athena SQL. Window functions compare each listing to segment average to find underpriced vehicles.</div>
+    <div class="pills"><span class="pill pa">AWS S3</span><span class="pill pa">Glue</span><span class="pill pa">Athena</span><span class="pill pa">IAM</span><span class="pill pb">PySpark</span></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"End-to-end AWS pipeline on real cloud infrastructure. I add transformation_ctx to every Glue step and always end with job.commit(). Glue Job Bookmarks means reruns only process new files."</div></div>
+  </div>
+
+  <div class="proj pj3">
+    <div class="proj-hdr"><div><div class="proj-num">Project 3</div><div class="proj-title">Vehicle Anomaly Detection — Streaming</div></div><span class="proj-status ps-ready">Guide Ready</span></div>
+    <div class="proj-desc">Python producer simulates 100 vehicles at 10 events/second → Kafka (Docker) → Spark Structured Streaming → 2-minute tumbling windows with watermarking → anomaly alerts.</div>
+    <div class="pills"><span class="pill pc">Kafka</span><span class="pill pc">Docker</span><span class="pill pc">Spark Streaming</span><span class="pill pg">Watermarking</span><span class="pill pg">Windowing</span></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"Locally I used Kafka in Docker — in production on AWS this would be Kinesis. I used a 1-minute watermark because sensor data arrives late due to network delays. Checkpoint location ensures the job recovers from crashes without data loss."</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PROJECT 4 — 12 SCENARIOS
+══════════════════════════════════════════════════════ -->
+<div class="section" id="p4-overview">
+  <div class="sec-hdr"><div class="sec-icon si-pk">🏭</div><div><div class="sec-title">Project 4 — Multi-Sector Data Lake (12 Scenarios)</div><div class="sec-desc">Healthcare + Automobile · all real-world pipeline challenges in one project</div></div></div>
+  <div class="scen-grid">
+    <div class="scen" onclick="goTo('p4-s1s2')"><div class="scen-num">S1</div><div class="scen-title">S3 Folder Structure</div><div class="scen-desc">zone/sector/feed/dt= pattern. dt= for partition pruning in Athena.</div></div>
+    <div class="scen" onclick="goTo('p4-s1s2')"><div class="scen-num">S2</div><div class="scen-title">Multiple Files Same Day</div><div class="scen-desc">Hospital A + B + C all land on same dt= partition. Read folder not file.</div></div>
+    <div class="scen" onclick="goTo('p4-s3')"><div class="scen-num">S3</div><div class="scen-title">Incremental Files</div><div class="scen-desc">Yesterday + today partitions. Watermark JSON file tracks last processed.</div></div>
+    <div class="scen" onclick="goTo('p4-s4')"><div class="scen-num">S4</div><div class="scen-title">Joining Feeds</div><div class="scen-desc">Admissions LEFT JOIN claims. Telemetry LEFT JOIN dealer sales.</div></div>
+    <div class="scen" onclick="goTo('p4-s5s6')"><div class="scen-num">S5</div><div class="scen-title">Valid vs Invalid</div><div class="scen-desc">fail_reason column. Quarantine bad rows. Alert if rate > 5%.</div></div>
+    <div class="scen" onclick="goTo('p4-s5s6')"><div class="scen-num">S6</div><div class="scen-title">Keep Latest Duplicate</div><div class="scen-desc">ROW_NUMBER partitioned by business key. Keep rn=1 (most recent).</div></div>
+    <div class="scen" onclick="goTo('p4-s7s8')"><div class="scen-num">S7</div><div class="scen-title">Store as Parquet</div><div class="scen-desc">Columnar, 3-5x smaller than CSV. coalesce before writing. mode=overwrite.</div></div>
+    <div class="scen" onclick="goTo('p4-s7s8')"><div class="scen-num">S8</div><div class="scen-title">Schema Changes</div><div class="scen-desc">mergeSchema for new cols. Cast for type changes. Defensive col check.</div></div>
+    <div class="scen" onclick="goTo('p4-s9s10')"><div class="scen-num">S9</div><div class="scen-title">Calculations</div><div class="scen-desc">LOS days, bill categories, anomaly scores, window function group comparisons.</div></div>
+    <div class="scen" onclick="goTo('p4-s9s10')"><div class="scen-num">S10</div><div class="scen-title">Output Structure</div><div class="scen-desc">Write to processed zone with consistent path naming and run_date column.</div></div>
+    <div class="scen" onclick="goTo('p4-s11s12')"><div class="scen-num">S11</div><div class="scen-title">Partitioning</div><div class="scen-desc">partitionBy low-cardinality cols. Never partition by high-cardinality keys.</div></div>
+    <div class="scen" onclick="goTo('p4-s11s12')"><div class="scen-num">S12</div><div class="scen-title">Merge Small Files</div><div class="scen-desc">coalesce before write. Delta OPTIMIZE for ongoing compaction.</div></div>
+  </div>
+</div>
+
+<!-- GENERATOR -->
+<div class="section" id="p4-generator">
+  <div class="sec-hdr"><div class="sec-icon si-g">⚙️</div><div><div class="sec-title">generate_data.py — Run This First</div><div class="sec-desc">Standalone Python script · no dependencies · creates all sample files for all 12 scenarios</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-g">Commands</span><span class="card-title">How to run the data generator</span><div class="card-acts"><button class="spk-btn" onclick="spk('gen-cmd',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="gen-cmd">
+    <div class="cw"><code class="code"># Generate ALL files (do this first)
+python generate_data.py
+
+# Only healthcare files
+python generate_data.py --sector healthcare
+
+# Only automobile files
+python generate_data.py --sector automobile
+
+# Only files for one specific scenario
+python generate_data.py --scenario 6
+
+# Custom row count
+python generate_data.py --rows 500
+
+# Then run the full pipeline
+python main.py</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">What gets created for each scenario</div>
+    <div class="mrow"><span class="mk">S1+S2</span><span class="mv">admissions_hospital_a, _b, _c on same dt= folder (3 files same day)</span></div>
+    <div class="mrow"><span class="mk">S3</span><span class="mv">admissions in dt=TODAY, dt=YESTERDAY, dt=TWO_DAYS_AGO partitions</span></div>
+    <div class="mrow"><span class="mk">S5</span><span class="mv">8 bad rows injected: null_patient_id, future_date, negative_bill, invalid_gender</span></div>
+    <div class="mrow"><span class="mk">S6</span><span class="mv">10 duplicate encounter IDs with updated status, 20 duplicate sale IDs</span></div>
+    <div class="mrow"><span class="mk">S8</span><span class="mv">schema_v1 (6 cols), v2 (7 cols), v3 (age as string), v4 (col removed)</span></div>
+    <div class="mrow"><span class="mk">S12</span><span class="mv">15 tiny files of 10 rows each in telemetry_small_files/ folder</span></div>
+  </div></div></div>
+</div>
+
+<!-- S1+S2 -->
+<div class="section" id="p4-s1s2">
+  <div class="sec-hdr"><div class="sec-icon si-b">📂</div><div><div class="sec-title">S1+S2 — Folder Structure & Multiple Files</div><div class="sec-desc">zone/sector/feed/dt= · read folder not file · input_file_name() tracking</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-b">Concept + Code</span><span class="card-title">Why dt= format, how to read all files in a folder, and source file tracking</span><div class="card-acts"><button class="spk-btn" onclick="spk('s1s2-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s1s2-code">
+    <div class="p">Read the FOLDER, not a specific filename. Spark reads ALL CSV files in that folder and combines them. input_file_name() adds a column showing which file each row came from.</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import input_file_name, lit, current_timestamp
+
+# Read ALL csv files in the folder — not just one file
+# Hospital A + B + C all land in same dt= folder (Scenario 2)
+folder = "data/raw/healthcare/admissions/dt=2024-01-15/"
+df = spark.read \
+    .option("header", "true") \
+    .option("inferSchema", "true") \
+    .csv(folder + "/*.csv")
+
+# Add traceability — critical for debugging data issues
+df = df \
+    .withColumn("source_file",  input_file_name()) \  # WHICH file?
+    .withColumn("ingested_at",  current_timestamp()) \
+    .withColumn("run_date",     lit("2024-01-15"))
+
+# Check how many rows came from each file
+df.groupBy("source_file").count().show(truncate=False)
+# admissions_hospital_a_...csv | 218
+# admissions_hospital_b_...csv | 200
+# admissions_hospital_c_...csv | 200</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"I read the folder path so Spark automatically combines all files. I always add input_file_name() so every row is traceable to its source file. When a data issue is reported weeks later, I can immediately identify which file and which source system sent the bad data."</div></div>
+    <div class="tip">The dt= prefix is Hive partition format. Glue Crawler auto-registers it as a partition in Glue Catalog. Athena uses partition pruning — reads ONLY matching folders instead of scanning everything.</div>
+  </div></div></div>
+</div>
+
+<!-- S3 -->
+<div class="section" id="p4-s3">
+  <div class="sec-hdr"><div class="sec-icon si-a">🔄</div><div><div class="sec-title">S3 — Incremental File Processing</div><div class="sec-desc">Process only NEW data · watermark JSON · 3-day timeline test</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-a">Concept + Code</span><span class="card-title">Watermark pattern — read only partitions AFTER last processed date</span><div class="card-acts"><button class="spk-btn" onclick="spk('s3-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s3-code">
+    <div class="cw"><code class="code">import json, os
+from datetime import date, timedelta
+
+WATERMARK_FILE = "data/watermarks.json"
+
+def get_watermark(sector, feed):
+    if os.path.exists(WATERMARK_FILE):
+        wm = json.load(open(WATERMARK_FILE))
+        return wm.get(f"{sector}/{feed}", "1970-01-01")
+    return "1970-01-01"   # first run — process everything
+
+def save_watermark(sector, feed, last_date):
+    wm = json.load(open(WATERMARK_FILE)) if os.path.exists(WATERMARK_FILE) else {}
+    wm[f"{sector}/{feed}"] = last_date
+    json.dump(wm, open(WATERMARK_FILE,"w"), indent=2)
+
+# Pipeline run
+last_date = get_watermark("healthcare", "admissions")
+print(f"Last processed: {last_date}")
+
+# Find all date partitions NEWER than watermark
+base = "data/raw/healthcare/admissions/"
+new_partitions = [
+    p for p in sorted(os.listdir(base))
+    if p.startswith("dt=") and p.replace("dt=","") > last_date
+]
+print(f"New partitions to process: {new_partitions}")
+
+# Read all new partitions
+dfs = []
+for partition in new_partitions:
+    dfs.append(spark.read.option("header","true")
+               .csv(f"{base}/{partition}/*.csv"))
+if dfs:
+    combined = dfs[0]
+    for df in dfs[1:]: combined = combined.union(df)
+    # ... process combined ...
+    save_watermark("healthcare","admissions", date.today().strftime("%Y-%m-%d"))</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"Incremental processing means reading only partitions AFTER the last processed date. I store the watermark in a JSON file locally or DynamoDB on AWS. I save the watermark AFTER a successful write — if I save before and the write fails those records are skipped forever. The pipeline is idempotent — partition overwrite means reruns never duplicate."</div></div>
+  </div></div></div>
+</div>
+
+<!-- S4 -->
+<div class="section" id="p4-s4">
+  <div class="sec-hdr"><div class="sec-icon si-p">🔗</div><div><div class="sec-title">S4 — Joining Multiple Feeds</div><div class="sec-desc">Admissions + Claims · Telemetry + Sales · always LEFT join from primary feed</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-p">Concept + Code</span><span class="card-title">LEFT join so primary feed rows are never lost due to delayed secondary</span><div class="card-acts"><button class="spk-btn" onclick="spk('s4-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s4-code">
+    <div class="cw"><code class="code"># Rename secondary feed columns to avoid ambiguity
+claims_clean = claims_df.select(
+    col("claim_id"),
+    col("encounter_id").alias("claim_enc_id"),
+    col("claim_type"), col("billed_amount"),
+    col("paid_amount"), col("claim_status")
+)
+
+# LEFT join — keep ALL admissions even if no claim yet
+joined = admissions_df.join(
+    claims_clean,
+    admissions_df["encounter_id"] == claims_clean["claim_enc_id"],
+    "left"       # NEVER inner join — lose rows you shouldn't lose
+).drop("claim_enc_id")
+
+# Check join quality — sudden drop = upstream issue
+total = joined.count()
+with_claims = joined.filter(col("claim_id").isNotNull()).count()
+missing = total - with_claims
+print(f"Admissions with claims: {with_claims}/{total} ({missing} still pending)")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"I always LEFT join from the primary feed. Claims arrive late, sales data gets delayed — I never want to lose admission records just because a secondary feed hasn't arrived yet. After joining I check the match rate — a sudden drop signals an upstream system issue."</div></div>
+  </div></div></div>
+</div>
+
+<!-- S5+S6 -->
+<div class="section" id="p4-s5s6">
+  <div class="sec-hdr"><div class="sec-icon si-r">✂️</div><div><div class="sec-title">S5+S6 — Valid/Invalid Split & Keep Latest Duplicate</div><div class="sec-desc">fail_reason column · quarantine · ROW_NUMBER dedup</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Concept + Code</span><span class="card-title">S5: tag every bad row with fail_reason · S6: ROW_NUMBER to keep latest</span><div class="card-acts"><button class="spk-btn" onclick="spk('s5s6-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s5s6-code">
+    <div class="lbl">Scenario 5 — Validate and quarantine</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import when, lit, col, current_date
+
+rules = {
+    "null_patient_id":  col("patient_id").isNull()|(col("patient_id")==""),
+    "future_date":      col("admission_date") > current_date(),
+    "negative_bill":    col("bill_amount").cast("double") < 0,
+    "invalid_gender":   ~col("gender").isin("Male","Female","Other")
+}
+fail = lit(None).cast("string")
+for name, cond in rules.items():
+    fail = when(cond, lit(name)).otherwise(fail)
+
+df = df.withColumn("fail_reason", fail)
+valid = df.filter(col("fail_reason").isNull()).drop("fail_reason")
+bad   = df.filter(col("fail_reason").isNotNull())
+
+valid.write.mode("append").parquet("data/processed/")
+bad.write.mode("append").csv("data/quarantine/")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">Scenario 6 — Keep latest record on duplicates</div>
+    <div class="cw"><code class="code">from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number
+
+# ROW_NUMBER: partition by business key, order by most recent first
+w = Window.partitionBy("encounter_id").orderBy(col("ingested_at").desc())
+
+before = df.count()
+df_deduped = df.withColumn("_rn", row_number().over(w)) \
+               .filter(col("_rn") == 1) \
+               .drop("_rn")
+after = df_deduped.count()
+print(f"Removed {before-after:,} duplicates")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"I use ROW_NUMBER partitioned by business key ordered by ingested_at descending. Rank 1 is always the most recent record. dropDuplicates keeps an arbitrary row — ROW_NUMBER lets me CHOOSE which row to keep. I always deduplicate BEFORE joining — duplicates multiply when you join first."</div></div>
+  </div></div></div>
+</div>
+
+<!-- S7+S8 -->
+<div class="section" id="p4-s7s8">
+  <div class="sec-hdr"><div class="sec-icon si-g">📦</div><div><div class="sec-title">S7+S8 — Parquet Storage & Schema Changes</div><div class="sec-desc">Why Parquet · coalesce · mergeSchema · defensive column check</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-g">Concept + Code</span><span class="card-title">Write Parquet correctly · handle files with different column sets</span><div class="card-acts"><button class="spk-btn" onclick="spk('s7s8-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s7s8-code">
+    <div class="lbl">Scenario 7 — Write Parquet</div>
+    <div class="cw"><code class="code">from pyspark.sql.functions import lit
+
+df = df.withColumn("dt", lit("2024-01-15"))  # add partition column
+
+# coalesce before write — avoid small files
+row_count = df.count()
+n_files   = max(1, row_count // 50000 + 1)
+
+df.coalesce(n_files) \
+  .write \
+  .mode("overwrite") \     # idempotent — safe to rerun
+  .partitionBy("dept","dt") \
+  .parquet("data/processed/healthcare/admissions/")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">Scenario 8 — Handle schema changes</div>
+    <div class="cw"><code class="code">from pyspark.sql.types import StringType
+
+# Files with different schemas in same folder
+# Hospital C has extra columns Hospital A/B don't have
+df = spark.read \
+    .option("header", "true") \
+    .option("inferSchema", "true") \
+    .csv("data/raw/healthcare/admissions/dt=2024-01-15/*.csv")
+# Hospital A+B rows: extra cols = NULL automatically
+
+# Defensive check — add missing expected columns as NULL
+expected = ["encounter_id","patient_id","gender","age",
+            "department","bill_amount","source_hospital"]
+for c in expected:
+    if c not in df.columns:
+        df = df.withColumn(c, lit(None).cast(StringType()))
+        print(f"WARNING: Added missing column: {c}")
+
+# Type change — cast explicitly
+df = df.withColumn("age", col("age").cast("integer"))  # was string</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"I always write Parquet — columnar so Spark reads only needed columns. I coalesce before writing to avoid small files targeting 128-256MB per file. For schema changes I add a defensive column check so missing expected columns are added as NULL rather than crashing downstream jobs."</div></div>
+  </div></div></div>
+</div>
+
+<!-- S9+S10 -->
+<div class="section" id="p4-s9s10">
+  <div class="sec-hdr"><div class="sec-icon si-p">📊</div><div><div class="sec-title">S9+S10 — Calculations & Output Structure</div><div class="sec-desc">Business metrics · window comparisons · run_date column</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-p">Concept + Code</span><span class="card-title">LOS, risk tiers, anomaly scores, dept comparisons — all in PySpark</span><div class="card-acts"><button class="spk-btn" onclick="spk('s9s10-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s9s10-code">
+    <div class="cw"><code class="code">from pyspark.sql.window import Window
+from pyspark.sql.functions import avg, when, datediff, to_date, round as round_
+
+# Healthcare: length of stay + risk tier + dept comparison
+df = df \
+    .withColumn("los_days",
+        datediff(to_date("discharge_date"), to_date("admission_date"))) \
+    .withColumn("risk_tier",
+        when(col("los_days") >= 7, "High")
+        .when(col("los_days") >= 4, "Medium")
+        .otherwise("Low")) \
+    .withColumn("bill_category",
+        when(col("bill_amount").cast("double") < 2000,  "Low")
+        .when(col("bill_amount").cast("double") < 10000, "Medium")
+        .otherwise("High"))
+
+# Window: compare each patient to department average
+w_dept = Window.partitionBy("department")
+df = df \
+    .withColumn("dept_avg_bill",
+        round_(avg(col("bill_amount").cast("double")).over(w_dept), 2)) \
+    .withColumn("vs_dept_avg",
+        round_(col("bill_amount").cast("double") - col("dept_avg_bill"), 2))
+
+# Automobile: anomaly detection
+df_auto = df_auto.withColumn("is_anomaly",
+    when(col("engine_temp").cast("double") > 100, "HIGH_TEMP")
+    .when(col("rpm").cast("double") > 5000, "HIGH_RPM")
+    .when(col("battery_v").cast("double") < 12, "LOW_BATTERY")
+    .otherwise(None))</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+  </div></div></div>
+</div>
+
+<!-- S11+S12 -->
+<div class="section" id="p4-s11s12">
+  <div class="sec-hdr"><div class="sec-icon si-c">🗃</div><div><div class="sec-title">S11+S12 — Partitioning & Merge Small Files</div><div class="sec-desc">Low-cardinality partition columns · coalesce vs repartition · Delta OPTIMIZE</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-c">Concept + Code</span><span class="card-title">Only partition by low-cardinality cols · compact small files periodically</span><div class="card-acts"><button class="spk-btn" onclick="spk('s11s12-code',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="s11s12-code">
+    <div class="lbl">Scenario 11 — Partition correctly</div>
+    <div class="cw"><code class="code"># GOOD partition columns: low cardinality (10-1000 distinct values)
+# department (7 values), region (5), status (3), year/month/day
+
+# BAD partition columns: high cardinality = millions of tiny folders
+# patient_id, vehicle_id, encounter_id → DON'T partition by these
+
+df.coalesce(4) \
+  .write.mode("overwrite") \
+  .partitionBy("department", "dt") \   # Athena skips non-matching folders
+  .parquet("data/processed/healthcare/admissions/")
+
+# Reading: Spark reads ONLY department=Cardiology folder
+df_cardio = spark.read \
+    .parquet("data/processed/healthcare/admissions/") \
+    .filter(col("department") == "Cardiology")   # partition pruning</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="lbl">Scenario 12 — Merge small files</div>
+    <div class="cw"><code class="code">def merge_small_files(spark, path, target_files=4, threshold_mb=5):
+    # Inventory file sizes
+    small = [f for f in Path(path).rglob("*.parquet")
+             if os.path.getsize(f)/(1024*1024) < threshold_mb]
+    if not small:
+        print("No compaction needed")
+        return
+    print(f"{len(small)} small files found — compacting to {target_files}")
+    df = spark.read.parquet(path)
+    # coalesce: reduces partitions without full shuffle (cheaper)
+    # repartition: full shuffle, even distribution (use if data skewed)
+    df.coalesce(target_files).write.mode("overwrite").parquet(path + "_compacted")
+
+# Delta OPTIMIZE (on AWS/Databricks)
+# spark.sql("OPTIMIZE delta.`s3://bucket/delta/orders/`")
+# spark.sql("OPTIMIZE delta.`s3://bucket/delta/orders/` ZORDER BY (dept)")</code><button class="cpbtn" onclick="cp(this)">Copy</button></div>
+    <div class="say"><div class="say-l">Say in interview</div><div class="say-t">"I partition by low-cardinality columns only — department (7 values) or region (5 values). Partitioning by patient_id would create millions of tiny folders which is far worse than no partitioning. For small files I use coalesce before writing and run Delta OPTIMIZE periodically with ZORDER to both compact files and co-locate related data."</div></div>
+  </div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     BEHAVIORAL
+══════════════════════════════════════════════════════ -->
+<div class="section" id="behavioral">
+  <div class="sec-hdr"><div class="sec-icon si-pk">🎤</div><div><div class="sec-title">Behavioral Answers</div><div class="sec-desc">Your CX background is your superpower — use it in every answer</div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-r">Must Prepare</span><span class="card-title">Why are you moving from CX to Data Engineering?</span><div class="card-acts"><button class="spk-btn" onclick="spk('bh1',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="bh1">
+    <div class="say"><div class="say-l">Your answer — practise until natural, 90 seconds</div><div class="say-t">"In my CX role I kept running into the same problem — I could see customers were having issues but didn't have the right data to understand why at scale. I started pulling reports, writing SQL to find patterns, and realised the data infrastructure was limiting the insights we could get. I wanted to be on the side that builds those systems — not just consumes them. I have spent the last several months upskilling in PySpark, AWS, and pipeline design, and I am ready to bring both the technical skills and the business context."</div></div>
+    <div class="win">Your CX background is a genuine differentiator. Most DE candidates can write PySpark but cannot explain downstream business impact. You can. Lead with that in every answer.</div>
+  </div></div></div>
+
+  <div class="card"><div class="card-head" onclick="tog(this)"><span class="tag t-a">STAR</span><span class="card-title">Tell me about a time you solved a complex problem with data</span><div class="card-acts"><button class="spk-btn" onclick="spk('bh2',event)">🔊</button><span class="arr">▼</span></div></div>
+  <div class="card-body"><div id="bh2">
+    <div class="mrow"><span class="mk">Situation</span><span class="mv">High customer complaints about delayed deliveries but couldn't identify root cause from our dashboard.</span></div>
+    <div class="mrow"><span class="mk">Task</span><span class="mv">Find patterns across regions, carriers, and time periods.</span></div>
+    <div class="mrow"><span class="mk">Action</span><span class="mv">Joined orders, shipping, and complaints tables in SQL. Found 68% of complaints came from one carrier in northeast on Mondays.</span></div>
+    <div class="mrow"><span class="mk">Result</span><span class="mv">Complaints dropped 40% in 2 months. This drove me deeper into DE — I wanted to build the pipeline that surfaces these insights automatically, not manually each time.</span></div>
+    <div class="tip">End every STAR story with a DE angle — it reinforces your career change narrative naturally.</div>
+  </div></div></div>
+</div>
+
+<!-- ANSWER FRAMEWORK -->
+<div class="section" id="answer-fw">
+  <div class="sec-hdr"><div class="sec-icon si-p">⚙️</div><div><div class="sec-title">The 3-Sentence Answer Framework</div><div class="sec-desc">Use for every technical question — even ones you have never seen</div></div></div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="bx" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent2);opacity:.3">1</div><div style="font-size:13px;font-weight:600;color:var(--text);margin:4px 0">Problem</div><div style="font-size:11.5px;color:var(--text2)">Show you understand what they are asking. Define the problem clearly.</div></div>
+    <div class="bx" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--green);opacity:.3">2</div><div style="font-size:13px;font-weight:600;color:var(--text);margin:4px 0">Solution</div><div style="font-size:11.5px;color:var(--text2)">Name the technique and explain WHY you chose it over alternatives.</div></div>
+    <div class="bx" style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--amber);opacity:.3">3</div><div style="font-size:13px;font-weight:600;color:var(--text);margin:4px 0">Trade-off</div><div style="font-size:11.5px;color:var(--text2)">Downsides? When would you choose differently? Shows seniority.</div></div>
+  </div>
+  <div class="info">When you go blank: "I have not hit this exact scenario in production, but my approach would be to [reasoning]. I would validate by [checking logs / testing]. Is that the direction you are thinking?" — Never go silent.</div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="section" id="checklist">
+  <div class="sec-hdr"><div class="sec-icon si-g">✅</div><div><div class="sec-title">Final Checklist Before Applying</div><div class="sec-desc">All of these must be true before sending applications</div></div></div>
+  <div class="chk-grid">
+    <div class="chk chk-done">✓ SQL — solve all 5 patterns without looking</div>
+    <div class="chk chk-done">✓ Window functions — ROW_NUMBER vs DENSE_RANK</div>
+    <div class="chk chk-done">✓ All 8 bucket key phrases memorised</div>
+    <div class="chk chk-done">✓ System design 5-layer framework ready</div>
+    <div class="chk chk-done">✓ Project 1 on GitHub with good README</div>
+    <div class="chk chk-done">✓ 12-scenario project code available</div>
+    <div class="chk chk-prog">~ Project 2 AWS pipeline running</div>
+    <div class="chk chk-todo">○ Project 3 streaming built</div>
+    <div class="chk chk-todo">○ LinkedIn headline says "Data Engineer"</div>
+    <div class="chk chk-todo">○ LinkedIn has at least one project post</div>
+    <div class="chk chk-todo">○ 5+ mock interviews completed</div>
+    <div class="chk chk-todo">○ 20+ LeetCode SQL medium solved</div>
+    <div class="chk chk-todo">○ Can explain every line of code in projects</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid rgba(52,211,153,.25);border-radius:14px;padding:16px;margin-top:16px">
+    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--green);margin-bottom:8px">Remember this</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.7">You are not a fresh graduate pretending to be a data engineer. You are someone who spent years understanding what data means to a business, then built real pipelines to solve those problems. Most DE candidates can write PySpark but cannot explain downstream business impact. You can — because you have been that downstream team. Own it.</div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</main>
+</div><!-- /app -->
+<script>
+let spRate=1.0;
+
+// ── Toggle card ──────────────────────────────────────────────────
+function tog(h){
+  const b=h.nextElementSibling;
+  const a=h.querySelector(".arr");
+  b.classList.toggle("open");
+  a.classList.toggle("open");
+}
+
+// ── Copy code ────────────────────────────────────────────────────
+function cp(btn){
+  const c=btn.previousElementSibling;
+  navigator.clipboard.writeText(c.textContent).then(()=>{
+    btn.textContent="Copied!";
+    btn.classList.add("ok");
+    const t=document.getElementById("toast");
+    t.classList.add("show");
+    setTimeout(()=>{btn.textContent="Copy";btn.classList.remove("ok");t.classList.remove("show")},2000);
+  });
+}
+
+// ── Voice / TTS ──────────────────────────────────────────────────
+function spk(id,e){
+  if(e)e.stopPropagation();
+  const el=document.getElementById(id);
+  if(!el)return;
+  const clone=el.cloneNode(true);
+  clone.querySelectorAll(".code,.cpbtn").forEach(n=>n.remove());
+  speakT(clone.innerText.replace(/\s+/g," ").trim());
+  const btn=e?e.currentTarget:null;
+  if(btn){
+    document.querySelectorAll(".spk-btn").forEach(b=>b.classList.remove("on"));
+    btn.classList.add("on");
+  }
+}
+
+function speakOpen(){
+  const ob=document.querySelector(".card-body.open");
+  if(ob){
+    const c=ob.cloneNode(true);
+    c.querySelectorAll(".code,.cpbtn").forEach(n=>n.remove());
+    speakT(c.innerText.replace(/\s+/g," ").trim());
+  } else {
+    speakT("Please open a card first by clicking on it, then click Read open card.");
+  }
+}
+
+function speakT(text){
+  if(!("speechSynthesis" in window)){
+    alert("Speech not supported. Try Chrome or Edge.");return;
+  }
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=spRate;
+  const voices=speechSynthesis.getVoices();
+  const v=voices.find(v=>v.lang==="en-GB")
+         ||voices.find(v=>v.lang.startsWith("en-")&&v.name.toLowerCase().includes("female"))
+         ||voices.find(v=>v.lang.startsWith("en-"))
+         ||voices[0];
+  if(v)u.voice=v;
+  u.onend=()=>document.querySelectorAll(".spk-btn").forEach(b=>b.classList.remove("on"));
+  speechSynthesis.speak(u);
+}
+
+function stopSpeak(){
+  speechSynthesis.cancel();
+  document.querySelectorAll(".spk-btn").forEach(b=>b.classList.remove("on"));
+}
+
+if(window.speechSynthesis){
+  speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+}
+
+// ── Navigation ───────────────────────────────────────────────────
+function goTo(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+  if(window.innerWidth<=900)toggleSb();
+}
+
+function toggleSb(){
+  document.getElementById("sb").classList.toggle("open");
+  document.getElementById("ov").classList.toggle("show");
+}
+
+// ── Search nav ───────────────────────────────────────────────────
+function filterNav(val){
+  const v=val.toLowerCase().trim();
+  document.querySelectorAll(".sb-link").forEach(item=>{
+    item.style.display=(!v||item.textContent.toLowerCase().includes(v))?"flex":"none";
+  });
+  document.querySelectorAll(".sb-sec").forEach(sec=>{
+    let sib=sec.nextElementSibling;
+    let any=false;
+    while(sib&&!sib.classList.contains("sb-sec")){
+      if(sib.style.display!=="none")any=true;
+      sib=sib.nextElementSibling;
+    }
+    sec.style.display=any||!v?"block":"none";
+  });
+}
+
+// ── Active nav on scroll ─────────────────────────────────────────
+const SECS=[
+  "home","roadmap","daily",
+  "sql-patterns","date-patterns","window-fns","pyspark-ops",
+  "buckets-map","b1","b2","b3","b4","b5","b6","b7","b8","key-phrases",
+  "sd-foundations","sd-healthcare","sd-auto","sd-laptop","sd-common",
+  "projects","proj1","proj2","proj3",
+  "p4-overview","p4-generator","p4-s1s2","p4-s3","p4-s4",
+  "p4-s5s6","p4-s7s8","p4-s9s10","p4-s11s12",
+  "behavioral","answer-fw","checklist"
+];
+
+window.addEventListener("scroll",()=>{
+  const y=window.scrollY+100;
+  for(let i=SECS.length-1;i>=0;i--){
+    const el=document.getElementById(SECS[i]);
+    if(el&&el.offsetTop<=y){
+      document.querySelectorAll(".sb-link").forEach(n=>n.classList.remove("active"));
+      document.querySelectorAll(".sb-link").forEach(n=>{
+        if(n.getAttribute("onclick")&&n.getAttribute("onclick").includes("'"+SECS[i]+"'"))
+          n.classList.add("active");
+      });
+      break;
+    }
+  }
+},{passive:true});
+</script>
+</body>
+</html>
